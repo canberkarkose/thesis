@@ -1,6 +1,5 @@
-import React from 'react';
 import { CssBaseline } from '@mui/material';
-import './App.css';
+import './App.styles.ts';
 import { Routes, Route } from 'react-router-dom';
 
 import { LandingPage } from './components/pages/LandingPage/LandingPage';
