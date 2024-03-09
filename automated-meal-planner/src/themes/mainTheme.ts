@@ -4,7 +4,9 @@ export const mainTheme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#336633', // Dark Green
+      main: '#7cb855', // Light Green
+      dark: '#555c78', // Grey
+      light: '#bbe06c', // Light Grey
     },
     secondary: {
       main: '#6A1B4D', // Berry Purple

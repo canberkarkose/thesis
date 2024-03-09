@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import backgroundImage from '../../../assets/background.png';
 
 export const MainContentContainer = styled.div`
+  width: 100%;
   max-width: 1000px;
   margin: 0 auto;
   padding: 20px;
@@ -33,5 +34,9 @@ export const MainContentContainer = styled.div`
   > * {
     position: relative;
     z-index: 2;
+  }
+  @media (min-width: 1600px) {
+    max-width: 1300px;
+    padding: 40px;
   }
 `;
