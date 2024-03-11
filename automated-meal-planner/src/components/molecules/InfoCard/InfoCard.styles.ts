@@ -7,9 +7,7 @@ export const CardContainer = styled(Box)({
   alignItems: 'center',
   gap: 20,
   textAlign: 'center',
-  padding: '20px',
-  border: '1px solid #000',
-  backgroundColor: '#fff',
   maxWidth: '300px',
-  margin: '0 auto'
+  margin: '0 auto',
+  padding: '15px',
 });

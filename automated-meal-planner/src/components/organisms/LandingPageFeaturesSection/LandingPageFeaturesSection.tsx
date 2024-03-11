@@ -5,15 +5,15 @@ import { InfoCard } from '../../molecules/InfoCard/InfoCard';
 const features = [
   {
     title: 'Empower Your Plate',
-    text: 'Simplify your meal planning with Bite by Byte...'
+    text: 'Simplify your meal planning with Bite by Byte. From vegan to Mediterranean, customize your diet to fit your lifestyle and nutrition goals effortlessly!'
   },
   {
     title: 'Stress-Free Meal Decisions',
-    text: 'Let Bite by Byte handle the meal planning...'
+    text: 'Let Bite by Byte handle the meal planning. Say goodbye to the daily "what\'s for dinner?" dilemma and enjoy the pleasure of cooking and eating.'
   },
   {
     title: 'Streamlined Grocery Planning',
-    text: 'Revolutionize shopping with auto-generated lists...'
+    text: ' Revolutionize shopping with auto-generated lists from your meal plans, ensuring you\'re always ready for a week of delicious dining.'
   },
 ];
 
