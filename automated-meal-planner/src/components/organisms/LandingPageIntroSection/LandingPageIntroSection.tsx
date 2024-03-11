@@ -15,7 +15,7 @@ export const LandingPageIntroSection = () => (
       <Typography variant='h4' color='primary.dark' fontSize='30px' fontWeight='bold' gutterBottom>
         Transform Your Eating Habits with Bite by Byte
       </Typography>
-      <Typography variant='body1' gutterBottom>
+      <Typography variant='body1' color='text.primary' gutterBottom>
         Simplify your meal planning with Bite by Byte.
         Personalize your diet, save time, and achieve your nutrition goals effortlessly.
       </Typography>
@@ -29,6 +29,8 @@ export const LandingPageIntroSection = () => (
         <Link to='/login'>Sign in</Link>
       </Typography>
     </TextContainer>
-    <ImageContainer />
+    <ImageContainer>
+      <Typography variant='h5' sx={{ mt: 13, ml: 2 }}>Placeholder for Simple Animation</Typography>
+    </ImageContainer>
   </IntroContainer>
 );
