@@ -4,15 +4,15 @@ export const mainTheme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#6bba62', // Light Green
-      dark: '#307470', // Dark Green
-      light: '#9ae17b', // Light Green
+      main: '#A7D3B9', // Light Green
+      dark: '#607F64', // Dark Green
+      light: '#9BC2A8', // Light Green
     },
     secondary: {
-      main: '#6A1B4D', // Berry Purple
+      main: '#8BB196',
     },
     action: {
-      active: '#E59500', // Carrot Orange
+      active: '#566D5F', // Carrot Orange
     },
     text: {
       primary: '#333333', // Dark Gray

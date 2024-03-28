@@ -1,6 +1,6 @@
-import { Box, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 
-import { CardContainer } from './InfoCard.styles';
+import { CardContainer, StyledIcon } from './InfoCard.styles';
 
 type InfoCardProps = {
   icon?: React.ReactElement;
@@ -14,9 +14,9 @@ export const InfoCard = ({
   text
 }: InfoCardProps) => (
   <CardContainer>
-    <Box component='span'>
+    <StyledIcon>
       {icon}
-    </Box>
+    </StyledIcon>
     <Typography variant='h6' color='secondary.main'>
       {title}
     </Typography>
