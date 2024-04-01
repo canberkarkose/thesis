@@ -1,47 +1,49 @@
 /* eslint-disable no-console */
+import { useState } from 'react';
 import {
   Box, Typography, Button, TextField, Divider, IconButton, InputAdornment
 } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import GoogleIcon from '@mui/icons-material/Google';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import AppleIcon from '@mui/icons-material/Apple';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-import { useState } from 'react';
+import { FirebaseError } from 'firebase/app';
 
 import { Space } from '../../atoms/Space/Space';
+
+import { googleSignIn, signUp } from '../../../services/auth-service';
 
 import { ContentContainer } from './Register.styles';
 
 export const Register = () => {
   const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState(false);
+  const [emailError, setEmailError] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [usernameError, setUsernameError] = useState(false);
+  const [passwordInteracted, setPasswordInteracted] = useState(false);
+  const [signUpAttempted, setSignUpAttempted] = useState(false);
+  const [signUpError, setSignUpError] = useState('');
+  const navigate = useNavigate();
+
+  const validateEmail = (rawEmail: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(rawEmail);
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
-    if (emailError) setEmailError(false);
-  };
-
-  const validateEmail = (rawEmail: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(rawEmail);
+    const newEmail = event.target.value;
+    setEmail(newEmail);
+    setEmailError(validateEmail(newEmail) ? '' : 'Please enter a valid email address.');
   };
 
   const handleNextStep = () => {
     if (!validateEmail(email)) {
-      setEmailError(true);
-      console.log('Invalid email');
+      setEmailError('Please enter a valid email address.');
     } else {
-      setEmailError(false);
+      setEmailError('');
       setCurrentStep(2);
     }
   };
@@ -53,36 +55,65 @@ export const Register = () => {
     length: pwd.length >= 10,
   });
 
-  const handleUsernameChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => setUsername(event.target.value);
-  const handlePasswordChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => setPassword(event.target.value);
+  const passwordValidation = validatePassword(password);
+
+  const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newUsername = event.target.value;
+    setUsername(newUsername);
+    setUsernameError(newUsername.length < 3 || newUsername.length > 50);
+  };
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.target.value);
+    setPasswordInteracted(true);
+  };
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
-  const handleSignUp = () => {
-    if (!validateUsername(username)) {
-      setUsernameError(true);
-      console.log('Username is too short');
-    } else {
-      setUsernameError(false);
-      const passwordValidation = validatePassword(password);
-      if (
-        !passwordValidation.letter
-        || !passwordValidation.numberOrSpecialChar
-        || !passwordValidation.length
-      ) {
-        console.log('Password does not meet the criteria');
-      } else {
+  const handleSignUp = async () => {
+    setSignUpAttempted(true);
+    if (validateEmail(email) && validateUsername(username) && password) {
+      try {
+        await signUp(email, password);
         console.log('Sign up successful');
-        // Proceed with sign-up logic
+        navigate('/home');
+      } catch (error) {
+        if (error instanceof FirebaseError && error.code === 'auth/email-already-in-use') {
+          console.error('Sign up failed: Email is already in use');
+          setEmailError('Email is already in use.');
+          setEmail('');
+          setCurrentStep(1);
+        } else {
+          console.error('Sign up failed', error);
+          setSignUpError('Failed to sign up. Please try again.');
+        }
       }
+    } else {
+      if (!validateEmail(email)) setEmailError('Please enter a valid email address.');
+      if (!validateUsername(username)) setUsernameError(true);
+      if (!password) setPasswordInteracted(true);
     }
   };
 
-  const passwordValidation = validatePassword(password);
+  const handleGoogleSignUp = () => {
+    googleSignIn().then((result) => {
+      const { user } = result;
+      if (user) {
+        console.log(user);
+        navigate('/home');
+      }
+    }).catch((error) => {
+      console.error(error);
+    });
+  };
 
+  const getColor = (isValid: boolean) => {
+    if (!passwordInteracted && !signUpAttempted) return 'text.primary';
+    return isValid ? 'success.main' : 'error.main';
+  };
+
+  const getBorderColor = (isValid: boolean) => {
+    if (!passwordInteracted && !signUpAttempted) return 'grey.500';
+    return isValid ? 'success.main' : 'error.main';
+  };
   return (
     <ContentContainer>
       <Box sx={{
@@ -106,169 +137,190 @@ export const Register = () => {
           </Typography>
         </Box>
         <Box sx={{
-          width: '100%', minHeight: 'calc(100vh - 400px)', display: 'flex', flexDirection: 'column', justifyContent: 'center'
+          width: '100%',
+          minHeight: 'calc(100vh - 400px)',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          position: 'relative'
         }}
         >
           {currentStep === 1 && (
-          <>
-            <Typography variant='subtitle2' sx={{ alignSelf: 'flex-start', fontWeight: 'bold', mb: 1 }}>
-              Email address
-            </Typography>
-            <TextField
-              fullWidth
-              variant='outlined'
-              value={email}
-              onChange={handleEmailChange}
-              error={emailError}
-              helperText={emailError && 'Please enter a valid email address.'}
-              sx={{ marginBottom: 3 }}
-              placeholder='name@domain.com'
-            />
-            <Button
-              fullWidth
-              variant='contained'
-              color='secondary'
-              onClick={handleNextStep}
-              sx={{ borderRadius: 20, textTransform: 'none' }}
-            >
-              <Typography fontSize='18px'>Next</Typography>
-            </Button>
-            <Space s24 />
-            <Divider sx={{ margin: '20px 0', position: 'relative' }}>
-              <Typography
+            <>
+              <Typography variant='subtitle2' sx={{ alignSelf: 'flex-start', fontWeight: 'bold', mb: 1 }}>
+                Email address
+              </Typography>
+              <TextField
+                fullWidth
+                variant='outlined'
+                value={email}
+                onChange={handleEmailChange}
+                error={!!emailError}
+                helperText={emailError}
+                sx={{ marginBottom: 3 }}
+                placeholder='name@domain.com'
+              />
+              <Button
+                fullWidth
+                variant='contained'
+                color='secondary'
+                onClick={handleNextStep}
+                sx={{ borderRadius: 20, textTransform: 'none' }}
+              >
+                <Typography fontSize='18px'>Next</Typography>
+              </Button>
+              <Space s24 />
+              <Divider sx={{ margin: '20px 0', position: 'relative' }}>
+                <Typography
+                  sx={{
+                    position: 'absolute', top: '-12px', left: 'calc(50% - 16px)', padding: '0 10px'
+                  }}
+                >
+                  or
+                </Typography>
+              </Divider>
+              <Space s24 />
+              <Button
+                fullWidth
+                variant='outlined'
+                onClick={handleGoogleSignUp}
                 sx={{
-                  position: 'absolute', top: '-12px', left: 'calc(50% - 16px)', padding: '0 10px'
+                  color: 'black', borderColor: 'black', mb: 1, borderRadius: 20, textTransform: 'none',
                 }}
               >
-                or
+                <Box sx={{
+                  width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+                }}
+                >
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <GoogleIcon sx={{ mr: 7, color: 'red' }} />
+                    <Typography fontSize='18px'>Sign up with Google</Typography>
+                  </Box>
+                </Box>
+              </Button>
+              <Space s24 />
+              <Divider sx={{ margin: '20px 0' }} />
+              <Space s24 />
+              <Typography textAlign='center'>
+                Already have an account?
+                {' '}
+                <Link to='/login'>Log in here.</Link>
               </Typography>
-            </Divider>
-            <Space s24 />
-            <Button
-              fullWidth
-              variant='outlined'
-              sx={{
-                color: 'black', borderColor: 'black', mb: 1, borderRadius: 20, textTransform: 'none',
-              }}
-            >
-              <Box sx={{
-                width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center'
-              }}
-              >
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <GoogleIcon sx={{ mr: 7, color: 'red' }} />
-                  <Typography fontSize='18px'>Sign up with Google</Typography>
-                </Box>
-              </Box>
-            </Button>
-            <Button
-              fullWidth
-              variant='outlined'
-              sx={{
-                color: 'black', borderColor: 'black', mb: 1, borderRadius: 20, textTransform: 'none',
-              }}
-            >
-              <Box sx={{
-                width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center'
-              }}
-              >
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <FacebookIcon sx={{ mr: 7, color: 'blue' }} />
-                  <Typography fontSize='18px'>Sign up with Facebook</Typography>
-                </Box>
-              </Box>
-            </Button>
-            <Button
-              fullWidth
-              variant='outlined'
-              sx={{
-                color: 'black', borderColor: 'black', mb: 1, borderRadius: 20, textTransform: 'none',
-              }}
-            >
-              <Box sx={{
-                width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center'
-              }}
-              >
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <AppleIcon sx={{ mr: 7, color: 'black' }} />
-                  <Typography fontSize='18px'>Sign up with Apple</Typography>
-                </Box>
-              </Box>
-            </Button>
-            <Space s24 />
-            <Divider sx={{ margin: '20px 0' }} />
-            <Space s24 />
-            <Typography textAlign='center'>
-              Already have an account?
-              {' '}
-              <Link to='/login'>Log in here.</Link>
-            </Typography>
-          </>
+            </>
           )}
           {currentStep === 2 && (
-          <>
-            <Typography variant='subtitle2' sx={{ alignSelf: 'flex-start', fontWeight: 'bold', mb: 1 }}>
-              Username
-            </Typography>
-            <TextField
-              fullWidth
-              variant='outlined'
-              value={username}
-              onChange={handleUsernameChange}
-              error={usernameError}
-              helperText={usernameError ? 'Username must be at least 3 characters.' : 'This will show up in your profile, and you can use it to log in.'}
-              sx={{ marginBottom: 3 }}
-            />
-            <Typography variant='subtitle2' sx={{ alignSelf: 'flex-start', fontWeight: 'bold', mb: 1 }}>
-              Password
-            </Typography>
-            <TextField
-              fullWidth
-              type={showPassword ? 'text' : 'password'}
-              variant='outlined'
-              value={password}
-              onChange={handlePasswordChange}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position='end'>
-                    <IconButton onClick={togglePasswordVisibility}>
-                      {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-              sx={{ marginBottom: 1 }}
-            />
-            <Typography variant='subtitle2' sx={{ fontWeight: 'bold' }}>
-              Your password must contain at least:
-            </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', mb: 2 }}>
-              <Typography variant='subtitle2' color={passwordValidation.letter ? 'success.main' : 'error.main'}>
-                <CheckCircleIcon />
-                {' '}
-                1 letter
+            <>
+              <Typography variant='subtitle2' sx={{ alignSelf: 'flex-start', fontWeight: 'bold', mb: 1 }}>
+                Username
               </Typography>
-              <Typography variant='subtitle2' color={passwordValidation.numberOrSpecialChar ? 'success.main' : 'error.main'}>
-                <CheckCircleIcon />
-                {' '}
-                1 number or special character (e.g., ? # ! $)
+              <TextField
+                fullWidth
+                variant='outlined'
+                value={username}
+                onChange={handleUsernameChange}
+                error={usernameError}
+                helperText={usernameError ? 'Username must be between 3 and 50 characters.' : 'This will show up in your profile, and you can use it to log in.'}
+                sx={{ marginBottom: 3 }}
+              />
+              <Typography variant='subtitle2' sx={{ alignSelf: 'flex-start', fontWeight: 'bold', mb: 1 }}>
+                Password
               </Typography>
-              <Typography variant='subtitle2' color={passwordValidation.length ? 'success.main' : 'error.main'}>
-                <CheckCircleIcon />
-                {' '}
-                10 characters
+              <TextField
+                fullWidth
+                type={showPassword ? 'text' : 'password'}
+                variant='outlined'
+                value={password}
+                onChange={handlePasswordChange}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position='end'>
+                      <IconButton onClick={togglePasswordVisibility}>
+                        {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{ marginBottom: 1 }}
+              />
+              <Space s12 />
+              <Typography variant='subtitle2' sx={{ fontWeight: 'bold' }}>
+                Your password must contain at least:
               </Typography>
-            </Box>
-            <Button
-              fullWidth
-              variant='contained'
-              color='secondary'
-              onClick={handleSignUp}
-              sx={{ borderRadius: 20, textTransform: 'none' }}
-            >
-              <Typography fontSize='18px'>Sign Up</Typography>
-            </Button>
-          </>
+              <Space s12 />
+              <Box sx={{ display: 'flex', flexDirection: 'column', mb: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Box sx={{
+                    width: 20,
+                    height: 20,
+                    borderRadius: '50%',
+                    border: '1px solid',
+                    borderColor: getBorderColor(passwordValidation.letter),
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    mr: 1
+                  }}
+                  >
+                    {passwordInteracted && (passwordValidation.letter ? <CheckCircleIcon sx={{ color: 'success.main', fontSize: 20 }} /> : null)}
+                  </Box>
+                  <Typography variant='subtitle2' color={getColor(passwordValidation.letter)}>
+                    1 letter
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Box sx={{
+                    width: 20,
+                    height: 20,
+                    borderRadius: '50%',
+                    border: '1px solid',
+                    borderColor: getBorderColor(passwordValidation.numberOrSpecialChar),
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    mr: 1
+                  }}
+                  >
+                    {passwordInteracted && (passwordValidation.numberOrSpecialChar ? <CheckCircleIcon sx={{ color: 'success.main', fontSize: 20 }} /> : null)}
+                  </Box>
+                  <Typography variant='subtitle2' color={getColor(passwordValidation.numberOrSpecialChar)}>
+                    1 number or special character
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Box sx={{
+                    width: 20,
+                    height: 20,
+                    borderRadius: '50%',
+                    border: '1px solid',
+                    borderColor: getBorderColor(passwordValidation.length),
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    mr: 1
+                  }}
+                  >
+                    {passwordInteracted && (passwordValidation.length ? <CheckCircleIcon sx={{ color: 'success.main', fontSize: 20 }} /> : null)}
+                  </Box>
+                  <Typography variant='subtitle2' color={getColor(passwordValidation.length)}>
+                    10 characters
+                  </Typography>
+                </Box>
+              </Box>
+              {signUpError && (
+              <Typography color='error' sx={{ textAlign: 'center', mb: 2 }}>
+                {signUpError}
+              </Typography>
+              )}
+              <Button
+                fullWidth
+                variant='contained'
+                color='secondary'
+                onClick={handleSignUp}
+                sx={{ borderRadius: 20, textTransform: 'none', mb: 13 }}
+              >
+                <Typography fontSize='18px'>Sign Up</Typography>
+              </Button>
+            </>
           )}
         </Box>
       </Box>

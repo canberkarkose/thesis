@@ -1,10 +1,5 @@
-type HomeProps = {
-  temp?: string;
-};
-
-export const Home = ({ temp }: HomeProps) => (
+export const Home = () => (
   <div>
     <h1>Home</h1>
-    {temp}
   </div>
 );
