@@ -6,6 +6,7 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 import GoogleIcon from '@mui/icons-material/Google';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
@@ -22,7 +23,7 @@ export const Register = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [usernameError, setUsernameError] = useState(false);
+  const [usernameError, setUsernameError] = useState('');
   const [signUpAttempted, setSignUpAttempted] = useState(false);
   const [passwordInteracted, setPasswordInteracted] = useState(false);
   const [signUpError, setSignUpError] = useState('');
@@ -48,7 +49,7 @@ export const Register = () => {
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newUsername = event.target.value;
     setUsername(newUsername);
-    setUsernameError(newUsername.length < 3 || newUsername.length > 50);
+    setUsernameError(newUsername.length >= 3 && newUsername.length <= 50 ? '' : 'Username must be between 3 and 50 characters.');
   };
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,22 +63,27 @@ export const Register = () => {
     setSignUpAttempted(true);
     if (validateEmail(email) && validateUsername(username) && password) {
       try {
-        await signUp(email, password);
-        console.log('Sign up successful');
+        await signUp(email, username, password);
         navigate('/home');
-      } catch (error) {
-        if (error instanceof FirebaseError && error.code === 'auth/email-already-in-use') {
-          console.error('Sign up failed: Email is already in use');
-          setEmailError('Email is already in use.');
-          setEmail('');
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          if (error.message === 'Username is already taken') {
+            setUsernameError('Username is already taken.');
+          } else {
+            const firebaseError = error as FirebaseError;
+            if (firebaseError.code === 'auth/email-already-in-use') {
+              setEmailError('Email is already in use.');
+            } else {
+              setSignUpError('Failed to sign up. Please try again.');
+            }
+          }
         } else {
-          console.error('Sign up failed', error);
-          setSignUpError('Failed to sign up. Please try again.');
+          setSignUpError('An unexpected error occurred. Please try again.');
         }
       }
     } else {
       if (!validateEmail(email)) setEmailError('Please enter a valid email address.');
-      if (!validateUsername(username)) setUsernameError(true);
+      if (!validateUsername(username)) setUsernameError('Username must be between 3 and 50 characters.');
       if (!password) setPasswordInteracted(true);
     }
   };
@@ -121,8 +127,8 @@ export const Register = () => {
           value={username}
           onChange={handleUsernameChange}
           error={!!usernameError}
-          helperText={usernameError ? 'Username must be between 3 and 50 characters.' : 'This will show up in your profile, and you can use it to log in.'}
-          sx={{ marginBottom: 3 }}
+          helperText={usernameError}
+          sx={{ marginBottom: 1 }}
         />
         <TextField
           fullWidth
@@ -132,7 +138,7 @@ export const Register = () => {
           onChange={handleEmailChange}
           error={!!emailError}
           helperText={emailError}
-          sx={{ marginBottom: 3 }}
+          sx={{ marginBottom: 1 }}
           placeholder='name@domain.com'
         />
         <TextField
@@ -142,10 +148,10 @@ export const Register = () => {
           label='Password'
           value={password}
           onChange={handlePasswordChange}
-          error={password.length > 0
-            && !passwordValidation.letter
-            && !passwordValidation.numberOrSpecialChar
-            && !passwordValidation.length}
+          error={passwordInteracted && (password.length === 0
+              || !passwordValidation.letter
+              || !passwordValidation.numberOrSpecialChar
+              || !passwordValidation.length)}
           InputProps={{
             endAdornment: (
               <InputAdornment position='end'>
@@ -176,7 +182,7 @@ export const Register = () => {
               mr: 1
             }}
             >
-              {passwordInteracted && (passwordValidation.letter ? <CheckCircleIcon sx={{ color: 'success.main', fontSize: 20 }} /> : null)}
+              {passwordInteracted && (passwordValidation.letter ? <CheckCircleIcon sx={{ color: 'success.main', fontSize: 20 }} /> : <CancelIcon sx={{ color: 'error.main', fontSize: 20 }} />)}
             </Box>
             <Typography variant='subtitle2' color={getColor(passwordValidation.letter)}>
               1 letter
@@ -195,7 +201,7 @@ export const Register = () => {
               mr: 1
             }}
             >
-              {passwordInteracted && (passwordValidation.numberOrSpecialChar ? <CheckCircleIcon sx={{ color: 'success.main', fontSize: 20 }} /> : null)}
+              {passwordInteracted && (passwordValidation.numberOrSpecialChar ? <CheckCircleIcon sx={{ color: 'success.main', fontSize: 20 }} /> : <CancelIcon sx={{ color: 'error.main', fontSize: 20 }} />)}
             </Box>
             <Typography variant='subtitle2' color={getColor(passwordValidation.numberOrSpecialChar)}>
               1 number or special character
@@ -214,7 +220,7 @@ export const Register = () => {
               mr: 1
             }}
             >
-              {passwordInteracted && (passwordValidation.length ? <CheckCircleIcon sx={{ color: 'success.main', fontSize: 20 }} /> : null)}
+              {passwordInteracted && (passwordValidation.length ? <CheckCircleIcon sx={{ color: 'success.main', fontSize: 20 }} /> : <CancelIcon sx={{ color: 'error.main', fontSize: 20 }} />)}
             </Box>
             <Typography variant='subtitle2' color={getColor(passwordValidation.length)}>
               10 characters

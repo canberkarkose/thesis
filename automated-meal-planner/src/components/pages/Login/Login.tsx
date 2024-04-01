@@ -2,7 +2,7 @@
 import {
   Box, Typography, Button, TextField, Divider, IconButton, InputAdornment
 } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import GoogleIcon from '@mui/icons-material/Google';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -11,25 +11,54 @@ import { useState } from 'react';
 
 import { Space } from '../../atoms/Space/Space';
 
+import { login, googleSignIn } from '../../../services/auth-service';
+
 import { ContentContainer } from './Login.styles';
 
 export const Login = () => {
   const [usernameOrEmail, setUsernameOrEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [usernameOrEmailError, setUsernameOrEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const navigate = useNavigate();
 
   const handleUsernameOrEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUsernameOrEmail(event.target.value);
+    if (usernameOrEmailError) setUsernameOrEmailError('');
   };
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
+    if (passwordError) setPasswordError('');
   };
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
-  const handleSignIn = () => {
-    console.log('Sign in logic here');
+  const handleSignIn = async () => {
+    if (!usernameOrEmail || !password) {
+      if (!usernameOrEmail) setUsernameOrEmailError('Please provide your username or email.');
+      if (!password) setPasswordError('Please provide your password.');
+      return;
+    }
+
+    try {
+      await login(usernameOrEmail, password);
+      navigate('/home');
+    } catch (error) {
+      setLoginError('Login failed. Please check your credentials.');
+      console.error('Login error:', error);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await googleSignIn();
+      navigate('/home');
+    } catch (error) {
+      setLoginError('Google sign-in failed.');
+    }
   };
 
   return (
@@ -56,10 +85,12 @@ export const Login = () => {
           <TextField
             fullWidth
             variant='outlined'
+            label='Email or username'
             value={usernameOrEmail}
             onChange={handleUsernameOrEmailChange}
-            sx={{ marginBottom: 3 }}
-            label='Email or username'
+            error={!!usernameOrEmailError}
+            helperText={usernameOrEmailError}
+            sx={{ marginBottom: 2, mt: 3 }}
           />
           <TextField
             fullWidth
@@ -67,6 +98,8 @@ export const Login = () => {
             variant='outlined'
             value={password}
             label='Password'
+            error={!!passwordError}
+            helperText={passwordError}
             onChange={handlePasswordChange}
             InputProps={{
               endAdornment: (
@@ -77,7 +110,7 @@ export const Login = () => {
                 </InputAdornment>
               ),
             }}
-            sx={{ marginBottom: 3 }}
+            sx={{ marginBottom: 2 }}
           />
           <Button
             fullWidth
@@ -102,6 +135,7 @@ export const Login = () => {
           <Button
             fullWidth
             variant='outlined'
+            onClick={handleGoogleSignIn}
             sx={{
               color: 'black', borderColor: 'black', mb: 1, borderRadius: 20, textTransform: 'none',
             }}
@@ -116,6 +150,7 @@ export const Login = () => {
               </Box>
             </Box>
           </Button>
+          {loginError && <Typography color='error'>{loginError}</Typography>}
           <Space s24 />
           <Divider sx={{ margin: '20px 0' }} />
           <Space s24 />
