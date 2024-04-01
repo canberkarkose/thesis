@@ -4,8 +4,6 @@ import {
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import GoogleIcon from '@mui/icons-material/Google';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import AppleIcon from '@mui/icons-material/Apple';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
@@ -55,25 +53,20 @@ export const Login = () => {
           width: '100%', minHeight: 'calc(100vh - 400px)', display: 'flex', flexDirection: 'column', justifyContent: 'center'
         }}
         >
-          <Typography variant='subtitle2' sx={{ alignSelf: 'flex-start', fontWeight: 'bold', mb: 1 }}>
-            Email or username
-          </Typography>
           <TextField
             fullWidth
             variant='outlined'
             value={usernameOrEmail}
             onChange={handleUsernameOrEmailChange}
             sx={{ marginBottom: 3 }}
-            placeholder='Email or username'
+            label='Email or username'
           />
-          <Typography variant='subtitle2' sx={{ alignSelf: 'flex-start', fontWeight: 'bold', mb: 1 }}>
-            Password
-          </Typography>
           <TextField
             fullWidth
             type={showPassword ? 'text' : 'password'}
             variant='outlined'
             value={password}
+            label='Password'
             onChange={handlePasswordChange}
             InputProps={{
               endAdornment: (
@@ -123,41 +116,6 @@ export const Login = () => {
               </Box>
             </Box>
           </Button>
-          <Button
-            fullWidth
-            variant='outlined'
-            sx={{
-              color: 'black', borderColor: 'black', mb: 1, borderRadius: 20, textTransform: 'none',
-            }}
-          >
-            <Box sx={{
-              width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center'
-            }}
-            >
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <FacebookIcon sx={{ mr: 7, color: 'blue' }} />
-                <Typography fontSize='18px'>Continue with Facebook</Typography>
-              </Box>
-            </Box>
-          </Button>
-          <Button
-            fullWidth
-            variant='outlined'
-            sx={{
-              color: 'black', borderColor: 'black', mb: 1, borderRadius: 20, textTransform: 'none',
-            }}
-          >
-            <Box sx={{
-              width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center'
-            }}
-            >
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <AppleIcon sx={{ mr: 7, color: 'black' }} />
-                <Typography fontSize='18px'>Continue with Apple</Typography>
-              </Box>
-            </Box>
-          </Button>
-
           <Space s24 />
           <Divider sx={{ margin: '20px 0' }} />
           <Space s24 />
