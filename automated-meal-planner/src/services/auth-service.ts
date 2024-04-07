@@ -4,7 +4,9 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   GoogleAuthProvider,
-  signInWithPopup
+  signInWithPopup,
+  browserSessionPersistence,
+  setPersistence
 } from 'firebase/auth';
 
 import {
@@ -32,13 +34,11 @@ export const signUp = async (email: string, username: string, password: string) 
     throw new Error('Username is already taken');
   }
   try {
+    await setPersistence(auth, browserSessionPersistence);
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const { user } = userCredential;
 
-    await setDoc(doc(db, 'usernames', user.uid), {
-      username,
-      email
-    });
+    await setDoc(doc(db, 'usernames', user.uid), { username, email });
 
     return user;
   } catch (error) {
@@ -48,6 +48,7 @@ export const signUp = async (email: string, username: string, password: string) 
 };
 
 export const googleSignIn = () => {
+  setPersistence(auth, browserSessionPersistence);
   const provider = new GoogleAuthProvider();
   provider.setCustomParameters({
     prompt: 'select_account',
@@ -58,7 +59,7 @@ export const googleSignIn = () => {
 const validateEmail = (rawEmail: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(rawEmail);
 
 export const login = async (usernameOrEmail: string, password: string) => {
-  // If the input passes the email regex, treat it as an email.
+  await setPersistence(auth, browserSessionPersistence);
   if (validateEmail(usernameOrEmail)) {
     try {
       return await signInWithEmailAndPassword(auth, usernameOrEmail, password);
@@ -67,7 +68,6 @@ export const login = async (usernameOrEmail: string, password: string) => {
       throw error;
     }
   } else {
-    // If the input does not pass as an email, treat it as a username.
     const usersRef = collection(db, 'usernames');
     const q = query(usersRef, where('username', '==', usernameOrEmail));
     const querySnapshot = await getDocs(q);
