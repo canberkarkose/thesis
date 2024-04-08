@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { useState } from 'react';
 import {
   Box, Typography, Button, TextField, Divider, IconButton, InputAdornment
@@ -102,7 +101,6 @@ export const Register = () => {
     googleSignIn().then((result) => {
       const { user } = result;
       if (user) {
-        console.log(user);
         navigate('/home');
       }
     }).catch((error) => {
