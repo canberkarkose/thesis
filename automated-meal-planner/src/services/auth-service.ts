@@ -47,8 +47,8 @@ export const signUp = async (email: string, username: string, password: string) 
   }
 };
 
-export const googleSignIn = () => {
-  setPersistence(auth, browserSessionPersistence);
+export const googleSignIn = async () => {
+  await setPersistence(auth, browserSessionPersistence);
   const provider = new GoogleAuthProvider();
   provider.setCustomParameters({
     prompt: 'select_account',
