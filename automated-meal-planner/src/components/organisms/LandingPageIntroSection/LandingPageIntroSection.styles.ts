@@ -7,9 +7,10 @@ import { ReactComponent as biryaniLogoSVG } from '../../../assets/biryani.svg';
 import { ReactComponent as burgerLogoSVG } from '../../../assets/burger.svg';
 import { ReactComponent as dietLogoSVG } from '../../../assets/diet.svg';
 import { ReactComponent as dinnerLogoSVG } from '../../../assets/dinner.svg';
-import { ReactComponent as fruitsLogoSVG } from '../../../assets/fruits.svg';
 import { ReactComponent as ramenLogoSVG } from '../../../assets/ramen.svg';
 import { ReactComponent as saladLogoSVG } from '../../../assets/salad.svg';
+import { ReactComponent as chickenLogoSVG } from '../../../assets/roasted-chicken.svg';
+import { ReactComponent as tacoLogoSVG } from '../../../assets/taco.svg';
 
 export const IntroContainer = styled(Box)`
   display: flex;
@@ -68,15 +69,19 @@ export const StyledDinner = styled(dinnerLogoSVG)`
   ${baseSvgStyle}
 `;
 
-export const StyledFruits = styled(fruitsLogoSVG)`
-  ${baseSvgStyle}
-`;
-
 export const StyledRamen = styled(ramenLogoSVG)`
   ${baseSvgStyle}
 `;
 
 export const StyledSalad = styled(saladLogoSVG)`
+  ${baseSvgStyle}
+`;
+
+export const StyledChicken = styled(chickenLogoSVG)`
+  ${baseSvgStyle}
+`;
+
+export const StyledTaco = styled(tacoLogoSVG)`
   ${baseSvgStyle}
 `;
 
@@ -135,4 +140,5 @@ export const AnimatedIcon = styled(Box)`
   width: 100px;
   height: 100px;
   animation: ${moveAcross} 6s linear;
+  animation-fill-mode: forwards;
 `;

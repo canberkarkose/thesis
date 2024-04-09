@@ -15,9 +15,10 @@ import {
   StyledBurger,
   StyledDiet,
   StyledDinner,
-  StyledFruits,
   StyledRamen,
-  StyledSalad
+  StyledSalad,
+  StyledChicken,
+  StyledTaco
 } from './LandingPageIntroSection.styles';
 
 const icons = [
@@ -25,9 +26,10 @@ const icons = [
   StyledBurger,
   StyledDiet,
   StyledDinner,
-  StyledFruits,
   StyledRamen,
-  StyledSalad
+  StyledSalad,
+  StyledChicken,
+  StyledTaco
 ];
 
 export const LandingPageIntroSection = () => {
