@@ -19,9 +19,9 @@ import { useNavigate } from 'react-router-dom';
 
 import { doc, updateDoc } from 'firebase/firestore';
 
-import { db } from '../../../../firebase-config';
+import { db } from '../../../firebase-config';
 
-import { useAuth } from '../../../../contexts/AuthContext';
+import { useAuth } from '../../../contexts/AuthContext';
 
 import { AccountDetailsContainer, ContentContainer, StyledButton } from './AccountDetails.styles';
 import { AccountDetailsStepOne } from './Steps/AccountDetailsStepOne';

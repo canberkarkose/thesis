@@ -2,16 +2,16 @@ import styled from '@emotion/styled';
 
 import { Button, ToggleButtonGroup } from '@mui/material';
 
-import { ReactComponent as GlutenFreeLogo } from '../../../../../assets/gluten-free.svg';
-import { ReactComponent as KetogenicLogo } from '../../../../../assets/ketogenic.svg';
-import { ReactComponent as VegetarianLogo } from '../../../../../assets/vegetarian.svg';
-import { ReactComponent as LactoVegetarianLogo } from '../../../../../assets/no-egg.svg';
-import { ReactComponent as OvoVegetarianLogo } from '../../../../../assets/dairy-free.svg';
-import { ReactComponent as VeganLogo } from '../../../../../assets/vegan.svg';
-import { ReactComponent as PescetarianLogo } from '../../../../../assets/seafood.svg';
-import { ReactComponent as PaleoLogo } from '../../../../../assets/paleo-diet.svg';
-import { ReactComponent as Whole30Logo } from '../../../../../assets/bread.svg';
-import { ReactComponent as AnythingLogo } from '../../../../../assets/all.svg';
+import { ReactComponent as GlutenFreeLogo } from '../../../../assets/gluten-free.svg';
+import { ReactComponent as KetogenicLogo } from '../../../../assets/ketogenic.svg';
+import { ReactComponent as VegetarianLogo } from '../../../../assets/vegetarian.svg';
+import { ReactComponent as LactoVegetarianLogo } from '../../../../assets/no-egg.svg';
+import { ReactComponent as OvoVegetarianLogo } from '../../../../assets/dairy-free.svg';
+import { ReactComponent as VeganLogo } from '../../../../assets/vegan.svg';
+import { ReactComponent as PescetarianLogo } from '../../../../assets/seafood.svg';
+import { ReactComponent as PaleoLogo } from '../../../../assets/paleo-diet.svg';
+import { ReactComponent as Whole30Logo } from '../../../../assets/bread.svg';
+import { ReactComponent as AnythingLogo } from '../../../../assets/all.svg';
 
 export const StepContentWrapper = styled.div`
   display: flex;

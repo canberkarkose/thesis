@@ -5,7 +5,7 @@ import { Login } from '../components/pages/Login/Login';
 import { Register } from '../components/pages/Register/Register';
 import { Home } from '../components/pages/Home/Home';
 
-import { AccountDetails } from '../components/pages/Register/AccountDetails/AccountDetails';
+import { AccountDetails } from '../components/pages/AccountDetails/AccountDetails';
 
 import { ResetPassword } from '../components/pages/Login/ForgotPassword/ResetPassword';
 
