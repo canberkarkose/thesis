@@ -18,7 +18,8 @@ import {
   StyledRamen,
   StyledSalad,
   StyledChicken,
-  StyledTaco
+  StyledTaco,
+  StyledTurkey
 } from './LandingPageIntroSection.styles';
 
 const icons = [
@@ -29,7 +30,8 @@ const icons = [
   StyledRamen,
   StyledSalad,
   StyledChicken,
-  StyledTaco
+  StyledTaco,
+  StyledTurkey
 ];
 
 export const LandingPageIntroSection = () => {
@@ -37,8 +39,6 @@ export const LandingPageIntroSection = () => {
 
   const handleAnimationEnd = () => {
     setCurrentIconIndex((currentIconIndex + 1) % icons.length);
-    // eslint-disable-next-line no-console
-    console.log('Animation ended, currentIconIndex:', currentIconIndex);
   };
 
   const CurrentIcon = icons[currentIconIndex];

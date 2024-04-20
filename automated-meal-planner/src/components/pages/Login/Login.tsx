@@ -1,17 +1,21 @@
-/* eslint-disable no-console */
 import {
-  Box, Typography, Button, TextField, Divider, IconButton, InputAdornment
+  Box, Typography, Button, TextField, Divider, IconButton, InputAdornment,
+  CircularProgress
 } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import GoogleIcon from '@mui/icons-material/Google';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+import { toast } from 'react-toastify';
 
 import { Space } from '../../atoms/Space/Space';
 
 import { login, googleSignIn } from '../../../services/auth-service';
+
+import { useAuth } from '../../../contexts/AuthContext';
 
 import { ContentContainer } from './Login.styles';
 
@@ -21,8 +25,31 @@ export const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [usernameOrEmailError, setUsernameOrEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const [loginError, setLoginError] = useState('');
+  const { user, loading } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loading && user) {
+      if (localStorage.getItem('justLoggedIn')) {
+        localStorage.removeItem('justLoggedIn');
+      } else {
+        setTimeout(() => {
+          toast.info('You are already logged in. Accessing another account? Please log out first.', { position: 'bottom-left' });
+        }, 1000);
+      }
+      setTimeout(() => {
+        navigate('/app/home');
+      }, 1000);
+    }
+  }, [user, loading, navigate]);
+
+  if (loading || user) {
+    return (
+      <Box display='flex' justifyContent='center' alignItems='center' minHeight='100vh'>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   const handleUsernameOrEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUsernameOrEmail(event.target.value);
@@ -45,19 +72,42 @@ export const Login = () => {
 
     try {
       await login(usernameOrEmail, password);
-      navigate('/home');
+      localStorage.setItem('justLoggedIn', 'true');
+      setTimeout(() => {
+        navigate('/app/home');
+      }, 1000);
     } catch (error) {
-      setLoginError('Login failed. Please check your credentials.');
       console.error('Login error:', error);
+      // Check if error is an instance of Error and contains expected properties
+      if (error instanceof Error && 'message' in error) {
+        const { message } = error;
+
+        if (message.includes('No user found')) {
+          toast.error('No user found with the given username or email.', { position: 'bottom-left' });
+        } else if (message.includes('invalid-credential')) {
+          toast.error('Invalid credentials.', { position: 'bottom-left' });
+        } else if (message.includes('too-many-requests')) {
+          toast.error('Too many failed login attempts. Please reset your password or try again later.', { position: 'bottom-left' });
+        } else {
+          toast.error(message, { position: 'bottom-left' });
+        }
+      } else {
+        toast.error('An unexpected error occurred.', { position: 'bottom-left' });
+      }
     }
   };
 
   const handleGoogleSignIn = async () => {
     try {
-      await googleSignIn();
-      navigate('/home');
+      const { isNewUser } = await googleSignIn();
+      localStorage.setItem('justLoggedIn', 'true');
+
+      setTimeout(() => {
+        navigate(isNewUser ? '/app/account-details' : '/app/home');
+      }, 1000);
     } catch (error) {
-      setLoginError('Google sign-in failed.');
+      console.error('Google sign-in failed:', error);
+      toast.error('Google sign-in failed. Please try again.', { position: 'bottom-left' });
     }
   };
 
@@ -88,6 +138,11 @@ export const Login = () => {
             label='Email or username'
             value={usernameOrEmail}
             onChange={handleUsernameOrEmailChange}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                handleSignIn();
+              }
+            }}
             error={!!usernameOrEmailError}
             helperText={usernameOrEmailError}
             sx={{ marginBottom: 2, mt: 3 }}
@@ -101,6 +156,11 @@ export const Login = () => {
             error={!!passwordError}
             helperText={passwordError}
             onChange={handlePasswordChange}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                handleSignIn();
+              }
+            }}
             InputProps={{
               endAdornment: (
                 <InputAdornment position='end'>
@@ -110,8 +170,19 @@ export const Login = () => {
                 </InputAdornment>
               ),
             }}
-            sx={{ marginBottom: 2 }}
           />
+          <Box sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            mb: 2,
+          }}
+          >
+            <Button color='primary' onClick={() => navigate('/forgot-password')} sx={{ textTransform: 'none' }}>
+              Forgot Password?
+            </Button>
+          </Box>
           <Button
             fullWidth
             variant='contained'
@@ -150,7 +221,6 @@ export const Login = () => {
               </Box>
             </Box>
           </Button>
-          {loginError && <Typography color='error'>{loginError}</Typography>}
           <Space s24 />
           <Divider sx={{ margin: '20px 0' }} />
           <Space s24 />

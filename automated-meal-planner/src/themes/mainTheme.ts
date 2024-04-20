@@ -12,7 +12,7 @@ export const mainTheme = createTheme({
       main: '#8BB196',
     },
     action: {
-      active: '#566D5F', // Carrot Orange
+      active: '#566D5F',
     },
     text: {
       primary: '#333333', // Dark Gray

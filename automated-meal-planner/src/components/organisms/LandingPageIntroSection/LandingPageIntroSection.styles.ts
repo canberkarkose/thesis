@@ -11,6 +11,7 @@ import { ReactComponent as ramenLogoSVG } from '../../../assets/ramen.svg';
 import { ReactComponent as saladLogoSVG } from '../../../assets/salad.svg';
 import { ReactComponent as chickenLogoSVG } from '../../../assets/roasted-chicken.svg';
 import { ReactComponent as tacoLogoSVG } from '../../../assets/taco.svg';
+import { ReactComponent as turkeyLogoSVG } from '../../../assets/christmas-dinner.svg';
 
 export const IntroContainer = styled(Box)`
   display: flex;
@@ -82,6 +83,10 @@ export const StyledChicken = styled(chickenLogoSVG)`
 `;
 
 export const StyledTaco = styled(tacoLogoSVG)`
+  ${baseSvgStyle}
+`;
+
+export const StyledTurkey = styled(turkeyLogoSVG)`
   ${baseSvgStyle}
 `;
 

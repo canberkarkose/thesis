@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  Box, Typography, Button, TextField, Divider, IconButton, InputAdornment
+  Box, Typography, Button, TextField, Divider, IconButton, InputAdornment, CircularProgress
 } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import GoogleIcon from '@mui/icons-material/Google';
@@ -11,8 +11,12 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 import { FirebaseError } from 'firebase/app';
 
+import { toast } from 'react-toastify';
+
 import { Space } from '../../atoms/Space/Space';
 import { googleSignIn, signUp } from '../../../services/auth-service';
+
+import { useAuth } from '../../../contexts/AuthContext';
 
 import { ContentContainer } from './Register.styles';
 
@@ -27,20 +31,49 @@ export const Register = () => {
   const [passwordInteracted, setPasswordInteracted] = useState(false);
   const [signUpError, setSignUpError] = useState('');
   const navigate = useNavigate();
+  const { user, loading } = useAuth();
 
-  const validateEmail = (rawEmail: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(rawEmail);
+  useEffect(() => {
+    if (loading) return;
+
+    if (user) {
+      const timeout = setTimeout(() => {
+        toast.info('You are already logged in. Accessing another account? Please log out first.', { position: 'bottom-left' });
+        navigate('/app/home');
+      }, 1000);
+      // eslint-disable-next-line consistent-return
+      return () => clearTimeout(timeout);
+    }
+  }, [user, loading, navigate]);
+
+  if (loading || user) {
+    return (
+      <Box display='flex' justifyContent='center' alignItems='center' minHeight='100vh'>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  const validateEmail = (rawEmail: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(decodeURIComponent(rawEmail));
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newEmail = event.target.value;
+    const newEmail = event.target.value.trim().toLowerCase();
     setEmail(newEmail);
-    setEmailError(validateEmail(newEmail) ? '' : 'Please enter a valid email address.');
+
+    if (newEmail.endsWith('@gmail.com')) {
+      setEmailError('Please sign up with Google below for Gmail accounts.');
+    } else if (!validateEmail(newEmail)) {
+      setEmailError('Please enter a valid email address.');
+    } else {
+      setEmailError('');
+    }
   };
 
   const validateUsername = (name: string) => name.length >= 3;
   const validatePassword = (pwd: string) => ({
     letter: /[a-zA-Z]/.test(pwd),
     numberOrSpecialChar: /[\d!@#$%^&*]/.test(pwd),
-    length: pwd.length >= 10,
+    length: pwd.length >= 7,
   });
 
   const passwordValidation = validatePassword(password);
@@ -49,6 +82,9 @@ export const Register = () => {
     const newUsername = event.target.value;
     setUsername(newUsername);
     setUsernameError(newUsername.length >= 3 && newUsername.length <= 50 ? '' : 'Username must be between 3 and 50 characters.');
+    if (validateEmail(newUsername)) {
+      setUsernameError('Username cannot be an email address.');
+    }
   };
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,7 +99,7 @@ export const Register = () => {
     if (validateEmail(email) && validateUsername(username) && password) {
       try {
         await signUp(email, username, password);
-        navigate('/home');
+        navigate('/app/account-details');
       } catch (error: unknown) {
         if (error instanceof Error) {
           if (error.message === 'Username is already taken') {
@@ -97,15 +133,21 @@ export const Register = () => {
     return isValid ? 'success.main' : 'error.main';
   };
 
-  const handleGoogleSignUp = () => {
-    googleSignIn().then((result) => {
-      const { user } = result;
-      if (user) {
-        navigate('/home');
+  const handleGoogleSignUp = async () => {
+    try {
+      const authResult = await googleSignIn();
+      const { user: signedInUser, isNewUser } = authResult;
+
+      if (signedInUser) {
+        if (isNewUser) {
+          navigate('/app/account-details');
+        } else {
+          navigate('/app/home');
+        }
       }
-    }).catch((error) => {
-      console.error(error);
-    });
+    } catch (error) {
+      toast.error('Failed to sign in with Google. Please try again.', { position: 'bottom-left' });
+    }
   };
 
   return (
@@ -124,6 +166,11 @@ export const Register = () => {
           label='Username *'
           value={username}
           onChange={handleUsernameChange}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') {
+              handleSignUp();
+            }
+          }}
           error={!!usernameError}
           helperText={usernameError}
           sx={{ marginBottom: 1 }}
@@ -134,6 +181,11 @@ export const Register = () => {
           label='Email address *'
           value={email}
           onChange={handleEmailChange}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') {
+              handleSignUp();
+            }
+          }}
           error={!!emailError}
           helperText={emailError}
           sx={{ marginBottom: 1 }}
@@ -146,6 +198,11 @@ export const Register = () => {
           label='Password'
           value={password}
           onChange={handlePasswordChange}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') {
+              handleSignUp();
+            }
+          }}
           error={passwordInteracted && (password.length === 0
               || !passwordValidation.letter
               || !passwordValidation.numberOrSpecialChar
@@ -221,7 +278,7 @@ export const Register = () => {
               {passwordInteracted && (passwordValidation.length ? <CheckCircleIcon sx={{ color: 'success.main', fontSize: 20 }} /> : <CancelIcon sx={{ color: 'error.main', fontSize: 20 }} />)}
             </Box>
             <Typography variant='subtitle2' color={getColor(passwordValidation.length)}>
-              10 characters
+              7 characters
             </Typography>
           </Box>
         </Box>

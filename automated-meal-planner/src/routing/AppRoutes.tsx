@@ -5,13 +5,24 @@ import { Login } from '../components/pages/Login/Login';
 import { Register } from '../components/pages/Register/Register';
 import { Home } from '../components/pages/Home/Home';
 
-import { ProtectedRoute } from './ProtectedRoute';
+import { AccountDetails } from '../components/pages/Register/AccountDetails/AccountDetails';
+
+import { ResetPassword } from '../components/pages/Login/ForgotPassword/ResetPassword';
+
+import { RequestReset } from '../components/pages/Login/ForgotPassword/RequestReset';
+
+import { AppRoute } from './AppRoute';
 
 export const AppRoutes = () => (
   <Routes>
     <Route path='/' element={<LandingPage />} />
     <Route path='/login' element={<Login />} />
     <Route path='/register' element={<Register />} />
-    <Route path='/home' element={<ProtectedRoute><Home /></ProtectedRoute>} />
+    <Route path='/forgot-password' element={<RequestReset />} />
+    <Route path='/reset-password' element={<ResetPassword />} />
+    <Route path='/app' element={<AppRoute />}>
+      <Route path='account-details' element={<AccountDetails />} />
+      <Route path='home' element={<Home />} />
+    </Route>
   </Routes>
 );
