@@ -44,6 +44,7 @@ export const LandingPageFeaturesSection = () => (
       ))}
     </Box>
     <Space s32 />
+    <Space s32 />
     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
       <Button variant='contained' size='large' color='primary' component={Link} to='/register'>
         Create your free account now!

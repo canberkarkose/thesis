@@ -1,5 +1,8 @@
+import { AppHeader } from '../../organisms/AppHeader/AppHeader';
+
 export const Home = () => (
-  <div>
+  <>
+    <AppHeader />
     <h1>Home</h1>
-  </div>
+  </>
 );

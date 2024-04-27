@@ -4,6 +4,27 @@ import { Typography } from '@mui/material';
 
 import backgroundImage from '../../../assets/background.png';
 
+import globalBackground from '../../../assets/globalBackground.png';
+
+export const GlobalBackground = styled.div`
+  background-image: url(${globalBackground});
+  background-size: cover;
+  background-position: center;
+  position: relative;
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.25);
+    z-index: 0;
+  }
+
+`;
+
 export const MainContentContainer = styled.div`
   width: 100%;
   max-width: 1000px;
