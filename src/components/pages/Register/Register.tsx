@@ -96,6 +96,7 @@ export const Register = () => {
 
   const handleSignUp = async () => {
     setSignUpAttempted(true);
+
     if (validateEmail(email) && validateUsername(username) && password) {
       try {
         await signUp(email, username, password);
@@ -109,7 +110,7 @@ export const Register = () => {
             if (firebaseError.code === 'auth/email-already-in-use') {
               setEmailError('Email is already in use.');
             } else {
-              setSignUpError('Failed to sign up. Please try again.');
+              setSignUpError(`Failed to sign up. ${firebaseError.message}`);
             }
           }
         } else {

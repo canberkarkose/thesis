@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -25,24 +24,53 @@ import { app, db } from '../firebase-config';
 
 const auth = getAuth(app);
 
-export const checkUsernameAvailability = async (username: string) => {
-  const usersRef = collection(db, 'users');
-  const q = query(usersRef, where('username', '==', username));
-  const querySnapshot = await getDocs(q);
-  return querySnapshot.empty;
+export const checkUsernameAvailabilityHttp = async (username: string): Promise<boolean> => {
+  try {
+    const response = await fetch('https://us-central1-bite-by-bite-thesis.cloudfunctions.net/checkUsernameAvailabilityHttp', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username }),
+    });
+    const data = await response.json();
+    return data.available;
+  } catch (error) {
+    console.error('Error checking username availability:', error);
+    throw error;
+  }
 };
 
-export const signUp = async (email: string, username: string, password: string) => {
-  if (!(await checkUsernameAvailability(username))) {
-    throw new Error('Username is already taken');
-  }
+export const createUserAndAuthenticate = async (email: string, password: string) => {
   try {
     await setPersistence(auth, browserSessionPersistence);
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    const { user } = userCredential;
+    return userCredential.user;
+  } catch (error) {
+    console.error('Authentication failed:', error);
+    throw error;
+  }
+};
 
-    await setDoc(doc(db, 'users', user.uid), { username, email, accountDetailsCompleted: false });
+export const setUserDocument = async (uid: string, username: string, email: string) => {
+  try {
+    await setDoc(doc(db, 'users', uid), {
+      uid, username, email, accountDetailsCompleted: false
+    });
+  } catch (error) {
+    console.error('Setting user document failed:', error);
+    throw error;
+  }
+};
 
+export const signUp = async (email: string, username: string, password: string) => {
+  if (!(await checkUsernameAvailabilityHttp(username))) {
+    throw new Error('Username is already taken');
+  }
+
+  try {
+    const user = await createUserAndAuthenticate(email, password);
+    await setUserDocument(user.uid, username, email);
     return user;
   } catch (error) {
     console.error('Sign up failed:', error);
@@ -71,7 +99,7 @@ export const googleSignIn = async () => {
 
   const existingUser = await checkIfUserExists(user.uid);
   if (username && !existingUser) {
-    const isUsernameAvailable = await checkUsernameAvailability(username);
+    const isUsernameAvailable = await checkUsernameAvailabilityHttp(username);
 
     if (username && !isUsernameAvailable) {
       username += Math.floor(Math.random() * 1000);
