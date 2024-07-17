@@ -2,16 +2,18 @@ import { Box } from '@mui/material';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
 
-import { ReactComponent as IntroPlateSVG } from '../../../assets/introPlate.svg';
-import { ReactComponent as biryaniLogoSVG } from '../../../assets/biryani.svg';
-import { ReactComponent as burgerLogoSVG } from '../../../assets/burger.svg';
-import { ReactComponent as dietLogoSVG } from '../../../assets/diet.svg';
-import { ReactComponent as dinnerLogoSVG } from '../../../assets/dinner.svg';
-import { ReactComponent as ramenLogoSVG } from '../../../assets/ramen.svg';
-import { ReactComponent as saladLogoSVG } from '../../../assets/salad.svg';
-import { ReactComponent as chickenLogoSVG } from '../../../assets/roasted-chicken.svg';
-import { ReactComponent as tacoLogoSVG } from '../../../assets/taco.svg';
-import { ReactComponent as turkeyLogoSVG } from '../../../assets/christmas-dinner.svg';
+import {
+  DinnerLogo,
+  RamenLogo,
+  SaladLogo,
+  ChristmasDinnerLogo,
+  BiryaniLogo,
+  BurgerLogo,
+  DietLogo,
+  IntroPlateLogo,
+  TacoLogo,
+  RoastedChickenLogo
+} from '@src/assets';
 
 export const IntroContainer = styled(Box)`
   display: flex;
@@ -50,47 +52,47 @@ export const ImageContainer = styled(Box)`
 `;
 
 const baseSvgStyle = `
-  width: 100px;
-  height: 100px;
+  width: 1px;
+  height: 1px;
 `;
 
-export const StyledBiryani = styled(biryaniLogoSVG)`
+export const StyledBiryani = styled(BiryaniLogo)`
   ${baseSvgStyle}
 `;
 
-export const StyledBurger = styled(burgerLogoSVG)`
+export const StyledBurger = styled(BurgerLogo)`
   ${baseSvgStyle}
 `;
 
-export const StyledDiet = styled(dietLogoSVG)`
+export const StyledDiet = styled(DietLogo)`
   ${baseSvgStyle}
 `;
 
-export const StyledDinner = styled(dinnerLogoSVG)`
+export const StyledDinner = styled(DinnerLogo)`
   ${baseSvgStyle}
 `;
 
-export const StyledRamen = styled(ramenLogoSVG)`
+export const StyledRamen = styled(RamenLogo)`
   ${baseSvgStyle}
 `;
 
-export const StyledSalad = styled(saladLogoSVG)`
+export const StyledSalad = styled(SaladLogo)`
   ${baseSvgStyle}
 `;
 
-export const StyledChicken = styled(chickenLogoSVG)`
+export const StyledChicken = styled(RoastedChickenLogo)`
   ${baseSvgStyle}
 `;
 
-export const StyledTaco = styled(tacoLogoSVG)`
+export const StyledTaco = styled(TacoLogo)`
   ${baseSvgStyle}
 `;
 
-export const StyledTurkey = styled(turkeyLogoSVG)`
+export const StyledTurkey = styled(ChristmasDinnerLogo)`
   ${baseSvgStyle}
 `;
 
-export const StyledIntroPlate = styled(IntroPlateSVG)`
+export const StyledIntroPlate = styled(IntroPlateLogo)`
   position: absolute;
   bottom: -20px;
   left: 50%;

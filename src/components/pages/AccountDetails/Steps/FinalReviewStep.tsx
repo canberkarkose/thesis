@@ -106,10 +106,11 @@ export const FinalReviewStep = (
       style={{
         color: '#666',
         fontStyle: 'italic',
-        textAlign: 'center'
+        textAlign: 'center',
       }}
     >
-      <InfoIcon color='primary' style={{ verticalAlign: 'middle' }} />
+      <InfoIcon color='primary' style={{ fontSize: '1.5rem', verticalAlign: 'middle', marginTop: '0.1%' }} />
+      {' '}
       Please confirm your selections.
       You can modify these preferences at any time from your profile settings.
     </Typography>

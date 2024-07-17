@@ -1,15 +1,12 @@
-import Box from '@mui/material/Box';
-
-import { Button, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 
 import { Link } from 'react-router-dom';
 
 import { Space } from '../../atoms/Space/Space';
 
 import { InfoCard } from '../../molecules/InfoCard/InfoCard';
-import { ReactComponent as StressFreeLogo } from '../../../assets/stressFree.svg';
-import { ReactComponent as PlateLogo } from '../../../assets/plate.svg';
-import { ReactComponent as ShoppingListLogo } from '../../../assets/shoppingList.svg';
+
+import { StressFreeLogo, PlateLogo, ShoppingListLogo } from '@src/assets';
 
 const features = [
   {
