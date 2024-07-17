@@ -1,7 +1,5 @@
 import { Link, Typography } from '@mui/material';
 
-import { ReactComponent as Logo } from '../../../assets/logo.svg';
-
 import {
   HeaderContainer,
   LogoContainer,
@@ -10,12 +8,14 @@ import {
   NavLink
 } from './LandingPageHeader.styles';
 
+import { BTBLogo } from '@src/assets';
+
 export const LandingPageHeader = () => (
   <HeaderContainer>
     <LogoTitleContainer>
       <Link href='/' style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
         <LogoContainer>
-          <Logo />
+          <BTBLogo />
         </LogoContainer>
         <Typography
           variant='h5'

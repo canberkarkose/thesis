@@ -1,12 +1,14 @@
+/* eslint-disable max-len */
+
 declare module '*.svg' {
-  import React = require('react');
+  import * as React from 'react';
 
-  export const ReactComponent: React.FunctionComponent<React.SVGProps<SVGSVGElement> &
-  { title?: string }>;
-  const src: string;
-  export default src;
+  const ReactComponent: React.FunctionComponent<
+    React.SVGProps<SVGSVGElement> & { title?: string }
+  >;
+
+  export default ReactComponent;
 }
-
 declare module '*.png' {
   import React = require('react');
 

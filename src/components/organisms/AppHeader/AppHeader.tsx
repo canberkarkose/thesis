@@ -7,11 +7,11 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { ReactComponent as Logo } from '../../../assets/logo.svg';
-
 import {
   HeaderContainer, LogoContainer, AccountActions, LogoText, HeaderContent
 } from './AppHeader.styles';
+
+import { BTBLogo } from '@src/assets';
 
 export const AppHeader = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -29,7 +29,7 @@ export const AppHeader = () => {
       <HeaderContent>
         <LogoContainer>
           <Link to='/app/home' style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-            <Logo />
+            <BTBLogo />
             <LogoText variant='h6'>Bite by Byte</LogoText>
           </Link>
         </LogoContainer>
