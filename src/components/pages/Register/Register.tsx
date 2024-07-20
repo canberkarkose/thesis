@@ -30,11 +30,12 @@ export const Register = () => {
   const [signUpAttempted, setSignUpAttempted] = useState(false);
   const [passwordInteracted, setPasswordInteracted] = useState(false);
   const [signUpError, setSignUpError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { user, loading } = useAuth();
+  const { user, loading: authLoading } = useAuth();
 
   useEffect(() => {
-    if (loading) return;
+    if (authLoading) return;
 
     if (user) {
       const timeout = setTimeout(() => {
@@ -44,9 +45,9 @@ export const Register = () => {
       // eslint-disable-next-line consistent-return
       return () => clearTimeout(timeout);
     }
-  }, [user, loading, navigate]);
+  }, [user, authLoading, navigate]);
 
-  if (loading || user) {
+  if (authLoading || user || loading) {
     return (
       <Box display='flex' justifyContent='center' alignItems='center' minHeight='100vh'>
         <CircularProgress />
@@ -98,10 +99,13 @@ export const Register = () => {
     setSignUpAttempted(true);
 
     if (validateEmail(email) && validateUsername(username) && password) {
+      setLoading(true);
       try {
         await signUp(email, username, password);
+        setLoading(false);
         navigate('/app/account-details');
       } catch (error: unknown) {
+        setLoading(false);
         if (error instanceof Error) {
           if (error.message === 'Username is already taken') {
             setUsernameError('Username is already taken.');
@@ -196,7 +200,7 @@ export const Register = () => {
           fullWidth
           type={showPassword ? 'text' : 'password'}
           variant='outlined'
-          label='Password'
+          label='Password *'
           value={password}
           onChange={handlePasswordChange}
           onKeyDown={(event) => {

@@ -130,6 +130,7 @@ export const ResetPassword = () => {
           type={showPassword ? 'text' : 'password'}
           variant='outlined'
           label='New Password'
+          error={changeAttempted && !passwordValidation.letter}
           value={newPassword}
           onChange={(e) => {
             setNewPassword(e.target.value);
@@ -149,6 +150,7 @@ export const ResetPassword = () => {
 
         <TextField
           fullWidth
+          error={changeAttempted && newPassword !== passwordConfirmation}
           type={showPassword ? 'text' : 'password'}
           variant='outlined'
           label='Confirm Password'

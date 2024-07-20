@@ -33,6 +33,7 @@ import { CuisinePreferences } from './Steps/types/Step.types';
 
 export const AccountDetails = () => {
   const [activeStep, setActiveStep] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [openModal, setOpenModal] = useState(true);
   const [diet, setDiet] = useState<string>('anything');
   const [intolerances, setIntolerances] = useState<string[]>([]);
@@ -77,8 +78,10 @@ export const AccountDetails = () => {
     };
 
     try {
+      setIsSubmitting(true);
       await updateDoc(doc(db, 'users', user.uid), userDetails);
       setTimeout(() => {
+        setIsSubmitting(false);
         toast.success('Account details updated successfully!', { position: 'bottom-left' });
         navigate('/app/home');
       }, 1000);
@@ -87,7 +90,7 @@ export const AccountDetails = () => {
     }
   };
 
-  if (loading) {
+  if (loading || isSubmitting) {
     return (
       <Box display='flex' justifyContent='center' alignItems='center' minHeight='100vh'>
         <CircularProgress />
