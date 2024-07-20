@@ -52,7 +52,11 @@ export const Login = () => {
   }
 
   const handleUsernameOrEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUsernameOrEmail(event.target.value);
+    const newEmailOrUsername = event.target.value;
+    setUsernameOrEmail(newEmailOrUsername);
+    if (newEmailOrUsername.endsWith('@gmail.com')) {
+      setUsernameOrEmailError('Please continue with Google below for Gmail accounts.');
+    }
     if (usernameOrEmailError) setUsernameOrEmailError('');
   };
 

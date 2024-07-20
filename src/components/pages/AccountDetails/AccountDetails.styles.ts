@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Button } from '@mui/material';
+import { Button, Box } from '@mui/material';
 
 export const AccountDetailsContainer = styled.div`
   height: 100vh;
@@ -35,6 +35,14 @@ export const ContentContainer = styled.div`
     height: auto;
     padding: 10px;
   }
+`;
+
+export const MenuContainer = styled(Box)`
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+  color: white;
 `;
 
 export const StyledButton = styled(Button)({
