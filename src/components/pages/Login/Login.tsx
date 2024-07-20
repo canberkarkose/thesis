@@ -183,7 +183,7 @@ export const Login = () => {
             mb: 2,
           }}
           >
-            <Button color='primary' onClick={() => navigate('/forgot-password')} sx={{ textTransform: 'none' }}>
+            <Button color='secondary' onClick={() => navigate('/forgot-password')} sx={{ textTransform: 'none' }}>
               Forgot Password?
             </Button>
           </Box>

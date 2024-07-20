@@ -72,7 +72,7 @@ export const AccountDetailsStepOne = (
             {diet.icon && <div style={{ marginRight: '10px' }}>{diet.icon}</div>}
             <div>
               <Typography variant='body1' component='div' style={{ fontWeight: '500' }}>{diet.label}</Typography>
-              <Typography variant='body2' component='div'>{diet.description}</Typography>
+              <Typography variant='body2' component='div' textTransform='none'>{diet.description}</Typography>
             </div>
           </ToggleButton>
         ))}
