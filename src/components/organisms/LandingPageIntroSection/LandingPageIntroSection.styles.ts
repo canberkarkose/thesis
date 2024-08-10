@@ -8,7 +8,6 @@ import {
   SaladLogo,
   ChristmasDinnerLogo,
   BiryaniLogo,
-  BurgerLogo,
   DietLogo,
   IntroPlateLogo,
   TacoLogo,
@@ -57,10 +56,6 @@ const baseSvgStyle = `
 `;
 
 export const StyledBiryani = styled(BiryaniLogo)`
-  ${baseSvgStyle}
-`;
-
-export const StyledBurger = styled(BurgerLogo)`
   ${baseSvgStyle}
 `;
 

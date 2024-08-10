@@ -39,6 +39,7 @@ export const Login = () => {
       }
       setTimeout(() => {
         navigate('/app/home');
+        toast.success('Successfully logged in.', { position: 'bottom-left' });
       }, 1000);
     }
   }, [user, loading, navigate]);

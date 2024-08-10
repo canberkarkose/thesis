@@ -3,7 +3,6 @@ export { AnythingLogo } from './AnythingLogo';
 export { BiryaniLogo } from './BiryaniLogo';
 export { BTBLogo } from './BTBLogo';
 export { Whole30Logo } from './BreadLogo';
-export { BurgerLogo } from './BurgerLogo';
 export { ChristmasDinnerLogo } from './ChristmasDinnerLogo';
 export { DairyFreeLogo } from './DairyFreeLogo';
 export { DietLogo } from './DietLogo';

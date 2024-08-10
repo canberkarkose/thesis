@@ -89,30 +89,41 @@ export const googleSignIn = async () => {
   await setPersistence(auth, browserSessionPersistence);
   const provider = new GoogleAuthProvider();
   provider.setCustomParameters({
-    prompt: 'select_account'
+    prompt: 'select_account',
   });
 
-  const result = await signInWithPopup(auth, provider);
-  const { user } = result;
-  const { email } = user;
-  let username = email?.split('@')[0];
+  try {
+    const result = await signInWithPopup(auth, provider);
+    const { user } = result;
+    const { email } = user;
+    let username = email?.split('@')[0];
 
-  const existingUser = await checkIfUserExists(user.uid);
-  if (username && !existingUser) {
-    const isUsernameAvailable = await checkUsernameAvailabilityHttp(username);
+    // Check if the user already exists in the database
+    const existingUser = await checkIfUserExists(user.uid);
 
-    if (username && !isUsernameAvailable) {
-      username += Math.floor(Math.random() * 1000);
+    // Handle new user creation
+    if (username && !existingUser) {
+      const isUsernameAvailable = await checkUsernameAvailabilityHttp(username);
+
+      // Generate a unique username if needed
+      if (!isUsernameAvailable) {
+        username += Math.floor(Math.random() * 1000);
+      }
+
+      // Save the new user data to the database
+      await setDoc(doc(db, 'users', user.uid), {
+        username,
+        email,
+        accountDetailsCompleted: false,
+      });
     }
 
-    await setDoc(doc(db, 'users', user.uid), {
-      username,
-      email,
-      accountDetailsCompleted: false
-    });
+    // Return user and new user status
+    return { user, isNewUser: !existingUser };
+  } catch (error) {
+    console.error('Google Sign-In Error:', error);
+    throw error;
   }
-
-  return { user, isNewUser: !existingUser };
 };
 
 const validateEmail = (rawEmail: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(rawEmail);

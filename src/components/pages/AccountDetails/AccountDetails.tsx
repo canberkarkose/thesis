@@ -9,26 +9,26 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
+  IconButton,
+  Menu,
+  MenuItem,
 } from '@mui/material';
-
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { toast } from 'react-toastify';
-
 import { useState } from 'react';
-
 import { useNavigate } from 'react-router-dom';
-
 import { doc, updateDoc } from 'firebase/firestore';
 
 import { db } from '../../../firebase-config';
-
 import { useAuth } from '../../../contexts/AuthContext';
 
-import { AccountDetailsContainer, ContentContainer, StyledButton } from './AccountDetails.styles';
+import {
+  AccountDetailsContainer, ContentContainer, MenuContainer, StyledButton
+} from './AccountDetails.styles';
 import { AccountDetailsStepOne } from './Steps/AccountDetailsStepOne';
 import { AccountDetailsStepTwo } from './Steps/AccountDetailsStepTwo';
 import { AccountDetailsStepThree } from './Steps/AccountDetailsStepThree';
 import { FinalReviewStep } from './Steps/FinalReviewStep';
-
 import { CuisinePreferences } from './Steps/types/Step.types';
 
 export const AccountDetails = () => {
@@ -44,6 +44,19 @@ export const AccountDetails = () => {
   const navigate = useNavigate();
   const steps = ['', '', ''];
   const { user, loading } = useAuth();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    handleClose();
+  };
 
   const updateCuisines = (cuisineDetails: CuisinePreferences): void => {
     setCuisinePreferences(cuisineDetails);
@@ -180,6 +193,35 @@ export const AccountDetails = () => {
         </DialogActions>
       </Dialog>
       <ContentContainer>
+        <MenuContainer>
+          <IconButton
+            size='large'
+            aria-label='account of current user'
+            aria-controls='menu-appbar'
+            aria-haspopup='true'
+            onClick={handleMenu}
+            color='inherit'
+          >
+            <AccountCircleIcon style={{ fontSize: '40px' }} />
+          </IconButton>
+          <Menu
+            id='menu-appbar'
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
+          </Menu>
+        </MenuContainer>
         <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 2 }}>
           {steps.map((label) => (
             <Step key={label}>

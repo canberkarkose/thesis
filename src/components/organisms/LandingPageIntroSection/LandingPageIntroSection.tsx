@@ -12,7 +12,6 @@ import {
   StyledIntroPlate,
   AnimatedIcon,
   StyledBiryani,
-  StyledBurger,
   StyledDiet,
   StyledDinner,
   StyledRamen,
@@ -24,7 +23,6 @@ import {
 
 const icons = [
   StyledBiryani,
-  StyledBurger,
   StyledDiet,
   StyledDinner,
   StyledRamen,
@@ -53,10 +51,10 @@ export const LandingPageIntroSection = () => {
           Personalize your diet, save time, and achieve your nutrition goals effortlessly.
         </Typography>
         <Space s16 />
-        <Button variant='contained' size='large' color='primary' component={Link} to='/register' sx={{ marginBottom: '10px' }}>
+        <Button variant='contained' size='large' color='primary' component={Link} to='/register' sx={{ marginBottom: '10px', marginLeft: '2px' }}>
           Sign up now
         </Button>
-        <Typography variant='subtitle2' sx={{ fontSize: '0.7rem', ml: 0.5 }}>
+        <Typography variant='subtitle2' sx={{ fontSize: '0.8rem' }}>
           Already a member?
           {' '}
           <Link to='/login'>Sign in</Link>

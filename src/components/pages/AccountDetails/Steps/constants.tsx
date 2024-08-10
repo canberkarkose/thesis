@@ -16,25 +16,19 @@ export const dietOptions = [
     value: 'anything', label: 'Anything', description: 'No specific dietary preference, adjustable anytime.', icon: <StyledAnything />
   },
   {
-    value: 'glutenFree', label: 'Gluten Free', description: 'Avoids gluten-containing grains and foods.', icon: <StyledGlutenFree />
-  },
-  {
-    value: 'ketogenic', label: 'Ketogenic', description: 'Low carb, high fat, focusing on protein.', icon: <StyledKetogenic />
-  },
-  {
     value: 'vegetarian', label: 'Vegetarian', description: 'Excludes meat and meat by-products.', icon: <StyledVegetarian />
-  },
-  {
-    value: 'lactoVegetarian', label: 'Lacto-Vegetarian', description: 'Vegetarian diet excluding eggs.', icon: <StyledLactoVegetarian />
-  },
-  {
-    value: 'ovoVegetarian', label: 'Ovo-Vegetarian', description: 'Vegetarian diet excluding dairy.', icon: <StyledOvoVegetarian />
   },
   {
     value: 'vegan', label: 'Vegan', description: 'Excludes meat, dairy, eggs, and honey.', icon: <StyledVegan />
   },
   {
+    value: 'glutenFree', label: 'Gluten Free', description: 'Avoids gluten-containing grains and foods.', icon: <StyledGlutenFree />
+  },
+  {
     value: 'pescetarian', label: 'Pescetarian', description: 'Excludes meat except fish and seafood.', icon: <StyledPescetarian />
+  },
+  {
+    value: 'ketogenic', label: 'Ketogenic', description: 'Low carb, high fat, focusing on protein.', icon: <StyledKetogenic />
   },
   {
     value: 'paleo', label: 'Paleo', description: 'Emphasizes whole foods; excludes grains, processed items.', icon: <StyledPaleo />
@@ -42,6 +36,12 @@ export const dietOptions = [
   {
     value: 'whole30', label: 'Whole30', description: 'Whole foods diet, excludes sugar and processed foods.', icon: <StyledWhole30 />
   },
+  {
+    value: 'lactoVegetarian', label: 'Lacto-Vegetarian', description: 'Vegetarian diet excluding eggs.', icon: <StyledLactoVegetarian />
+  },
+  {
+    value: 'ovoVegetarian', label: 'Ovo-Vegetarian', description: 'Vegetarian diet excluding dairy.', icon: <StyledOvoVegetarian />
+  }
 ];
 
 export const findDietLabel = (dietValue: string) => {

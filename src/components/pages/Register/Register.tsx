@@ -30,9 +30,13 @@ export const Register = () => {
   const [signUpAttempted, setSignUpAttempted] = useState(false);
   const [passwordInteracted, setPasswordInteracted] = useState(false);
   const [signUpError, setSignUpError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
+
+  if (signUpError) {
+    toast.error(signUpError, { position: 'bottom-left' });
+  }
 
   useEffect(() => {
     if (authLoading) return;
@@ -47,7 +51,7 @@ export const Register = () => {
     }
   }, [user, authLoading, navigate]);
 
-  if (authLoading || user || loading) {
+  if (authLoading || user || isLoading) {
     return (
       <Box display='flex' justifyContent='center' alignItems='center' minHeight='100vh'>
         <CircularProgress />
@@ -99,20 +103,20 @@ export const Register = () => {
     setSignUpAttempted(true);
 
     if (validateEmail(email) && validateUsername(username) && password) {
-      setLoading(true);
+      setIsLoading(true);
       try {
         await signUp(email, username, password);
-        setLoading(false);
+        setIsLoading(false);
         navigate('/app/account-details');
       } catch (error: unknown) {
-        setLoading(false);
+        setIsLoading(false);
         if (error instanceof Error) {
           if (error.message === 'Username is already taken') {
-            setUsernameError('Username is already taken.');
+            setUsernameError('Username is already taken. Please choose another.');
           } else {
             const firebaseError = error as FirebaseError;
             if (firebaseError.code === 'auth/email-already-in-use') {
-              setEmailError('Email is already in use.');
+              setEmailError('Email is already in use. Please log in or use a different email address.');
             } else {
               setSignUpError(`Failed to sign up. ${firebaseError.message}`);
             }
@@ -140,9 +144,12 @@ export const Register = () => {
 
   const handleGoogleSignUp = async () => {
     try {
+      // Show loading spinner
+      setIsLoading(true);
+      // Await Google Sign-In result
       const authResult = await googleSignIn();
       const { user: signedInUser, isNewUser } = authResult;
-
+      // Ensure the user is signed in before navigating
       if (signedInUser) {
         if (isNewUser) {
           navigate('/app/account-details');
@@ -151,7 +158,13 @@ export const Register = () => {
         }
       }
     } catch (error) {
-      toast.error('Failed to sign in with Google. Please try again.', { position: 'bottom-left' });
+      // Handle errors and provide user feedback
+      toast.error('Failed to sign in with Google. Please try again.', {
+        position: 'bottom-left',
+      });
+    } finally {
+      // Always set loading to false after attempt
+      setIsLoading(false);
     }
   };
 
@@ -287,11 +300,6 @@ export const Register = () => {
             </Typography>
           </Box>
         </Box>
-        {signUpError && (
-        <Typography color='error' sx={{ textAlign: 'center', mb: 2 }}>
-          {signUpError}
-        </Typography>
-        )}
         <Button
           fullWidth
           variant='contained'
