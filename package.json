@@ -33,7 +33,7 @@
     "build": "vite build",
     "test": "react-scripts test",
     "eject": "vite eject",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'"
   },
   "browserslist": {
     "production": [
