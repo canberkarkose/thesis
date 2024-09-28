@@ -159,6 +159,7 @@ export const Register = () => {
       }
     } catch (error) {
       // Handle errors and provide user feedback
+      console.error(error);
       toast.error('Failed to sign in with Google. Please try again.', {
         position: 'bottom-left',
       });

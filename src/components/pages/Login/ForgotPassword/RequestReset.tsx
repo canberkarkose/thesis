@@ -52,6 +52,7 @@ export const RequestReset = () => {
       toast.info('Password reset email sent. Please check your inbox.', { position: 'bottom-left' });
       navigate('/login');
     } catch (error) {
+      console.error(error);
       toast.error('Failed to send reset email. Please try again.', { position: 'bottom-left' });
     }
   };

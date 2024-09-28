@@ -2,9 +2,9 @@ import styled from '@emotion/styled';
 
 import { Typography } from '@mui/material';
 
-import backgroundImage from '../../../assets/background.png';
+import backgroundImage from '@src/assets/background.png';
 
-import globalBackground from '../../../assets/globalBackground.png';
+import globalBackground from '@src/assets/globalBackground.png';
 
 export const GlobalBackground = styled.div`
   background-image: url(${globalBackground});
