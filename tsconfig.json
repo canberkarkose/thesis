@@ -21,6 +21,6 @@
       "@src/*": ["./src/*"]
     },
   },
-  "include": ["src/**/*"],                           /* Specify an array of glob patterns that match files to be included in compilation. */
+  "include": ["src/**/*", "declarations.t.ts"],                           /* Specify an array of glob patterns that match files to be included in compilation. */
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.test.tsx"]                /* Specify an array of glob patterns that match files to be excluded from compilation. */
 }

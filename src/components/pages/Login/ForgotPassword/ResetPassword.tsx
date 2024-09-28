@@ -104,6 +104,7 @@ export const ResetPassword = () => {
       toast.success('Your password has been reset successfully.', { position: 'bottom-left' });
       navigate('/login');
     } catch (error) {
+      console.error(error);
       toast.error('Failed to reset password. Please try again.', { position: 'bottom-left' });
     }
   };
