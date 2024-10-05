@@ -6,6 +6,8 @@ import {
   Grid
 } from '@mui/material';
 
+import { useTheme } from '@mui/material/styles';
+
 import { StepContentWrapper } from './Steps.styles';
 
 import { cuisines } from './constants';
@@ -27,6 +29,7 @@ export const AccountDetailsStepThree = (
     cuisinePreferences
   }: AccountDetailsStepThreeProps
 ) => {
+  const theme = useTheme();
   const [includedCuisines, setIncludedCuisines] = useState<string[]>([]);
   const [excludedCuisines, setExcludedCuisines] = useState<string[]>([]);
 
@@ -94,7 +97,7 @@ export const AccountDetailsStepThree = (
                   variant={includedCuisines.includes(cuisine) ? 'contained' : 'outlined'}
                   color='secondary'
                   style={{
-                    color: includedCuisines.includes(cuisine) ? 'white' : '#666666',
+                    color: includedCuisines.includes(cuisine) ? 'white' : theme.palette.secondary.main,
                     borderRadius: 5,
                     border: '0.5px solid rgba(0, 0, 0, 1)',
                   }}
@@ -107,7 +110,7 @@ export const AccountDetailsStepThree = (
                   variant={excludedCuisines.includes(cuisine) ? 'contained' : 'outlined'}
                   color='secondary'
                   style={{
-                    color: excludedCuisines.includes(cuisine) ? 'white' : '#666666',
+                    color: excludedCuisines.includes(cuisine) ? 'white' : theme.palette.secondary.main,
                     backgroundColor: excludedCuisines.includes(cuisine) ? '#95190C' : '',
                     borderRadius: 5,
                     border: '0.5px solid rgba(0, 0, 0, 1)',

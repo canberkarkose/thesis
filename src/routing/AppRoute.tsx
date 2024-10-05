@@ -9,6 +9,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { db } from '../firebase-config';
 import { useAuth } from '../contexts/AuthContext';
 
+import { AppLayout } from '@components/templates/AppLayout';
+
 export const AppRoute = () => {
   const { user, loading } = useAuth();
   const [isInitialCheckComplete, setIsInitialCheckComplete] = useState(false);
@@ -40,7 +42,7 @@ export const AppRoute = () => {
               }, 1000);
             } else if (accountDetailsCompleted && location.pathname.includes('/account-details')) {
               setTimeout(() => {
-                navigate('/app/home');
+                navigate('/app/dashboard');
                 toast.info('Your account details are already configured. Visit profile settings to make changes.', { position: 'bottom-left' });
               }, 1000);
             } else {
@@ -72,5 +74,15 @@ export const AppRoute = () => {
     );
   }
 
+  const routesWithoutLayout = ['/app/account-details'];
+  const shouldShowLayout = !routesWithoutLayout.includes(location.pathname);
+
+  if (shouldShowLayout) {
+    return (
+      <AppLayout>
+        <Outlet />
+      </AppLayout>
+    );
+  }
   return <Outlet />;
 };

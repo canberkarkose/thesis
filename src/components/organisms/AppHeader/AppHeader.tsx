@@ -28,7 +28,7 @@ export const AppHeader = () => {
     <HeaderContainer>
       <HeaderContent>
         <LogoContainer>
-          <Link to='/app/home' style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+          <Link to='/app/dashboard' style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
             <BTBLogo />
             <LogoText variant='h6'>Bite by Byte</LogoText>
           </Link>
