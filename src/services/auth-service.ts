@@ -7,7 +7,8 @@ import {
   browserSessionPersistence,
   setPersistence,
   sendPasswordResetEmail,
-  confirmPasswordReset
+  confirmPasswordReset,
+  signOut
 } from 'firebase/auth';
 
 import {
@@ -174,6 +175,15 @@ export const confirmPassword = async (oobCode: string, newPassword: string) => {
     await confirmPasswordReset(auth, oobCode, newPassword);
   } catch (error) {
     console.error('Error confirming new password:', error);
+    throw error;
+  }
+};
+
+export const logout = async () => {
+  try {
+    await signOut(auth);
+  } catch (error) {
+    console.error('Error signing out:', error);
     throw error;
   }
 };

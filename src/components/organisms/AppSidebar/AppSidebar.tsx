@@ -22,7 +22,7 @@ interface AppSidebarProps {
   onHoverChange: (isHovered: boolean) => void;
 }
 
-export const AppSidebar: React.FC<AppSidebarProps> = ({ onHoverChange }: AppSidebarProps) => {
+export const AppSidebar = ({ onHoverChange }: AppSidebarProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);

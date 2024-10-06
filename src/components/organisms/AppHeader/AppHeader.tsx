@@ -5,15 +5,19 @@ import {
 } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+
+import { toast } from 'react-toastify';
 
 import {
   HeaderContainer, LogoContainer, AccountActions, LogoText, HeaderContent
 } from './AppHeader.styles';
 
 import { BTBLogo } from '@src/assets';
+import { logout } from '@src/services/auth-service';
 
 export const AppHeader = () => {
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -22,6 +26,17 @@ export const AppHeader = () => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      handleClose();
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+      toast.error('Logout failed. Please try again.');
+    }
   };
 
   return (
@@ -62,7 +77,7 @@ export const AppHeader = () => {
           >
             <MenuItem onClick={handleClose}>Profile</MenuItem>
             <MenuItem onClick={handleClose}>Account</MenuItem>
-            <MenuItem onClick={handleClose}>Logout</MenuItem>
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Menu>
         </AccountActions>
       </HeaderContent>

@@ -9,7 +9,7 @@ interface AppLayoutProps {
   children: React.ReactNode;
 }
 
-export const AppLayout: React.FC<AppLayoutProps> = ({ children }: AppLayoutProps) => {
+export const AppLayout = ({ children }: AppLayoutProps) => {
   const [isSidebarHovered, setIsSidebarHovered] = useState(false);
 
   const handleSidebarHoverChange = (isHovered: boolean) => {

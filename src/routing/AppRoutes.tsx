@@ -24,7 +24,7 @@ export const AppRoutes = () => (
     <Route path='/register' element={<Register />} />
     <Route path='/forgot-password' element={<RequestReset />} />
     <Route path='/reset-password' element={<ResetPassword />} />
-    <Route path='/app' element={<AppRoute />}>
+    <Route path='/app/*' element={<AppRoute />}>
       <Route path='account-details' element={<AccountDetails />} />
       <Route path='dashboard' element={<Dashboard />} />
       <Route path='grocery-list' element={<GroceryList />} />
