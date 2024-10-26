@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import GoogleIcon from '@mui/icons-material/Google';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import { useEffect, useState } from 'react';
 
@@ -18,6 +19,8 @@ import { login, googleSignIn } from '../../../services/auth-service';
 import { useAuth } from '../../../contexts/AuthContext';
 
 import { ContentContainer } from './Login.styles';
+
+import { CustomIconButtonAndText } from '@components/molecules/CustomIconButtonAndText/CustomIconButtonAndText';
 
 export const Login = () => {
   const [usernameOrEmail, setUsernameOrEmail] = useState('');
@@ -118,21 +121,20 @@ export const Login = () => {
 
   return (
     <ContentContainer>
-      <Box sx={{
-        padding: 3,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-      }}
-      >
-        <Box sx={{
-          display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 2, position: 'relative', width: '100%'
+      <Box
+        sx={{
+          padding: 3,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
         }}
-        >
-          <Typography variant='h4' sx={{ fontWeight: 'bold', textAlign: 'center' }}>
-            Sign in to Bite by Byte
-          </Typography>
-        </Box>
+      >
+        <CustomIconButtonAndText
+          icon={<ArrowBackIcon />}
+          text='Sign in to Bite by Byte'
+          onIconClick={() => navigate('/')}
+          tooltip='Go back to home'
+        />
         <Box sx={{
           width: '100%', minHeight: 'calc(100vh - 400px)', display: 'flex', flexDirection: 'column', justifyContent: 'center'
         }}
@@ -166,14 +168,16 @@ export const Login = () => {
                 handleSignIn();
               }
             }}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position='end'>
-                  <IconButton onClick={togglePasswordVisibility}>
-                    {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                  </IconButton>
-                </InputAdornment>
-              ),
+            slotProps={{
+              input: {
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <IconButton onClick={togglePasswordVisibility}>
+                      {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }
             }}
           />
           <Box sx={{
