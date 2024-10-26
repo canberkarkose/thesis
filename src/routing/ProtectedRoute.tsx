@@ -1,34 +1,34 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, Outlet, useLocation } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Box } from '@mui/material';
-import 'react-toastify/dist/ReactToastify.css';
 
 import { db } from '../firebase-config';
 import { useAuth } from '../contexts/AuthContext';
 
-import { AppLayout } from '@components/templates/AppLayout';
+import { usePrevious } from '@src/hooks/usePrevious';
 
-export const AppRoute = () => {
+export const ProtectedRoute = () => {
   const { user, loading } = useAuth();
   const [isInitialCheckComplete, setIsInitialCheckComplete] = useState(false);
+  const [shouldRedirect, setShouldRedirect] = useState('');
   const location = useLocation();
-  const navigate = useNavigate();
+
+  const previousUser = usePrevious(user);
 
   useEffect(() => {
-    window.onpopstate = () => {
-      setIsInitialCheckComplete(false);
-      window.location.reload();
-    };
     if (loading) return;
 
     if (!user) {
-      setTimeout(() => {
+      // Check if the user has just logged out
+      if (previousUser && !user) {
+        toast.info('You have been logged out.', { position: 'bottom-left' });
+      } else {
         toast.error('Please log in to access this page.', { position: 'bottom-left' });
-        navigate('/login');
-      }, 1000);
+      }
+      setShouldRedirect('/login');
     } else {
       const fetchUserDetails = async () => {
         try {
@@ -36,15 +36,17 @@ export const AppRoute = () => {
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
             const { accountDetailsCompleted } = docSnap.data();
-            if (!accountDetailsCompleted && !location.pathname.includes('/account-details')) {
-              setTimeout(() => {
-                navigate('/app/account-details');
-              }, 1000);
-            } else if (accountDetailsCompleted && location.pathname.includes('/account-details')) {
-              setTimeout(() => {
-                navigate('/app/dashboard');
-                toast.info('Your account details are already configured. Visit profile settings to make changes.', { position: 'bottom-left' });
-              }, 1000);
+
+            if (!accountDetailsCompleted && !location.pathname.includes('/app/account-details')) {
+              // Redirect to account details page if not completed
+              setShouldRedirect('/app/account-details');
+            } else if (accountDetailsCompleted && location.pathname.includes('/app/account-details')) {
+              // Redirect to dashboard if account details are already completed
+              toast.info(
+                'Your account details are already configured. Visit profile settings to make changes.',
+                { position: 'bottom-left' }
+              );
+              setShouldRedirect('/app/dashboard');
             } else {
               setIsInitialCheckComplete(true);
             }
@@ -59,7 +61,7 @@ export const AppRoute = () => {
       };
       fetchUserDetails();
     }
-  }, [user, loading, location.pathname, navigate]);
+  }, [user, loading, location.pathname]);
 
   if (loading || !isInitialCheckComplete) {
     return (
@@ -74,15 +76,9 @@ export const AppRoute = () => {
     );
   }
 
-  const routesWithoutLayout = ['/app/account-details'];
-  const shouldShowLayout = !routesWithoutLayout.includes(location.pathname);
-
-  if (shouldShowLayout) {
-    return (
-      <AppLayout>
-        <Outlet />
-      </AppLayout>
-    );
+  if (shouldRedirect) {
+    return <Navigate to={shouldRedirect} replace />;
   }
+
   return <Outlet />;
 };

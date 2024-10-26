@@ -1,5 +1,3 @@
-// src/components/AppSidebar/AppSidebar.tsx
-
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 

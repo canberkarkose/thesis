@@ -1,5 +1,3 @@
-// src/components/AppSidebar/AppSidebar.styles.ts
-
 import styled from '@emotion/styled';
 import { Button } from '@mui/material';
 
@@ -14,10 +12,10 @@ interface SidebarItemProps {
 
 export const SidebarContainer = styled.div<SidebarContainerProps>`
   width: ${(props) => (props.isHovered ? '250px' : '70px')};
-  height: calc(100vh - 100px); /* Adjust based on header height */
+  height: calc(100vh - 100px);
   background-color: #3C4C3D;
   position: fixed;
-  top: 100px; /* Height of your header */
+  top: 100px;
   left: 0;
   transition: width 0.3s ease;
   overflow: hidden;
@@ -39,13 +37,12 @@ export const SidebarItemButton = styled(Button)<SidebarItemProps>`
   width: 100%;
   color: white !important;
   text-transform: none;
-  padding: 15px 15px; /* Increase padding for larger click area */
+  padding: 15px;
   transition: background-color 0.2s;
   background-color: ${(props) => (props.selected ? '#2E3B2F' : 'transparent')};
   border-radius: 1;
-
   &:hover {
-    background-color: #2E3B2F;
+    background-color: #334134;
   }
 `;
 
@@ -54,10 +51,8 @@ export const SidebarIcon = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-
-  /* Increase the icon size */
   svg {
-    font-size: 32px; /* Adjust size as needed */
+    font-size: 32px;
   }
 `;
 
@@ -70,5 +65,5 @@ export const SidebarText = styled.span<SidebarTextProps>`
   white-space: nowrap;
   opacity: ${(props) => (props.isHovered ? 1 : 0)};
   transition: opacity 0.3s ease;
-  font-size: 18px; /* Increase text size */
+  font-size: 18px;
 `;

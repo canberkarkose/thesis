@@ -1,15 +1,12 @@
 import { useState } from 'react';
+import { Outlet } from 'react-router-dom';
 
 import { MainContainer, ContentArea } from './AppLayout.styles';
 
 import { AppHeader } from '@components/organisms/AppHeader/AppHeader';
 import { AppSidebar } from '@components/organisms/AppSidebar/AppSidebar';
 
-interface AppLayoutProps {
-  children: React.ReactNode;
-}
-
-export const AppLayout = ({ children }: AppLayoutProps) => {
+export const AppLayout = () => {
   const [isSidebarHovered, setIsSidebarHovered] = useState(false);
 
   const handleSidebarHoverChange = (isHovered: boolean) => {
@@ -22,7 +19,7 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
       <MainContainer>
         <AppSidebar onHoverChange={handleSidebarHoverChange} />
         <ContentArea isSidebarHovered={isSidebarHovered}>
-          {children}
+          <Outlet />
         </ContentArea>
       </MainContainer>
     </>
