@@ -38,7 +38,7 @@ export const Login = () => {
         }, 1000);
       }
       setTimeout(() => {
-        navigate('/app/home');
+        navigate('/app/dashboard');
         toast.success('Successfully logged in.', { position: 'bottom-left' });
       }, 1000);
     }
@@ -79,7 +79,7 @@ export const Login = () => {
       await login(usernameOrEmail, password);
       localStorage.setItem('justLoggedIn', 'true');
       setTimeout(() => {
-        navigate('/app/home');
+        navigate('/app/dashboard');
       }, 1000);
     } catch (error) {
       console.error('Login error:', error);
@@ -108,7 +108,7 @@ export const Login = () => {
       localStorage.setItem('justLoggedIn', 'true');
 
       setTimeout(() => {
-        navigate(isNewUser ? '/app/account-details' : '/app/home');
+        navigate(isNewUser ? '/app/account-details' : '/app/dashboard');
       }, 1000);
     } catch (error) {
       console.error('Google sign-in failed:', error);

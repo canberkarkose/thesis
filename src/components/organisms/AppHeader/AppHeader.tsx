@@ -5,15 +5,19 @@ import {
 } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+
+import { toast } from 'react-toastify';
 
 import {
   HeaderContainer, LogoContainer, AccountActions, LogoText, HeaderContent
 } from './AppHeader.styles';
 
 import { BTBLogo } from '@src/assets';
+import { logout } from '@src/services/auth-service';
 
 export const AppHeader = () => {
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -24,11 +28,22 @@ export const AppHeader = () => {
     setAnchorEl(null);
   };
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+      handleClose();
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+      toast.error('Logout failed. Please try again.');
+    }
+  };
+
   return (
     <HeaderContainer>
       <HeaderContent>
         <LogoContainer>
-          <Link to='/app/home' style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+          <Link to='/app/dashboard' style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
             <BTBLogo />
             <LogoText variant='h6'>Bite by Byte</LogoText>
           </Link>
@@ -62,7 +77,7 @@ export const AppHeader = () => {
           >
             <MenuItem onClick={handleClose}>Profile</MenuItem>
             <MenuItem onClick={handleClose}>Account</MenuItem>
-            <MenuItem onClick={handleClose}>Logout</MenuItem>
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Menu>
         </AccountActions>
       </HeaderContent>

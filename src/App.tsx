@@ -7,6 +7,7 @@ import { AppRoutes } from './routing/AppRoutes.tsx';
 import { mainTheme } from './themes/mainTheme.ts';
 import { PageWrapper } from './App.styles.ts';
 import { AuthProvider } from './contexts/AuthContext.tsx';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (

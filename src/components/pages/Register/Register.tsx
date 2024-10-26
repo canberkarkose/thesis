@@ -44,7 +44,7 @@ export const Register = () => {
     if (user) {
       const timeout = setTimeout(() => {
         toast.info('You are already logged in. Accessing another account? Please log out first.', { position: 'bottom-left' });
-        navigate('/app/home');
+        navigate('/app/dashboard');
       }, 1000);
       // eslint-disable-next-line consistent-return
       return () => clearTimeout(timeout);
@@ -154,7 +154,7 @@ export const Register = () => {
         if (isNewUser) {
           navigate('/app/account-details');
         } else {
-          navigate('/app/home');
+          navigate('/app/dashboard');
         }
       }
     } catch (error) {

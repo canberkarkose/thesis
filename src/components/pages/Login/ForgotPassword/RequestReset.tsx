@@ -29,7 +29,7 @@ export const RequestReset = () => {
         localStorage.removeItem('justLoggedIn');
       }
       setTimeout(() => {
-        navigate('/app/home');
+        navigate('/app/dashboard');
       }, 1000);
     }
   }, [user, loading, navigate]);

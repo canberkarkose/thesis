@@ -96,7 +96,7 @@ export const AccountDetails = () => {
       setTimeout(() => {
         setIsSubmitting(false);
         toast.success('Account details updated successfully!', { position: 'bottom-left' });
-        navigate('/app/home');
+        navigate('/app/dashboard');
       }, 1000);
     } catch (error) {
       console.error('Failed to update user details:', error);

@@ -44,7 +44,7 @@ export const ResetPassword = () => {
       }
       setTimeout(() => {
         setRedirected(true);
-        navigate('/app/home');
+        navigate('/app/dashboard');
       }, 1000);
     }
   }, [user, loading, navigate]);
