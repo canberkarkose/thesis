@@ -36,14 +36,14 @@ export const Login = () => {
       if (localStorage.getItem('justLoggedIn')) {
         localStorage.removeItem('justLoggedIn');
       } else {
-        setTimeout(() => {
-          toast.info('You are already logged in. Accessing another account? Please log out first.', { position: 'bottom-left' });
-        }, 1000);
+        toast.info('You are already logged in. Accessing another account? Please log out first.', { position: 'bottom-left' });
       }
-      setTimeout(() => {
+      if (user.accountDetailsCompleted) {
         navigate('/app/dashboard');
         toast.success('Successfully logged in.', { position: 'bottom-left' });
-      }, 1000);
+      } else {
+        navigate('/app/account-details');
+      }
     }
   }, [user, loading, navigate]);
 
@@ -107,8 +107,8 @@ export const Login = () => {
 
   const handleGoogleSignIn = async () => {
     try {
-      const { isNewUser } = await googleSignIn();
       localStorage.setItem('justLoggedIn', 'true');
+      const { isNewUser } = await googleSignIn();
 
       setTimeout(() => {
         navigate(isNewUser ? '/app/account-details' : '/app/dashboard');
@@ -225,7 +225,7 @@ export const Login = () => {
             }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <GoogleIcon sx={{ mr: 7, color: 'red' }} />
+                <GoogleIcon sx={{ mr: 11.5, color: 'red' }} />
                 <Typography fontSize='18px'>Continue with Google</Typography>
               </Box>
             </Box>

@@ -6,12 +6,17 @@ import {
   ReactNode,
   useMemo
 } from 'react';
-import { User, getAuth, onAuthStateChanged } from 'firebase/auth';
+import { User as FirebaseUser, getAuth, onAuthStateChanged } from 'firebase/auth';
 
 import { app } from '../firebase-config';
 
+interface CustomUser extends FirebaseUser {
+  accountDetailsCompleted?: boolean;
+  username?: string;
+}
+
 interface AuthContextType {
-  user: User | null;
+  user: CustomUser | null;
   loading: boolean;
 }
 
@@ -22,7 +27,7 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<CustomUser | null>(null);
   const [loading, setLoading] = useState(true);
   const auth = getAuth(app);
 

@@ -45,12 +45,19 @@ export const Register = () => {
     if (authLoading) return;
 
     if (user) {
-      const timeout = setTimeout(() => {
+      if (localStorage.getItem('justLoggedIn')) {
+        localStorage.removeItem('justLoggedIn');
+      } else {
         toast.info('You are already logged in. Accessing another account? Please log out first.', { position: 'bottom-left' });
-        navigate('/app/dashboard');
+      }
+      setTimeout(() => {
+        if (user.accountDetailsCompleted) {
+          navigate('/app/dashboard');
+          toast.success('Successfully logged in.', { position: 'bottom-left' });
+        } else {
+          navigate('/app/account-details');
+        }
       }, 1000);
-      // eslint-disable-next-line consistent-return
-      return () => clearTimeout(timeout);
     }
   }, [user, authLoading, navigate]);
 
@@ -108,6 +115,7 @@ export const Register = () => {
     if (validateEmail(email) && validateUsername(username) && password) {
       setIsLoading(true);
       try {
+        localStorage.setItem('justLoggedIn', 'true');
         await signUp(email, username, password);
         setIsLoading(false);
         navigate('/app/account-details');
@@ -147,6 +155,7 @@ export const Register = () => {
 
   const handleGoogleSignUp = async () => {
     try {
+      localStorage.setItem('justLoggedIn', 'true');
       // Show loading spinner
       setIsLoading(true);
       // Await Google Sign-In result

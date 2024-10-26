@@ -31,7 +31,11 @@ export const RequestReset = () => {
         localStorage.removeItem('justLoggedIn');
       }
       setTimeout(() => {
-        navigate('/app/dashboard');
+        if (user.accountDetailsCompleted) {
+          navigate('/app/dashboard');
+        } else {
+          navigate('/app/account-details');
+        }
       }, 1000);
     }
   }, [user, loading, navigate]);
