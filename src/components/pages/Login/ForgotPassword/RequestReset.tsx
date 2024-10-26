@@ -4,8 +4,8 @@ import {
   Button,
   CircularProgress,
   TextField,
-  Typography
 } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -13,6 +13,8 @@ import { resetPassword } from '../../../../services/auth-service';
 
 import { ContentContainer } from '../Login.styles';
 import { useAuth } from '../../../../contexts/AuthContext';
+
+import { CustomIconButtonAndText } from '@components/molecules/CustomIconButtonAndText/CustomIconButtonAndText';
 
 export const RequestReset = () => {
   const [email, setEmail] = useState('');
@@ -68,9 +70,12 @@ export const RequestReset = () => {
         height: '100vh'
       }}
       >
-        <Typography variant='h4' sx={{ fontWeight: 'bold', textAlign: 'center', marginBottom: 2 }}>
-          Request Password Reset
-        </Typography>
+        <CustomIconButtonAndText
+          icon={<ArrowBackIcon />}
+          text='Request Password Reset'
+          onIconClick={() => navigate('/login')}
+          tooltip='Go back to login'
+        />
         <TextField
           fullWidth
           variant='outlined'
@@ -84,7 +89,7 @@ export const RequestReset = () => {
           }}
           sx={{ marginBottom: 4, mt: 3 }}
         />
-        <Button onClick={handleSubmit} variant='contained' sx={{ borderRadius: 10, textTransform: 'none' }}>
+        <Button onClick={handleSubmit} variant='contained' sx={{ borderRadius: 10, textTransform: 'none', width: '100%' }}>
           Send Reset Email
         </Button>
       </Box>

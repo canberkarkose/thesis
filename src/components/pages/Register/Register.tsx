@@ -8,6 +8,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import { FirebaseError } from 'firebase/app';
 
@@ -19,6 +20,8 @@ import { googleSignIn, signUp } from '../../../services/auth-service';
 import { useAuth } from '../../../contexts/AuthContext';
 
 import { ContentContainer } from './Register.styles';
+
+import { CustomIconButtonAndText } from '@components/molecules/CustomIconButtonAndText/CustomIconButtonAndText';
 
 export const Register = () => {
   const [email, setEmail] = useState('');
@@ -175,9 +178,12 @@ export const Register = () => {
         padding: 3, display: 'flex', flexDirection: 'column', justifyContent: 'center'
       }}
       >
-        <Typography variant='h4' sx={{ fontWeight: 'bold', textAlign: 'center', marginBottom: 2 }}>
-          Sign up to Bite by Byte
-        </Typography>
+        <CustomIconButtonAndText
+          icon={<ArrowBackIcon />}
+          text='Sign up to Bite by Byte'
+          onIconClick={() => navigate('/')}
+          tooltip='Go back to home'
+        />
         <Space s24 />
         <TextField
           fullWidth
@@ -226,14 +232,16 @@ export const Register = () => {
               || !passwordValidation.letter
               || !passwordValidation.numberOrSpecialChar
               || !passwordValidation.length)}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position='end'>
-                <IconButton onClick={togglePasswordVisibility}>
-                  {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                </IconButton>
-              </InputAdornment>
-            ),
+          slotProps={{
+            input: {
+              endAdornment: (
+                <InputAdornment position='end'>
+                  <IconButton onClick={togglePasswordVisibility}>
+                    {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }
           }}
           sx={{ marginBottom: 1 }}
         />

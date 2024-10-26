@@ -137,14 +137,16 @@ export const ResetPassword = () => {
             setNewPassword(e.target.value);
             setPasswordInteracted(true);
           }}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position='end'>
-                <IconButton onClick={togglePasswordVisibility}>
-                  {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                </IconButton>
-              </InputAdornment>
-            ),
+          slotProps={{
+            input: {
+              endAdornment: (
+                <InputAdornment position='end'>
+                  <IconButton onClick={togglePasswordVisibility}>
+                    {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }
           }}
           sx={{ marginBottom: 2, mt: 3 }}
         />
