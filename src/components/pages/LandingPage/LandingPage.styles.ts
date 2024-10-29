@@ -1,7 +1,5 @@
 import styled from '@emotion/styled';
 
-import { Typography } from '@mui/material';
-
 import backgroundImage from '@src/assets/background.png';
 
 import globalBackground from '@src/assets/globalBackground.png';
@@ -62,8 +60,4 @@ export const MainContentContainer = styled.div`
     max-width: 1300px;
     padding: 40px;
   }
-`;
-
-export const DemoInvitation = styled(Typography)`
-  text-align: center;
 `;
