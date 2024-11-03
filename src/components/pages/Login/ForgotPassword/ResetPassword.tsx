@@ -22,6 +22,8 @@ import { confirmPassword } from '../../../../services/auth-service';
 import { ContentContainer } from '../Login.styles';
 import { useAuth } from '../../../../contexts/AuthContext';
 
+import { GlobalBackground } from '@components/pages/LandingPage/LandingPage.styles';
+
 export const ResetPassword = () => {
   const [searchParams] = useSearchParams();
   const [newPassword, setNewPassword] = useState('');
@@ -114,122 +116,124 @@ export const ResetPassword = () => {
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
   return (
-    <ContentContainer>
-      <Box sx={{
-        padding: 3,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        height: '100vh'
-      }}
-      >
-        <Typography variant='h4' sx={{ fontWeight: 'bold', textAlign: 'center', marginBottom: 2 }}>
-          Set New Password
-        </Typography>
-        <TextField
-          fullWidth
-          type={showPassword ? 'text' : 'password'}
-          variant='outlined'
-          label='New Password'
-          error={changeAttempted && !passwordValidation.letter}
-          value={newPassword}
-          onChange={(e) => {
-            setNewPassword(e.target.value);
-            setPasswordInteracted(true);
-          }}
-          slotProps={{
-            input: {
-              endAdornment: (
-                <InputAdornment position='end'>
-                  <IconButton onClick={togglePasswordVisibility}>
-                    {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }
-          }}
-          sx={{ marginBottom: 2, mt: 3 }}
-        />
+    <GlobalBackground>
+      <ContentContainer>
+        <Box sx={{
+          padding: 3,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          height: '100vh'
+        }}
+        >
+          <Typography variant='h4' sx={{ fontWeight: 'bold', textAlign: 'center', marginBottom: 2 }}>
+            Set New Password
+          </Typography>
+          <TextField
+            fullWidth
+            type={showPassword ? 'text' : 'password'}
+            variant='outlined'
+            label='New Password'
+            error={changeAttempted && !passwordValidation.letter}
+            value={newPassword}
+            onChange={(e) => {
+              setNewPassword(e.target.value);
+              setPasswordInteracted(true);
+            }}
+            slotProps={{
+              input: {
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <IconButton onClick={togglePasswordVisibility}>
+                      {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }
+            }}
+            sx={{ marginBottom: 2, mt: 3 }}
+          />
 
-        <TextField
-          fullWidth
-          error={changeAttempted && newPassword !== passwordConfirmation}
-          type={showPassword ? 'text' : 'password'}
-          variant='outlined'
-          label='Confirm Password'
-          value={passwordConfirmation}
-          onChange={(e) => setPasswordConfirmation(e.target.value)}
-          sx={{ marginBottom: 2 }}
-        />
+          <TextField
+            fullWidth
+            error={changeAttempted && newPassword !== passwordConfirmation}
+            type={showPassword ? 'text' : 'password'}
+            variant='outlined'
+            label='Confirm Password'
+            value={passwordConfirmation}
+            onChange={(e) => setPasswordConfirmation(e.target.value)}
+            sx={{ marginBottom: 2 }}
+          />
 
-        <Space s12 />
-        <Typography variant='subtitle2' sx={{ fontWeight: 'bold' }}>
-          Your password must contain at least:
-        </Typography>
-        <Space s12 />
-        <Box sx={{ display: 'flex', flexDirection: 'column', mb: 2 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Box sx={{
-              width: 20,
-              height: 20,
-              borderRadius: '50%',
-              border: '1px solid',
-              borderColor: getBorderColor(passwordValidation.letter),
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              mr: 1
-            }}
-            >
-              {passwordInteracted && (passwordValidation.letter ? <CheckCircleIcon sx={{ color: 'success.main', fontSize: 20 }} /> : <CancelIcon sx={{ color: 'error.main', fontSize: 20 }} />)}
+          <Space s12 />
+          <Typography variant='subtitle2' sx={{ fontWeight: 'bold' }}>
+            Your password must contain at least:
+          </Typography>
+          <Space s12 />
+          <Box sx={{ display: 'flex', flexDirection: 'column', mb: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{
+                width: 20,
+                height: 20,
+                borderRadius: '50%',
+                border: '1px solid',
+                borderColor: getBorderColor(passwordValidation.letter),
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mr: 1
+              }}
+              >
+                {passwordInteracted && (passwordValidation.letter ? <CheckCircleIcon sx={{ color: 'success.main', fontSize: 20 }} /> : <CancelIcon sx={{ color: 'error.main', fontSize: 20 }} />)}
+              </Box>
+              <Typography variant='subtitle2' color={getColor(passwordValidation.letter)}>
+                1 letter
+              </Typography>
             </Box>
-            <Typography variant='subtitle2' color={getColor(passwordValidation.letter)}>
-              1 letter
-            </Typography>
-          </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Box sx={{
-              width: 20,
-              height: 20,
-              borderRadius: '50%',
-              border: '1px solid',
-              borderColor: getBorderColor(passwordValidation.numberOrSpecialChar),
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              mr: 1
-            }}
-            >
-              {passwordInteracted && (passwordValidation.numberOrSpecialChar ? <CheckCircleIcon sx={{ color: 'success.main', fontSize: 20 }} /> : <CancelIcon sx={{ color: 'error.main', fontSize: 20 }} />)}
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{
+                width: 20,
+                height: 20,
+                borderRadius: '50%',
+                border: '1px solid',
+                borderColor: getBorderColor(passwordValidation.numberOrSpecialChar),
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mr: 1
+              }}
+              >
+                {passwordInteracted && (passwordValidation.numberOrSpecialChar ? <CheckCircleIcon sx={{ color: 'success.main', fontSize: 20 }} /> : <CancelIcon sx={{ color: 'error.main', fontSize: 20 }} />)}
+              </Box>
+              <Typography variant='subtitle2' color={getColor(passwordValidation.numberOrSpecialChar)}>
+                1 number or special character
+              </Typography>
             </Box>
-            <Typography variant='subtitle2' color={getColor(passwordValidation.numberOrSpecialChar)}>
-              1 number or special character
-            </Typography>
-          </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Box sx={{
-              width: 20,
-              height: 20,
-              borderRadius: '50%',
-              border: '1px solid',
-              borderColor: getBorderColor(passwordValidation.length),
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              mr: 1
-            }}
-            >
-              {passwordInteracted && (passwordValidation.length ? <CheckCircleIcon sx={{ color: 'success.main', fontSize: 20 }} /> : <CancelIcon sx={{ color: 'error.main', fontSize: 20 }} />)}
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{
+                width: 20,
+                height: 20,
+                borderRadius: '50%',
+                border: '1px solid',
+                borderColor: getBorderColor(passwordValidation.length),
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mr: 1
+              }}
+              >
+                {passwordInteracted && (passwordValidation.length ? <CheckCircleIcon sx={{ color: 'success.main', fontSize: 20 }} /> : <CancelIcon sx={{ color: 'error.main', fontSize: 20 }} />)}
+              </Box>
+              <Typography variant='subtitle2' color={getColor(passwordValidation.length)}>
+                7 characters
+              </Typography>
             </Box>
-            <Typography variant='subtitle2' color={getColor(passwordValidation.length)}>
-              7 characters
-            </Typography>
           </Box>
+          <Button onClick={handleSubmit} variant='contained' sx={{ borderRadius: 20, textTransform: 'none' }}>
+            Reset Password
+          </Button>
         </Box>
-        <Button onClick={handleSubmit} variant='contained' sx={{ borderRadius: 20, textTransform: 'none' }}>
-          Reset Password
-        </Button>
-      </Box>
-    </ContentContainer>
+      </ContentContainer>
+    </GlobalBackground>
   );
 };

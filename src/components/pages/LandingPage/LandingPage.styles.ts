@@ -4,11 +4,18 @@ import backgroundImage from '@src/assets/background.png';
 
 import globalBackground from '@src/assets/globalBackground.png';
 
-export const GlobalBackground = styled.div`
+interface GlobalBackgroundProps {
+  coverBackground?: boolean;
+}
+
+export const GlobalBackground = styled.div<GlobalBackgroundProps>`
   background-image: url(${globalBackground});
-  background-size: cover;
   background-position: center;
   position: relative;
+  
+  ${(props) => props.coverBackground && `
+    background-size: cover;
+  `}
 
   &:before {
     content: '';
@@ -20,7 +27,6 @@ export const GlobalBackground = styled.div`
     background: rgba(255, 255, 255, 0.25);
     z-index: 0;
   }
-
 `;
 
 export const MainContentContainer = styled.div`

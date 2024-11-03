@@ -15,6 +15,7 @@ import { ContentContainer } from '../Login.styles';
 import { useAuth } from '../../../../contexts/AuthContext';
 
 import { CustomIconButtonAndText } from '@components/molecules/CustomIconButtonAndText/CustomIconButtonAndText';
+import { GlobalBackground } from '@components/pages/LandingPage/LandingPage.styles';
 
 export const RequestReset = () => {
   const [email, setEmail] = useState('');
@@ -64,39 +65,41 @@ export const RequestReset = () => {
   };
 
   return (
-    <ContentContainer>
-      <Box sx={{
-        padding: 3,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh'
-      }}
-      >
-        <CustomIconButtonAndText
-          icon={<ArrowBackIcon />}
-          text='Request Password Reset'
-          onIconClick={() => navigate('/login')}
-          tooltip='Go back to login'
-        />
-        <TextField
-          fullWidth
-          variant='outlined'
-          label='Email Address'
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              handleSubmit();
-            }
-          }}
-          sx={{ marginBottom: 4, mt: 3 }}
-        />
-        <Button onClick={handleSubmit} variant='contained' sx={{ borderRadius: 10, textTransform: 'none', width: '100%' }}>
-          Send Reset Email
-        </Button>
-      </Box>
-    </ContentContainer>
+    <GlobalBackground>
+      <ContentContainer>
+        <Box sx={{
+          padding: 3,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh'
+        }}
+        >
+          <CustomIconButtonAndText
+            icon={<ArrowBackIcon />}
+            text='Request Password Reset'
+            onIconClick={() => navigate('/login')}
+            tooltip='Go back to login'
+          />
+          <TextField
+            fullWidth
+            variant='outlined'
+            label='Email Address'
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                handleSubmit();
+              }
+            }}
+            sx={{ marginBottom: 4, mt: 3 }}
+          />
+          <Button onClick={handleSubmit} variant='contained' sx={{ borderRadius: 10, textTransform: 'none', width: '100%' }}>
+            Send Reset Email
+          </Button>
+        </Box>
+      </ContentContainer>
+    </GlobalBackground>
   );
 };

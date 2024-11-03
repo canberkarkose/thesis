@@ -13,7 +13,7 @@ import { MainContentContainer, GlobalBackground } from './LandingPage.styles';
 export const LandingPagePresentation = () => (
   <>
     <LandingPageHeader />
-    <GlobalBackground>
+    <GlobalBackground coverBackground>
       <MainContentContainer>
         <LandingPageIntroSection />
         <Space s24 />

@@ -9,7 +9,7 @@ export const mainTheme = createTheme({
       light: '#9BC2A8', // Light Green
     },
     secondary: {
-      main: '#8BB196',
+      main: '#8BB196'
     },
     action: {
       active: '#566D5F',

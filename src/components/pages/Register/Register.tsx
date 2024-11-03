@@ -19,6 +19,8 @@ import { googleSignIn, signUp } from '../../../services/auth-service';
 
 import { useAuth } from '../../../contexts/AuthContext';
 
+import { GlobalBackground } from '../LandingPage/LandingPage.styles';
+
 import { ContentContainer } from './Register.styles';
 
 import { CustomIconButtonAndText } from '@components/molecules/CustomIconButtonAndText/CustomIconButtonAndText';
@@ -182,181 +184,183 @@ export const Register = () => {
   };
 
   return (
-    <ContentContainer>
-      <Box sx={{
-        padding: 3, display: 'flex', flexDirection: 'column', justifyContent: 'center'
-      }}
-      >
-        <CustomIconButtonAndText
-          icon={<ArrowBackIcon />}
-          text='Sign up to Bite by Byte'
-          onIconClick={() => navigate('/')}
-          tooltip='Go back to home'
-        />
-        <Space s24 />
-        <TextField
-          fullWidth
-          variant='outlined'
-          label='Username *'
-          value={username}
-          onChange={handleUsernameChange}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              handleSignUp();
-            }
-          }}
-          error={!!usernameError}
-          helperText={usernameError}
-          sx={{ marginBottom: 1 }}
-        />
-        <TextField
-          fullWidth
-          variant='outlined'
-          label='Email address *'
-          value={email}
-          onChange={handleEmailChange}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              handleSignUp();
-            }
-          }}
-          error={!!emailError}
-          helperText={emailError}
-          sx={{ marginBottom: 1 }}
-          placeholder='name@domain.com'
-        />
-        <TextField
-          fullWidth
-          type={showPassword ? 'text' : 'password'}
-          variant='outlined'
-          label='Password *'
-          value={password}
-          onChange={handlePasswordChange}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              handleSignUp();
-            }
-          }}
-          error={passwordInteracted && (password.length === 0
+    <GlobalBackground>
+      <ContentContainer>
+        <Box sx={{
+          padding: 3, display: 'flex', flexDirection: 'column', justifyContent: 'center'
+        }}
+        >
+          <CustomIconButtonAndText
+            icon={<ArrowBackIcon />}
+            text='Sign up to Bite by Byte'
+            onIconClick={() => navigate('/')}
+            tooltip='Go back to home'
+          />
+          <Space s24 />
+          <TextField
+            fullWidth
+            variant='outlined'
+            label='Username *'
+            value={username}
+            onChange={handleUsernameChange}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                handleSignUp();
+              }
+            }}
+            error={!!usernameError}
+            helperText={usernameError}
+            sx={{ marginBottom: 1 }}
+          />
+          <TextField
+            fullWidth
+            variant='outlined'
+            label='Email address *'
+            value={email}
+            onChange={handleEmailChange}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                handleSignUp();
+              }
+            }}
+            error={!!emailError}
+            helperText={emailError}
+            sx={{ marginBottom: 1 }}
+            placeholder='name@domain.com'
+          />
+          <TextField
+            fullWidth
+            type={showPassword ? 'text' : 'password'}
+            variant='outlined'
+            label='Password *'
+            value={password}
+            onChange={handlePasswordChange}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                handleSignUp();
+              }
+            }}
+            error={passwordInteracted && (password.length === 0
               || !passwordValidation.letter
               || !passwordValidation.numberOrSpecialChar
               || !passwordValidation.length)}
-          slotProps={{
-            input: {
-              endAdornment: (
-                <InputAdornment position='end'>
-                  <IconButton onClick={togglePasswordVisibility}>
-                    {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }
-          }}
-          sx={{ marginBottom: 1 }}
-        />
-        <Space s12 />
-        <Typography variant='subtitle2' sx={{ fontWeight: 'bold' }}>
-          Your password must contain at least:
-        </Typography>
-        <Space s12 />
-        <Box sx={{ display: 'flex', flexDirection: 'column', mb: 2 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Box sx={{
-              width: 20,
-              height: 20,
-              borderRadius: '50%',
-              border: '1px solid',
-              borderColor: getBorderColor(passwordValidation.letter),
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              mr: 1
+            slotProps={{
+              input: {
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <IconButton onClick={togglePasswordVisibility}>
+                      {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }
             }}
-            >
-              {passwordInteracted && (passwordValidation.letter ? <CheckCircleIcon sx={{ color: 'success.main', fontSize: 20 }} /> : <CancelIcon sx={{ color: 'error.main', fontSize: 20 }} />)}
+            sx={{ marginBottom: 1 }}
+          />
+          <Space s12 />
+          <Typography variant='subtitle2' sx={{ fontWeight: 'bold' }}>
+            Your password must contain at least:
+          </Typography>
+          <Space s12 />
+          <Box sx={{ display: 'flex', flexDirection: 'column', mb: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{
+                width: 20,
+                height: 20,
+                borderRadius: '50%',
+                border: '1px solid',
+                borderColor: getBorderColor(passwordValidation.letter),
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mr: 1
+              }}
+              >
+                {passwordInteracted && (passwordValidation.letter ? <CheckCircleIcon sx={{ color: 'success.main', fontSize: 20 }} /> : <CancelIcon sx={{ color: 'error.main', fontSize: 20 }} />)}
+              </Box>
+              <Typography variant='subtitle2' color={getColor(passwordValidation.letter)}>
+                1 letter
+              </Typography>
             </Box>
-            <Typography variant='subtitle2' color={getColor(passwordValidation.letter)}>
-              1 letter
-            </Typography>
-          </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Box sx={{
-              width: 20,
-              height: 20,
-              borderRadius: '50%',
-              border: '1px solid',
-              borderColor: getBorderColor(passwordValidation.numberOrSpecialChar),
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              mr: 1
-            }}
-            >
-              {passwordInteracted && (passwordValidation.numberOrSpecialChar ? <CheckCircleIcon sx={{ color: 'success.main', fontSize: 20 }} /> : <CancelIcon sx={{ color: 'error.main', fontSize: 20 }} />)}
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{
+                width: 20,
+                height: 20,
+                borderRadius: '50%',
+                border: '1px solid',
+                borderColor: getBorderColor(passwordValidation.numberOrSpecialChar),
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mr: 1
+              }}
+              >
+                {passwordInteracted && (passwordValidation.numberOrSpecialChar ? <CheckCircleIcon sx={{ color: 'success.main', fontSize: 20 }} /> : <CancelIcon sx={{ color: 'error.main', fontSize: 20 }} />)}
+              </Box>
+              <Typography variant='subtitle2' color={getColor(passwordValidation.numberOrSpecialChar)}>
+                1 number or special character
+              </Typography>
             </Box>
-            <Typography variant='subtitle2' color={getColor(passwordValidation.numberOrSpecialChar)}>
-              1 number or special character
-            </Typography>
-          </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Box sx={{
-              width: 20,
-              height: 20,
-              borderRadius: '50%',
-              border: '1px solid',
-              borderColor: getBorderColor(passwordValidation.length),
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              mr: 1
-            }}
-            >
-              {passwordInteracted && (passwordValidation.length ? <CheckCircleIcon sx={{ color: 'success.main', fontSize: 20 }} /> : <CancelIcon sx={{ color: 'error.main', fontSize: 20 }} />)}
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{
+                width: 20,
+                height: 20,
+                borderRadius: '50%',
+                border: '1px solid',
+                borderColor: getBorderColor(passwordValidation.length),
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mr: 1
+              }}
+              >
+                {passwordInteracted && (passwordValidation.length ? <CheckCircleIcon sx={{ color: 'success.main', fontSize: 20 }} /> : <CancelIcon sx={{ color: 'error.main', fontSize: 20 }} />)}
+              </Box>
+              <Typography variant='subtitle2' color={getColor(passwordValidation.length)}>
+                7 characters
+              </Typography>
             </Box>
-            <Typography variant='subtitle2' color={getColor(passwordValidation.length)}>
-              7 characters
-            </Typography>
           </Box>
-        </Box>
-        <Button
-          fullWidth
-          variant='contained'
-          color='secondary'
-          onClick={handleSignUp}
-          sx={{ borderRadius: 20, textTransform: 'none' }}
-        >
-          <Typography fontSize='18px'>Sign Up</Typography>
-        </Button>
-        <Space s12 />
-        <Divider sx={{ margin: '20px 0', position: 'relative' }}>
-          <Typography
+          <Button
+            fullWidth
+            variant='contained'
+            color='secondary'
+            onClick={handleSignUp}
+            sx={{ borderRadius: 20, textTransform: 'none' }}
+          >
+            <Typography fontSize='18px'>Sign Up</Typography>
+          </Button>
+          <Space s12 />
+          <Divider sx={{ margin: '20px 0', position: 'relative' }}>
+            <Typography
+              sx={{
+                position: 'absolute', top: '-12px', left: 'calc(50% - 16px)', padding: '0 10px'
+              }}
+            >
+              or
+            </Typography>
+          </Divider>
+          <Space s12 />
+          <Button
+            fullWidth
+            variant='outlined'
+            onClick={handleGoogleSignUp}
             sx={{
-              position: 'absolute', top: '-12px', left: 'calc(50% - 16px)', padding: '0 10px'
+              color: 'black', borderColor: 'black', borderRadius: 20, textTransform: 'none',
             }}
           >
-            or
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <GoogleIcon sx={{ mr: 2, color: 'red' }} />
+              <Typography fontSize='18px'>Sign up with Google</Typography>
+            </Box>
+          </Button>
+          <Typography textAlign='center' sx={{ marginTop: 2 }}>
+            Already have an account?
+            {' '}
+            <Link to='/login'>Log in here.</Link>
           </Typography>
-        </Divider>
-        <Space s12 />
-        <Button
-          fullWidth
-          variant='outlined'
-          onClick={handleGoogleSignUp}
-          sx={{
-            color: 'black', borderColor: 'black', borderRadius: 20, textTransform: 'none',
-          }}
-        >
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <GoogleIcon sx={{ mr: 2, color: 'red' }} />
-            <Typography fontSize='18px'>Sign up with Google</Typography>
-          </Box>
-        </Button>
-        <Typography textAlign='center' sx={{ marginTop: 2 }}>
-          Already have an account?
-          {' '}
-          <Link to='/login'>Log in here.</Link>
-        </Typography>
-      </Box>
-    </ContentContainer>
+        </Box>
+      </ContentContainer>
+    </GlobalBackground>
   );
 };
