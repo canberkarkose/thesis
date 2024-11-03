@@ -11,6 +11,11 @@ import {
   StyledWhole30
 } from './Steps.styles';
 
+import {
+  StyledBiryani, StyledRamen, StyledSalad, StyledTaco,
+  StyledTurkey, StyledItalianFood
+} from '@components/organisms/LandingPageIntroSection/LandingPageIntroSection.styles';
+
 export const dietOptions = [
   {
     value: 'anything', label: 'Anything', description: 'No specific dietary preference, adjustable anytime.', icon: <StyledAnything />
@@ -89,4 +94,24 @@ export const cuisines = [
   'Spanish',
   'Thai',
   'Vietnamese',
+];
+
+export const demoDietOptions = [
+  { value: 'anything', label: 'Anything', icon: <StyledAnything /> },
+  { value: 'vegetarian', label: 'Vegetarian', icon: <StyledVegetarian /> },
+  { value: 'vegan', label: 'Vegan', icon: <StyledVegan /> },
+  { value: 'glutenFree', label: 'Gluten Free', icon: <StyledGlutenFree /> },
+  { value: 'pescetarian', label: 'Pescetarian', icon: <StyledPescetarian /> },
+  { value: 'ketogenic', label: 'Ketogenic', icon: <StyledKetogenic /> },
+];
+
+export const demoIntolerances = ['Dairy', 'Egg', 'Gluten', 'Peanut', 'Soy', 'Tree Nut'];
+
+export const demoCuisines = [
+  { value: 'asian', label: 'Asian', icon: <StyledRamen /> }, // Matched with StyledRamen
+  { value: 'american', label: 'American', icon: <StyledTurkey /> }, // Matched with StyledDinner
+  { value: 'italian', label: 'Italian', icon: <StyledItalianFood /> }, // Matched with StyledSalad
+  { value: 'mexican', label: 'Mexican', icon: <StyledTaco /> }, // Matched with StyledTaco
+  { value: 'greek', label: 'Greek', icon: <StyledSalad /> }, // Matched with StyledSalad
+  { value: 'indian', label: 'Indian', icon: <StyledBiryani /> }, // Matched with StyledBiryani
 ];

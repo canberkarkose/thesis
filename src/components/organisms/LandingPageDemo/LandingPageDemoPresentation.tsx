@@ -115,6 +115,7 @@ export const LandingPageDemoPresentation = ({ onSelectDemo }: LandingPageDemoPre
 
   return (
     <DemoContentWrapper
+      isOpeningScreen
       headline='Not Quite Ready To Sign Up?'
       subheading="Try one of our quick demos and get a taste of what's cooking!"
     >
@@ -127,7 +128,7 @@ export const LandingPageDemoPresentation = ({ onSelectDemo }: LandingPageDemoPre
           startIcon={<MenuIcon />}
           onClick={() => onSelectDemo('manual')}
         >
-          Create Your Menu
+          Create Your Meals
         </Button>
         <Button
           variant='contained'
@@ -135,7 +136,10 @@ export const LandingPageDemoPresentation = ({ onSelectDemo }: LandingPageDemoPre
           startIcon={<QuizIcon />}
           onClick={() => onSelectDemo('quiz')}
           sx={{
-            backgroundColor: '#D67333'
+            backgroundColor: '#D67333',
+            '&:hover': {
+              backgroundColor: '#84441b'
+            }
           }}
         >
           Take the Meal Quiz

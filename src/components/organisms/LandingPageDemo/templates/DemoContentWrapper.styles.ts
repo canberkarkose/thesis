@@ -3,10 +3,14 @@ import { Box, Typography } from '@mui/material';
 
 import demoBackground from '@src/assets/demoBackground.png';
 
-export const DemoContainer = styled(Box)`
-  height: 500px;
+interface DemoContainerProps {
+  isOpeningScreen?: boolean;
+}
+
+export const DemoContainer = styled(Box)<DemoContainerProps>`
+  height: 600px;
   text-align: center;
-  max-width: 1000px;
+  max-width: 900px;
   margin: 0 auto;
   position: relative;
 
@@ -14,7 +18,10 @@ export const DemoContainer = styled(Box)`
   flex-direction: column;
   align-items: center;
   justify-content: flext-start;
-  padding-top: 100px;
+    ${(props) => (props.isOpeningScreen
+    ? 'padding-top: 150px;'
+    : 'padding-top: 50px;'
+  )}
 
   background-image: url(${demoBackground});
   background-position: center;
