@@ -13,9 +13,8 @@ const getPaddingTop = (props: DemoContainerProps) => {
     return 'padding-top: 125px;';
   } else if (props.isQuiz) {
     return 'padding-top: 95px;';
-  } else {
-    return 'padding-top: 50px;';
   }
+  return 'padding-top: 50px;';
 };
 
 export const DemoContainer = styled(Box)<DemoContainerProps>`
