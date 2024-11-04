@@ -11,7 +11,8 @@ interface DemoContainerProps {
 const getPaddingTop = (props: DemoContainerProps) => {
   if (props.isOpeningScreen) {
     return 'padding-top: 125px;';
-  } else if (props.isQuiz) {
+  }
+  if (props.isQuiz) {
     return 'padding-top: 95px;';
   }
   return 'padding-top: 50px;';
