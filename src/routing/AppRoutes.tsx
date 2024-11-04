@@ -7,6 +7,7 @@ import { Dashboard } from '../components/pages/App/Dashboard/Dashboard';
 import { AccountDetails } from '../components/pages/AccountDetails/AccountDetails';
 import { ResetPassword } from '../components/pages/Login/ForgotPassword/ResetPassword';
 import { RequestReset } from '../components/pages/Login/ForgotPassword/RequestReset';
+import { ErrorPage } from '../components/pages/ErrorPage/ErrorPage';
 
 import { ProtectedRoute } from './ProtectedRoute';
 
@@ -36,7 +37,15 @@ export const AppRoutes = () => (
         <Route path='grocery-list' element={<GroceryList />} />
         <Route path='meal-planner' element={<MealPlanner />} />
         <Route path='recipes' element={<Recipes />} />
+        <Route
+          path='*'
+          element={<ErrorPage isAuthenticated />}
+        />
       </Route>
     </Route>
+    <Route
+      path='*'
+      element={<ErrorPage isAuthenticated={false} />}
+    />
   </Routes>
 );
