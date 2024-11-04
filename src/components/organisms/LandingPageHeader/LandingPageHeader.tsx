@@ -32,7 +32,6 @@ export const LandingPageHeader = () => (
     </LogoTitleContainer>
     <NavigationLinks>
       <NavLink href='/how-it-works'>How it works</NavLink>
-      <NavLink href='/science-of-nutrition'>The Science of Nutrition</NavLink>
     </NavigationLinks>
   </HeaderContainer>
 );
