@@ -10,16 +10,18 @@ import { RequestReset } from '../components/pages/Login/ForgotPassword/RequestRe
 
 import { ProtectedRoute } from './ProtectedRoute';
 
-import { AppLayout } from '@components/templates/AppLayout';
+import { AppLayout } from '@components/templates/AppLayout/AppLayout';
 
 import { GroceryList } from '@components/pages/App/GroceryList/GroceryList';
 import { MealPlanner } from '@components/pages/App/MealPlanner/MealPlanner';
 import { Recipes } from '@components/pages/App/Recipes/Recipes';
+import { HowItWorks } from '@components/pages/HowItWorks/HowItworks';
 
 export const AppRoutes = () => (
   <Routes>
     {/* Public Routes */}
     <Route path='/' element={<LandingPage />} />
+    <Route path='/how-it-works' element={<HowItWorks />} />
     <Route path='/login' element={<Login />} />
     <Route path='/register' element={<Register />} />
     <Route path='/forgot-password' element={<RequestReset />} />

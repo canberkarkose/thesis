@@ -45,9 +45,8 @@ export const WebsiteTitle = styled.h1`
 `;
 
 export const NavigationLinks = styled.div`
-  display: flex;
-  gap: 20px;
-  padding-right: 100px;
+  padding-right: 150px;
+  font-size: 19px;
 
   @media (max-width: 768px) {
     flex-direction: column;
