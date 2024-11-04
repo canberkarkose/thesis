@@ -8,6 +8,16 @@ interface DemoContainerProps {
   isQuiz?: boolean;
 }
 
+const getPaddingTop = (props: DemoContainerProps) => {
+  if (props.isOpeningScreen) {
+    return 'padding-top: 125px;';
+  } else if (props.isQuiz) {
+    return 'padding-top: 95px;';
+  } else {
+    return 'padding-top: 50px;';
+  }
+};
+
 export const DemoContainer = styled(Box)<DemoContainerProps>`
   height: 550px;
   text-align: center;
@@ -19,12 +29,7 @@ export const DemoContainer = styled(Box)<DemoContainerProps>`
   flex-direction: column;
   align-items: center;
   justify-content: flext-start;
-    ${(props) => (props.isOpeningScreen
-    ? 'padding-top: 125px;'
-    : props.isQuiz ? 'padding-top: 95px;'
-    : 'padding-top: 50px;'
-  )}
-
+  ${(props) => getPaddingTop(props)}
   background-image: url(${demoBackground});
   background-position: center;
   background-size: cover;
