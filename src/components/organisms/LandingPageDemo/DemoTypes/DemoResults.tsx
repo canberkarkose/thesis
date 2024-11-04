@@ -20,7 +20,7 @@ export const DemoResults = ({ recipes, onBack }: DemoResultsProps) => {
       headline='Your Generated Meals'
       subheading='Here are some meal ideas based on your selections!'
     >
-      <Space s24 />
+      <Space s16 />
       <Box display='flex' justifyContent='space-between' flexWrap='wrap' gap={2}>
         {recipes.map((recipe) => (
           <Box
@@ -52,7 +52,7 @@ export const DemoResults = ({ recipes, onBack }: DemoResultsProps) => {
           </Box>
         ))}
       </Box>
-      <Space s32 />
+      <Space s16 />
       <Box textAlign='center'>
         <Typography variant='h6'>
           Want to generate more meals and see detailed recipes?

@@ -5,10 +5,11 @@ import demoBackground from '@src/assets/demoBackground.png';
 
 interface DemoContainerProps {
   isOpeningScreen?: boolean;
+  isQuiz?: boolean;
 }
 
 export const DemoContainer = styled(Box)<DemoContainerProps>`
-  height: 600px;
+  height: 550px;
   text-align: center;
   max-width: 900px;
   margin: 0 auto;
@@ -19,7 +20,8 @@ export const DemoContainer = styled(Box)<DemoContainerProps>`
   align-items: center;
   justify-content: flext-start;
     ${(props) => (props.isOpeningScreen
-    ? 'padding-top: 150px;'
+    ? 'padding-top: 125px;'
+    : props.isQuiz ? 'padding-top: 95px;'
     : 'padding-top: 50px;'
   )}
 

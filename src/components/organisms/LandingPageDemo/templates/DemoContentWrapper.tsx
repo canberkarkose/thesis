@@ -5,6 +5,7 @@ import { DemoContainer, Headline, Subheading } from './DemoContentWrapper.styles
 
 interface DemoContentWrapperProps {
   isOpeningScreen?: boolean;
+  isQuiz?: boolean;
   headline: string;
   subheading: string;
   children: React.ReactNode;
@@ -14,14 +15,15 @@ interface DemoContentWrapperProps {
 
 export const DemoContentWrapper = ({
   isOpeningScreen,
+  isQuiz,
   headline,
   subheading,
   children,
   shouldDisplayGoBackButton,
   onBack,
 }: DemoContentWrapperProps) => (
-  <DemoContainer isOpeningScreen={isOpeningScreen}>
-    <Box display='flex' alignItems='center' sx={{ left: -10 }}>
+  <DemoContainer isOpeningScreen={isOpeningScreen} isQuiz={isQuiz}>
+    <Box display='flex' alignItems='center' sx={{ left: shouldDisplayGoBackButton ? -10 : undefined }}>
       {shouldDisplayGoBackButton && (
         <IconButton onClick={onBack} sx={{ right: 5, marginBottom: '16px' }}>
           <ArrowBackIcon />

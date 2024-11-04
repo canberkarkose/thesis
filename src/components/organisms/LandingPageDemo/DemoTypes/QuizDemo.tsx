@@ -81,7 +81,7 @@ export const QuizDemo = ({ onBack, onGenerateMeals }: QuizDemoProps) => {
 
   return (
     <DemoContentWrapper
-      isOpeningScreen
+      isQuiz
       headline='Take the Meal Quiz'
       subheading='Answer a few questions to generate personalized meals'
       shouldDisplayGoBackButton

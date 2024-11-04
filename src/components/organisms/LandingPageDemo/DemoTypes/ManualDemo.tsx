@@ -39,7 +39,7 @@ export const ManualDemo = ({ onBack, onGenerateMeals }: ManualDemoProps) => {
       onBack={onBack}
     >
       <Space s32 />
-      <Space s32 />
+      <Space s16 />
       <Box display='flex' justifyContent='space-between' width='100%'>
 
         {/* Diet Options */}
@@ -145,7 +145,6 @@ export const ManualDemo = ({ onBack, onGenerateMeals }: ManualDemoProps) => {
           </Grid>
         </Box>
       </Box>
-      <Space s32 />
       <Space s32 />
       <div style={{
         marginTop: '20px', display: 'flex', justifyContent: 'space-between', gap: '20px'
