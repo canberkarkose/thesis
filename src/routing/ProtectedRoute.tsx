@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import {
+  Outlet, useLocation, useNavigate
+} from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -13,8 +15,8 @@ import { usePrevious } from '@src/hooks/usePrevious';
 export const ProtectedRoute = () => {
   const { user, loading } = useAuth();
   const [isInitialCheckComplete, setIsInitialCheckComplete] = useState(false);
-  const [shouldRedirect, setShouldRedirect] = useState('');
   const location = useLocation();
+  const navigate = useNavigate();
 
   const previousUser = usePrevious(user);
 
@@ -28,7 +30,7 @@ export const ProtectedRoute = () => {
       } else {
         toast.error('Please log in to access this page.', { position: 'bottom-left' });
       }
-      setShouldRedirect('/login');
+      navigate('/login');
     } else {
       const fetchUserDetails = async () => {
         try {
@@ -39,14 +41,14 @@ export const ProtectedRoute = () => {
 
             if (!accountDetailsCompleted && !location.pathname.includes('/app/account-details')) {
               // Redirect to account details page if not completed
-              setShouldRedirect('/app/account-details');
+              navigate('/app/account-details');
             } else if (accountDetailsCompleted && location.pathname.includes('/app/account-details')) {
               // Redirect to dashboard if account details are already completed
               toast.info(
                 'Your account details are already configured. Visit profile settings to make changes.',
                 { position: 'bottom-left' }
               );
-              setShouldRedirect('/app/dashboard');
+              navigate('/app/dashboard');
             } else {
               setIsInitialCheckComplete(true);
             }
@@ -74,10 +76,6 @@ export const ProtectedRoute = () => {
         <CircularProgress />
       </Box>
     );
-  }
-
-  if (shouldRedirect) {
-    return <Navigate to={shouldRedirect} replace />;
   }
 
   return <Outlet />;

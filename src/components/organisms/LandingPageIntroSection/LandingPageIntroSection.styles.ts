@@ -11,7 +11,8 @@ import {
   DietLogo,
   IntroPlateLogo,
   TacoLogo,
-  RoastedChickenLogo
+  RoastedChickenLogo,
+  ItalianFoodLogo
 } from '@src/assets';
 
 export const IntroContainer = styled(Box)`
@@ -53,6 +54,10 @@ export const ImageContainer = styled(Box)`
 const baseSvgStyle = `
   width: 1px;
   height: 1px;
+`;
+
+export const StyledItalianFood = styled(ItalianFoodLogo)`
+${baseSvgStyle}
 `;
 
 export const StyledBiryani = styled(BiryaniLogo)`

@@ -12,7 +12,7 @@ import {
   VeganLogo,
   SeafoodLogo,
   PaleoDietLogo,
-  AnythingLogo
+  AnythingLogo,
 } from '@src/assets';
 
 export const StepContentWrapper = styled.div`

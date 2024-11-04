@@ -31,6 +31,8 @@ import { AccountDetailsStepThree } from './Steps/AccountDetailsStepThree';
 import { FinalReviewStep } from './Steps/FinalReviewStep';
 import { CuisinePreferences } from './Steps/types/Step.types';
 
+import { logout } from '@src/services/auth-service';
+
 export const AccountDetails = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -54,8 +56,15 @@ export const AccountDetails = () => {
     setAnchorEl(null);
   };
 
-  const handleLogout = () => {
-    handleClose();
+  const handleLogout = async () => {
+    try {
+      await logout();
+      handleClose();
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+      toast.error('Logout failed. Please try again.');
+    }
   };
 
   const updateCuisines = (cuisineDetails: CuisinePreferences): void => {

@@ -1,5 +1,3 @@
-/* eslint-disable max-len */
-
 declare module '*.svg' {
   import * as React from 'react';
 
@@ -12,4 +10,9 @@ declare module '*.svg' {
 declare module '*.png' {
   const src: string;
   export default src;
+}
+
+declare module '*.svg?url' {
+  const content: string;
+  export default content;
 }

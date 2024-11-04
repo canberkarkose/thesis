@@ -9,6 +9,7 @@ export { DietLogo } from './DietLogo';
 export { DinnerLogo } from './DinnerLogo';
 export { GlutenFreeLogo } from './GlutenFreeLogo';
 export { IntroPlateLogo } from './IntroPlateLogo';
+export { ItalianFoodLogo } from './ItalianFoodLogo';
 export { KetogenicLogo } from './KetogenicLogo';
 export { NoEggLogo } from './NoEggLogo';
 export { PaleoDietLogo } from './PaleoDietLogo';

@@ -18,6 +18,8 @@ import { login, googleSignIn } from '../../../services/auth-service';
 
 import { useAuth } from '../../../contexts/AuthContext';
 
+import { GlobalBackground } from '../LandingPage/LandingPage.styles';
+
 import { ContentContainer } from './Login.styles';
 
 import { CustomIconButtonAndText } from '@components/molecules/CustomIconButtonAndText/CustomIconButtonAndText';
@@ -36,14 +38,14 @@ export const Login = () => {
       if (localStorage.getItem('justLoggedIn')) {
         localStorage.removeItem('justLoggedIn');
       } else {
-        setTimeout(() => {
-          toast.info('You are already logged in. Accessing another account? Please log out first.', { position: 'bottom-left' });
-        }, 1000);
+        toast.info('You are already logged in. Accessing another account? Please log out first.', { position: 'bottom-left' });
       }
-      setTimeout(() => {
+      if (user.accountDetailsCompleted) {
         navigate('/app/dashboard');
         toast.success('Successfully logged in.', { position: 'bottom-left' });
-      }, 1000);
+      } else {
+        navigate('/app/account-details');
+      }
     }
   }, [user, loading, navigate]);
 
@@ -107,8 +109,8 @@ export const Login = () => {
 
   const handleGoogleSignIn = async () => {
     try {
-      const { isNewUser } = await googleSignIn();
       localStorage.setItem('justLoggedIn', 'true');
+      const { isNewUser } = await googleSignIn();
 
       setTimeout(() => {
         navigate(isNewUser ? '/app/account-details' : '/app/dashboard');
@@ -120,126 +122,128 @@ export const Login = () => {
   };
 
   return (
-    <ContentContainer>
-      <Box
-        sx={{
-          padding: 3,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-        }}
-      >
-        <CustomIconButtonAndText
-          icon={<ArrowBackIcon />}
-          text='Sign in to Bite by Byte'
-          onIconClick={() => navigate('/')}
-          tooltip='Go back to home'
-        />
-        <Box sx={{
-          width: '100%', minHeight: 'calc(100vh - 400px)', display: 'flex', flexDirection: 'column', justifyContent: 'center'
-        }}
+    <GlobalBackground>
+      <ContentContainer>
+        <Box
+          sx={{
+            padding: 3,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+          }}
         >
-          <TextField
-            fullWidth
-            variant='outlined'
-            label='Email or username'
-            value={usernameOrEmail}
-            onChange={handleUsernameOrEmailChange}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                handleSignIn();
-              }
-            }}
-            error={!!usernameOrEmailError}
-            helperText={usernameOrEmailError}
-            sx={{ marginBottom: 2, mt: 3 }}
-          />
-          <TextField
-            fullWidth
-            type={showPassword ? 'text' : 'password'}
-            variant='outlined'
-            value={password}
-            label='Password'
-            error={!!passwordError}
-            helperText={passwordError}
-            onChange={handlePasswordChange}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                handleSignIn();
-              }
-            }}
-            slotProps={{
-              input: {
-                endAdornment: (
-                  <InputAdornment position='end'>
-                    <IconButton onClick={togglePasswordVisibility}>
-                      {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }
-            }}
+          <CustomIconButtonAndText
+            icon={<ArrowBackIcon />}
+            text='Sign in to Bite by Byte'
+            onIconClick={() => navigate('/')}
+            tooltip='Go back to home'
           />
           <Box sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: '100%',
-            mb: 2,
+            width: '100%', minHeight: 'calc(100vh - 400px)', display: 'flex', flexDirection: 'column', justifyContent: 'center'
           }}
           >
-            <Button color='secondary' onClick={() => navigate('/forgot-password')} sx={{ textTransform: 'none' }}>
-              Forgot Password?
+            <TextField
+              fullWidth
+              variant='outlined'
+              label='Email or username'
+              value={usernameOrEmail}
+              onChange={handleUsernameOrEmailChange}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  handleSignIn();
+                }
+              }}
+              error={!!usernameOrEmailError}
+              helperText={usernameOrEmailError}
+              sx={{ marginBottom: 2, mt: 3 }}
+            />
+            <TextField
+              fullWidth
+              type={showPassword ? 'text' : 'password'}
+              variant='outlined'
+              value={password}
+              label='Password'
+              error={!!passwordError}
+              helperText={passwordError}
+              onChange={handlePasswordChange}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  handleSignIn();
+                }
+              }}
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position='end'>
+                      <IconButton onClick={togglePasswordVisibility}>
+                        {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }
+              }}
+            />
+            <Box sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
+              mb: 2,
+            }}
+            >
+              <Button color='secondary' onClick={() => navigate('/forgot-password')} sx={{ textTransform: 'none' }}>
+                Forgot Password?
+              </Button>
+            </Box>
+            <Button
+              fullWidth
+              variant='contained'
+              color='secondary'
+              onClick={handleSignIn}
+              sx={{ borderRadius: 20, textTransform: 'none' }}
+            >
+              <Typography fontSize='18px'>Log In</Typography>
             </Button>
-          </Box>
-          <Button
-            fullWidth
-            variant='contained'
-            color='secondary'
-            onClick={handleSignIn}
-            sx={{ borderRadius: 20, textTransform: 'none' }}
-          >
-            <Typography fontSize='18px'>Log In</Typography>
-          </Button>
-          <Space s24 />
-          <Divider sx={{ margin: '20px 0', position: 'relative' }}>
-            <Typography
+            <Space s24 />
+            <Divider sx={{ margin: '20px 0', position: 'relative' }}>
+              <Typography
+                sx={{
+                  position: 'absolute', top: '-12px', left: 'calc(50% - 16px)', padding: '0 10px'
+                }}
+              >
+                or
+              </Typography>
+            </Divider>
+            <Space s24 />
+            <Button
+              fullWidth
+              variant='outlined'
+              onClick={handleGoogleSignIn}
               sx={{
-                position: 'absolute', top: '-12px', left: 'calc(50% - 16px)', padding: '0 10px'
+                color: 'black', borderColor: 'black', mb: 1, borderRadius: 20, textTransform: 'none',
               }}
             >
-              or
-            </Typography>
-          </Divider>
-          <Space s24 />
-          <Button
-            fullWidth
-            variant='outlined'
-            onClick={handleGoogleSignIn}
-            sx={{
-              color: 'black', borderColor: 'black', mb: 1, borderRadius: 20, textTransform: 'none',
-            }}
-          >
-            <Box sx={{
-              width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center'
-            }}
-            >
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <GoogleIcon sx={{ mr: 7, color: 'red' }} />
-                <Typography fontSize='18px'>Continue with Google</Typography>
+              <Box sx={{
+                width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+              }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <GoogleIcon sx={{ mr: 11.5, color: 'red' }} />
+                  <Typography fontSize='18px'>Continue with Google</Typography>
+                </Box>
               </Box>
-            </Box>
-          </Button>
-          <Space s24 />
-          <Divider sx={{ margin: '20px 0' }} />
-          <Space s24 />
-          <Typography textAlign='center'>
-            Don’t have an account yet?
-            {' '}
-            <Link to='/register'>Sign up to Bite by Byte!</Link>
-          </Typography>
+            </Button>
+            <Space s24 />
+            <Divider sx={{ margin: '20px 0' }} />
+            <Space s24 />
+            <Typography textAlign='center'>
+              Don’t have an account yet?
+              {' '}
+              <Link to='/register'>Sign up to Bite by Byte!</Link>
+            </Typography>
+          </Box>
         </Box>
-      </Box>
-    </ContentContainer>
+      </ContentContainer>
+    </GlobalBackground>
   );
 };
