@@ -15,18 +15,18 @@
     "@vitejs/plugin-react": "^4.3.3",
     "axios": "^1.7.7",
     "css-select": "^5.1.0",
-    "firebase": "^10.10.0",
-    "firebase-admin": "^12.2.0",
+    "firebase": "^11.0.1",
+    "firebase-admin": "^12.7.0",
     "postcss": "^8.4.39",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-firebase-hooks": "^5.1.1",
-    "react-router-dom": "^6.22.1",
-    "react-toastify": "^10.0.5",
+    "react-router-dom": "^6.27.0",
+    "react-toastify": "^10.0.6",
     "resolve-url-loader": "^5.0.0",
     "svgo": "^3.3.2",
-    "vite": "^5.3.3",
-    "web-vitals": "^2.1.4"
+    "vite": "^5.4.10",
+    "web-vitals": "^4.2.4"
   },
   "scripts": {
     "dev": "vite --host",
@@ -48,17 +48,17 @@
     "eslint": "^8.57.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-import-resolver-typescript": "^3.6.1",
-    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jest": "^28.8.3",
-    "eslint-plugin-jsx-a11y": "^6.8.0",
-    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "29.7.0",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
-    "typescript": "^5.6.2",
-    "vite-plugin-svgr": "^4.2.0"
+    "typescript": "^5.6.3",
+    "vite-plugin-svgr": "^4.3.0"
   }
 }
