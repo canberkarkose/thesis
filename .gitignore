@@ -27,3 +27,5 @@ yarn-error.log*
 .env
 
 .vscode
+
+src/firebase-config.ts
