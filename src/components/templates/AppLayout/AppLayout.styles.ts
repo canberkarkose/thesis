@@ -6,7 +6,8 @@ interface ContentAreaProps {
 
 export const MainContainer = styled.div`
   display: flex;
-  margin-top: 100px; /* Adjust based on header height */
+  margin-top: 10%;
+  margin-left: 5%;
 `;
 
 export const ContentArea = styled.main<ContentAreaProps>`

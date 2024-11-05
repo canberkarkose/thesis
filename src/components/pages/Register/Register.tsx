@@ -51,17 +51,10 @@ export const Register = () => {
         localStorage.removeItem('justLoggedIn');
       } else {
         toast.info('You are already logged in. Accessing another account? Please log out first.', { position: 'bottom-left' });
+        navigate('/app/dashboard');
       }
-      setTimeout(() => {
-        if (user.accountDetailsCompleted) {
-          navigate('/app/dashboard');
-          toast.success('Successfully logged in.', { position: 'bottom-left' });
-        } else {
-          navigate('/app/account-details');
-        }
-      }, 1000);
     }
-  }, [user, authLoading, navigate]);
+  }, [user, authLoading]);
 
   if (authLoading || user || isLoading) {
     return (

@@ -30,26 +30,24 @@ export const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [usernameOrEmailError, setUsernameOrEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const { user, loading } = useAuth();
+  const { user, loading: authLoading } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!loading && user) {
+    if (authLoading) return;
+
+    if (user) {
       if (localStorage.getItem('justLoggedIn')) {
         localStorage.removeItem('justLoggedIn');
       } else {
         toast.info('You are already logged in. Accessing another account? Please log out first.', { position: 'bottom-left' });
-      }
-      if (user.accountDetailsCompleted) {
         navigate('/app/dashboard');
-        toast.success('Successfully logged in.', { position: 'bottom-left' });
-      } else {
-        navigate('/app/account-details');
       }
     }
-  }, [user, loading, navigate]);
+  }, [user, authLoading]);
 
-  if (loading || user) {
+  if (authLoading || user || isLoading) {
     return (
       <Box display='flex' justifyContent='center' alignItems='center' minHeight='100vh'>
         <CircularProgress />
@@ -79,14 +77,16 @@ export const Login = () => {
       if (!password) setPasswordError('Please provide your password.');
       return;
     }
-
     try {
+      setIsLoading(true);
       await login(usernameOrEmail, password);
       localStorage.setItem('justLoggedIn', 'true');
       setTimeout(() => {
         navigate('/app/dashboard');
+        toast.success('Successfully logged in.', { position: 'bottom-left' });
       }, 1000);
     } catch (error) {
+      setIsLoading(false);
       console.error('Login error:', error);
       // Check if error is an instance of Error and contains expected properties
       if (error instanceof Error && 'message' in error) {
@@ -110,11 +110,15 @@ export const Login = () => {
   const handleGoogleSignIn = async () => {
     try {
       localStorage.setItem('justLoggedIn', 'true');
-      const { isNewUser } = await googleSignIn();
+      const { user: signedInUser, isNewUser } = await googleSignIn();
 
-      setTimeout(() => {
-        navigate(isNewUser ? '/app/account-details' : '/app/dashboard');
-      }, 1000);
+      if (signedInUser) {
+        if (isNewUser) {
+          navigate('/app/account-details');
+        } else {
+          navigate('/app/dashboard');
+        }
+      }
     } catch (error) {
       console.error('Google sign-in failed:', error);
       toast.error('Google sign-in failed. Please try again.', { position: 'bottom-left' });
