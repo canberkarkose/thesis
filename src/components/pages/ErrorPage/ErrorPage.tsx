@@ -7,7 +7,7 @@ interface ErrorPageProps {
   isAuthenticated: boolean;
 }
 
-export const ErrorPage = ({ errorCode = 404, errorMessage = 'Page Not Found', isAuthenticated }: ErrorPageProps) => {
+export const ErrorPage = ({ errorCode = 404, errorMessage = 'Oops.. Page Not Found', isAuthenticated }: ErrorPageProps) => {
   const navigate = useNavigate();
 
   const handleGoBack = () => {
@@ -27,7 +27,7 @@ export const ErrorPage = ({ errorCode = 404, errorMessage = 'Page Not Found', is
       minHeight='100vh'
       textAlign='center'
     >
-      <Typography variant='h1' fontWeight='bold' color='error'>
+      <Typography variant='h1' fontWeight='bold' color='primary.dark'>
         {errorCode}
       </Typography>
       <Typography variant='h5' marginBottom='16px'>

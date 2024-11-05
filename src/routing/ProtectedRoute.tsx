@@ -39,19 +39,21 @@ export const ProtectedRoute = () => {
           if (docSnap.exists()) {
             const { accountDetailsCompleted } = docSnap.data();
 
+            // Only handle navigation and toasts if the page is accessed directly
             if (!accountDetailsCompleted && !location.pathname.includes('/app/account-details')) {
-              // Redirect to account details page if not completed
               navigate('/app/account-details');
-            } else if (accountDetailsCompleted && location.pathname.includes('/app/account-details')) {
-              // Redirect to dashboard if account details are already completed
+            } else if (
+              accountDetailsCompleted
+              && location.pathname.includes('/app/account-details')
+            ) {
+              navigate('/app/dashboard');
               toast.info(
-                'Your account details are already configured. Visit profile settings to make changes.',
+                'Your account details are already configured. Visit account settings to make changes.',
                 { position: 'bottom-left' }
               );
-              navigate('/app/dashboard');
-            } else {
-              setIsInitialCheckComplete(true);
             }
+
+            setIsInitialCheckComplete(true);
           } else {
             console.error('No such document!');
             setIsInitialCheckComplete(true);
@@ -61,7 +63,13 @@ export const ProtectedRoute = () => {
           setIsInitialCheckComplete(true);
         }
       };
-      fetchUserDetails();
+
+      // Fetch user details only if this is an initial check (e.g., page refresh)
+      if (!isInitialCheckComplete) {
+        fetchUserDetails();
+      } else {
+        setIsInitialCheckComplete(true);
+      }
     }
   }, [user, loading, location.pathname]);
 

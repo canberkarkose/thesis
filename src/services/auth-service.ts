@@ -112,11 +112,7 @@ export const googleSignIn = async () => {
       }
 
       // Save the new user data to the database
-      await setDoc(doc(db, 'users', user.uid), {
-        username,
-        email,
-        accountDetailsCompleted: false,
-      });
+      await setUserDocument(user.uid, username, email || '');
     }
 
     // Return user and new user status
