@@ -2,6 +2,7 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Typography,
 } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useState } from 'react';
@@ -10,7 +11,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import {
-  HeaderContainer, LogoContainer, AccountActions, LogoText, HeaderContent
+  HeaderContainer, LogoContainer, AccountActions, HeaderContent
 } from './AppHeader.styles';
 
 import { BTBLogo } from '@src/assets';
@@ -45,7 +46,19 @@ export const AppHeader = () => {
         <LogoContainer>
           <Link to='/app/dashboard' style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
             <BTBLogo />
-            <LogoText variant='h6'>Bite by Byte</LogoText>
+            <Typography
+              variant='h5'
+              component='h1'
+              sx={{
+                fontWeight: 'bold', color: 'white', lineHeight: 1.2, mb: '15%'
+              }}
+            >
+              Bite
+              <br />
+              by
+              <br />
+              Byte
+            </Typography>
           </Link>
         </LogoContainer>
         <AccountActions>

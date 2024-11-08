@@ -116,7 +116,12 @@ export const Login = () => {
         if (isNewUser) {
           navigate('/app/account-details');
         } else {
-          navigate('/app/dashboard');
+          setTimeout(() => {
+            navigate('/app/dashboard');
+            toast.success('Successfully signed in with Google.', {
+              position: 'bottom-left',
+            });
+          }, 1000);
         }
       }
     } catch (error) {
