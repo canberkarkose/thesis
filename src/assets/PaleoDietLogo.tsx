@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 /* eslint-disable react/jsx-props-no-spreading */
 export const PaleoDietLogo = (props: React.SVGProps<SVGSVGElement>) => (
   <svg

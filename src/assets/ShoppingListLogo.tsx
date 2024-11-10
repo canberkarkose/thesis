@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 export const ShoppingListLogo = () => (
   <svg
     version='1.0'

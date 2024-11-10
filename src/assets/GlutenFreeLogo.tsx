@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 /* eslint-disable react/jsx-props-no-spreading */
 export const GlutenFreeLogo = (props: React.SVGProps<SVGSVGElement>) => (
   <svg xmlns='http://www.w3.org/2000/svg' viewBox='-2 -3 64 64' {...props}>

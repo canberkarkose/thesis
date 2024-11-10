@@ -3,6 +3,8 @@
 import React from 'react';
 import { IconButton, Typography, Tooltip } from '@mui/material';
 
+import { dataTestIds } from '../../../dataTest/dataTestIds';
+
 import { CustomContainer, CustomBox } from './CustomIconButtonAndText.styles';
 
 interface CustomIconButtonAndTextProps {
@@ -22,16 +24,25 @@ export const CustomIconButtonAndText = ({
     <CustomBox>
       {tooltip ? (
         <Tooltip title={tooltip}>
-          <IconButton onClick={onIconClick} sx={{ right: 10 }}>
+          <IconButton
+            data-testid={dataTestIds.components.customIconButtonAndText.iconButton}
+            onClick={onIconClick}
+            sx={{ right: 10 }}
+          >
             {icon}
           </IconButton>
         </Tooltip>
       ) : (
-        <IconButton onClick={onIconClick} sx={{ right: 10 }}>
+        <IconButton
+          data-testid={dataTestIds.components.customIconButtonAndText.iconButton}
+          onClick={onIconClick}
+          sx={{ right: 10 }}
+        >
           {icon}
         </IconButton>
       )}
       <Typography
+        data-testid={dataTestIds.components.customIconButtonAndText.text}
         variant='h4'
         sx={{
           fontWeight: 'bold',

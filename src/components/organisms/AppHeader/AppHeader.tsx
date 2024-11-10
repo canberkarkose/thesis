@@ -1,3 +1,5 @@
+// AppHeader.tsx
+
 import {
   IconButton,
   Menu,
@@ -10,12 +12,15 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { toast } from 'react-toastify';
 
+import { dataTestIds } from '../../../dataTest/dataTestIds';
+
+import { BTBLogo } from '../../../assets'; // TODO: should be able to use @src directly but cant check it later
+
+import { logout } from '../../../services/auth-service';
+
 import {
   HeaderContainer, LogoContainer, AccountActions, HeaderContent
 } from './AppHeader.styles';
-
-import { BTBLogo } from '@src/assets';
-import { logout } from '@src/services/auth-service';
 
 export const AppHeader = () => {
   const navigate = useNavigate();
@@ -41,9 +46,9 @@ export const AppHeader = () => {
   };
 
   return (
-    <HeaderContainer>
+    <HeaderContainer data-testid={dataTestIds.components.appHeader.container}>
       <HeaderContent>
-        <LogoContainer>
+        <LogoContainer data-testid={dataTestIds.components.appHeader.logo}>
           <Link to='/app/dashboard' style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
             <BTBLogo />
             <Typography
@@ -69,6 +74,7 @@ export const AppHeader = () => {
             aria-haspopup='true'
             onClick={handleMenu}
             color='inherit'
+            data-testid={dataTestIds.components.appHeader.accountButton}
           >
             <AccountCircleIcon style={{ fontSize: '40px' }} />
             {' '}
@@ -87,10 +93,26 @@ export const AppHeader = () => {
             }}
             open={Boolean(anchorEl)}
             onClose={handleClose}
+            data-testid={dataTestIds.components.appHeader.menu}
           >
-            <MenuItem onClick={handleClose}>Profile</MenuItem>
-            <MenuItem onClick={handleClose}>Account</MenuItem>
-            <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            <MenuItem
+              onClick={handleClose}
+              data-testid={dataTestIds.components.appHeader.menuItemProfile}
+            >
+              Profile
+            </MenuItem>
+            <MenuItem
+              onClick={handleClose}
+              data-testid={dataTestIds.components.appHeader.menuItemAccount}
+            >
+              Account
+            </MenuItem>
+            <MenuItem
+              onClick={handleLogout}
+              data-testid={dataTestIds.components.appHeader.menuItemLogout}
+            >
+              Logout
+            </MenuItem>
           </Menu>
         </AccountActions>
       </HeaderContent>

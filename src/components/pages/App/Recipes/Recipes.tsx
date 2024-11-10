@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useRef, useState } from 'react';
 import { Box, CircularProgress } from '@mui/material';
+
+import { mockRecipes } from './mockRecipes';
 
 import { RecipeCard } from '@components/molecules/RecipeCard/RecipeCard';
 import { fetchRandomRecipes } from '@src/services/spoonacular-service';
@@ -14,7 +17,7 @@ interface Recipe {
 
 export const Recipes = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false); // Change to true to fetch real recipes
   const [error, setError] = useState<string | null>(null);
   const hasFetched = useRef(false);
 
@@ -32,7 +35,7 @@ export const Recipes = () => {
           setIsLoading(false);
         }
       };
-      loadRecipes();
+      // loadRecipes(); // Uncomment this line to fetch real recipes
     }
   }, []);
 
@@ -53,7 +56,7 @@ export const Recipes = () => {
 
   return (
     <Box display='flex' flexWrap='wrap' justifyContent='center'>
-      {recipes.map((recipe) => (
+      {mockRecipes.map((recipe) => ( // Replace mockRecipes with recipes
         <RecipeCard
           key={recipe.id}
           image={recipe.image || ''}

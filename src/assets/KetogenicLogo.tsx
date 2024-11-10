@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 /* eslint-disable react/jsx-props-no-spreading */
 export const KetogenicLogo = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
