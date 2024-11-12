@@ -212,7 +212,7 @@ export const PlaceholderIngredientImage = styled(Box)(() => ({
 
 export const InstructionsContainer = styled(Box)(({ theme }) => ({
   width: '100%',
-  backgroundColor: '#9dbc21',
+  backgroundColor: '#b8da2e',
   borderRadius: '12px',
   padding: theme.spacing(5),
   marginTop: theme.spacing(1),

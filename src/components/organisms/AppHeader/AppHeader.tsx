@@ -34,6 +34,11 @@ export const AppHeader = () => {
     setAnchorEl(null);
   };
 
+  const handleNavigateAccount = () => {
+    navigate('/app/account');
+    handleClose();
+  };
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -96,13 +101,7 @@ export const AppHeader = () => {
             data-testid={dataTestIds.components.appHeader.menu}
           >
             <MenuItem
-              onClick={handleClose}
-              data-testid={dataTestIds.components.appHeader.menuItemProfile}
-            >
-              Profile
-            </MenuItem>
-            <MenuItem
-              onClick={handleClose}
+              onClick={handleNavigateAccount}
               data-testid={dataTestIds.components.appHeader.menuItemAccount}
             >
               Account

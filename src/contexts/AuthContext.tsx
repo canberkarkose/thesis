@@ -10,7 +10,7 @@ import { User as FirebaseUser, getAuth, onAuthStateChanged } from 'firebase/auth
 
 import { app } from '../firebase-config';
 
-interface CustomUser extends FirebaseUser {
+export interface CustomUser extends FirebaseUser {
   accountDetailsCompleted?: boolean;
   username?: string;
 }
