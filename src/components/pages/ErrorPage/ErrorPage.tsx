@@ -24,8 +24,8 @@ export const ErrorPage = ({ errorCode = 404, errorMessage = 'Oops.. Page Not Fou
       flexDirection='column'
       alignItems='center'
       justifyContent='center'
-      minHeight='100vh'
       textAlign='center'
+      marginTop='20%'
     >
       <Typography variant='h1' fontWeight='bold' color='primary.dark'>
         {errorCode}
@@ -34,7 +34,7 @@ export const ErrorPage = ({ errorCode = 404, errorMessage = 'Oops.. Page Not Fou
         {errorMessage}
       </Typography>
       <Button variant='contained' color='primary' onClick={handleGoBack}>
-        {isAuthenticated ? 'Go back to Dashboard' : 'Go to Home'}
+        {isAuthenticated ? 'Go back to Dashboard' : 'Go back to Home'}
       </Button>
     </Box>
   );

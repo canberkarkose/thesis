@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 export const ItalianFoodLogo = () => (
   <svg viewBox='0 0 128 128' xmlns='http://www.w3.org/2000/svg' aria-hidden='true' role='img' className='iconify iconify--noto' preserveAspectRatio='xMidYMid meet'>
     <path d='M62.27 52.91c-35.89.46-57.79 15.72-57.01 36.63c.82 22.12 28.07 35.13 59.81 35.1c36.15-.03 56.86-17.55 57.32-34.04c.54-19.23-18.8-38.21-60.12-37.69z' fill='#dbdad8' />

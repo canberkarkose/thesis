@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 /* eslint-disable react/jsx-props-no-spreading */
 export const NoEggLogo = (props: React.SVGProps<SVGSVGElement>) => (
   <svg xmlns='http://www.w3.org/2000/svg' width={512} height={512} viewBox='-10 -20 542 512' {...props}>

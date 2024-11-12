@@ -161,6 +161,9 @@ export const Register = () => {
         if (isNewUser) {
           navigate('/app/account-details');
         } else {
+          toast.success('Successfully signed in with Google.', {
+            position: 'bottom-left',
+          });
           navigate('/app/dashboard');
         }
       }

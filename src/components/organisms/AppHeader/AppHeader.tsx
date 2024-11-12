@@ -1,7 +1,10 @@
+// AppHeader.tsx
+
 import {
   IconButton,
   Menu,
   MenuItem,
+  Typography,
 } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useState } from 'react';
@@ -9,12 +12,15 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { toast } from 'react-toastify';
 
-import {
-  HeaderContainer, LogoContainer, AccountActions, LogoText, HeaderContent
-} from './AppHeader.styles';
+import { dataTestIds } from '../../../dataTest/dataTestIds';
 
-import { BTBLogo } from '@src/assets';
-import { logout } from '@src/services/auth-service';
+import { BTBLogo } from '../../../assets'; // TODO: should be able to use @src directly but cant check it later
+
+import { logout } from '../../../services/auth-service';
+
+import {
+  HeaderContainer, LogoContainer, AccountActions, HeaderContent
+} from './AppHeader.styles';
 
 export const AppHeader = () => {
   const navigate = useNavigate();
@@ -40,12 +46,24 @@ export const AppHeader = () => {
   };
 
   return (
-    <HeaderContainer>
+    <HeaderContainer data-testid={dataTestIds.components.appHeader.container}>
       <HeaderContent>
-        <LogoContainer>
+        <LogoContainer data-testid={dataTestIds.components.appHeader.logo}>
           <Link to='/app/dashboard' style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
             <BTBLogo />
-            <LogoText variant='h6'>Bite by Byte</LogoText>
+            <Typography
+              variant='h5'
+              component='h1'
+              sx={{
+                fontWeight: 'bold', color: 'white', lineHeight: 1.2, mb: '15%'
+              }}
+            >
+              Bite
+              <br />
+              by
+              <br />
+              Byte
+            </Typography>
           </Link>
         </LogoContainer>
         <AccountActions>
@@ -56,6 +74,7 @@ export const AppHeader = () => {
             aria-haspopup='true'
             onClick={handleMenu}
             color='inherit'
+            data-testid={dataTestIds.components.appHeader.accountButton}
           >
             <AccountCircleIcon style={{ fontSize: '40px' }} />
             {' '}
@@ -74,10 +93,26 @@ export const AppHeader = () => {
             }}
             open={Boolean(anchorEl)}
             onClose={handleClose}
+            data-testid={dataTestIds.components.appHeader.menu}
           >
-            <MenuItem onClick={handleClose}>Profile</MenuItem>
-            <MenuItem onClick={handleClose}>Account</MenuItem>
-            <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            <MenuItem
+              onClick={handleClose}
+              data-testid={dataTestIds.components.appHeader.menuItemProfile}
+            >
+              Profile
+            </MenuItem>
+            <MenuItem
+              onClick={handleClose}
+              data-testid={dataTestIds.components.appHeader.menuItemAccount}
+            >
+              Account
+            </MenuItem>
+            <MenuItem
+              onClick={handleLogout}
+              data-testid={dataTestIds.components.appHeader.menuItemLogout}
+            >
+              Logout
+            </MenuItem>
           </Menu>
         </AccountActions>
       </HeaderContent>

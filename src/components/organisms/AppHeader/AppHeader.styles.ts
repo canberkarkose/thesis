@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { AppBar, Typography } from '@mui/material';
+import { AppBar } from '@mui/material';
 
 export const HeaderContainer = styled(AppBar)`
   background-color: #3C4C3D;
@@ -26,23 +26,14 @@ export const AccountActions = styled.div`
 
 export const LogoContainer = styled.div`
   display: flex;
-  align-items: center;
   flex-grow: 0;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   margin-top: 1.3%;
-  margin-left: 40%;
+  margin-left: 2%;
   svg {
     width: 100px;
     height: auto;
   }
-`;
-
-export const LogoText = styled(Typography)`
-  font-weight: bold;
-  font-size: 1.5rem;
-  color: white;
-  margin-left: 10px;
-  margin-bottom: 5%;
 `;
