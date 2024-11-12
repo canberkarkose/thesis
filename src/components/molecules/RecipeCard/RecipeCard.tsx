@@ -13,9 +13,12 @@ interface RecipeCardProps {
   image?: string;
   title: string;
   description: string;
+  onSeeMore: () => void;
 }
 
-export const RecipeCard = ({ image, title, description }: RecipeCardProps) => {
+export const RecipeCard = ({
+  image, title, description, onSeeMore
+}: RecipeCardProps) => {
   const titleRef = useRef<HTMLDivElement>(null);
   const [isTitleTruncated, setIsTitleTruncated] = useState(false);
 
@@ -105,6 +108,7 @@ export const RecipeCard = ({ image, title, description }: RecipeCardProps) => {
               backgroundColor: '#5d6e0d'
             }
           }}
+          onClick={onSeeMore}
         >
           See More
         </Button>
