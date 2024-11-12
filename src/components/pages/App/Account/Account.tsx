@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   Box,
   Typography,
@@ -21,7 +21,13 @@ import { toast } from 'react-toastify';
 import { Container } from './Account.styles';
 
 import { UserData } from './Account.types';
-import { fetchUserData } from './Account.helpers';
+import {
+  fetchUserData,
+  validateUsername,
+  hasUnsavedChanges,
+  validateEmail,
+  checkEmailAvailability,
+} from './Account.helpers';
 
 import { useAuth } from '@src/contexts/AuthContext';
 import { db } from '@src/firebase-config';
@@ -31,6 +37,7 @@ import {
   intolerancesTypes,
   cuisines,
 } from '@components/pages/AccountDetails/Steps/constants';
+import { checkUsernameAvailabilityHttp } from '@src/services/auth-service';
 
 export const Account = () => {
   const { user, loading } = useAuth();
@@ -47,6 +54,19 @@ export const Account = () => {
   const [intolerances, setIntolerances] = useState<string[]>([]);
   const [includedCuisines, setIncludedCuisines] = useState<string[]>([]);
   const [excludedCuisines, setExcludedCuisines] = useState<string[]>([]);
+
+  const [usernameError, setUsernameError] = useState('');
+  const [emailError, setEmailError] = useState('');
+
+  const hasChanges = useMemo(() => hasUnsavedChanges(
+    userData,
+    username,
+    email,
+    diet,
+    intolerances,
+    includedCuisines,
+    excludedCuisines
+  ), [userData, username, email, diet, intolerances, includedCuisines, excludedCuisines]);
 
   useEffect(() => {
     const getUserData = async () => {
@@ -78,6 +98,28 @@ export const Account = () => {
   const handleSaveChanges = async () => {
     try {
       if (user) {
+        if (username !== userData?.username) {
+          // Check if the new username is available
+          const isAvailable = await checkUsernameAvailabilityHttp(username);
+          if (!isAvailable) {
+            // Username is already taken
+            setUsernameError('Username is already taken');
+            return; // Do not proceed further
+          }
+        }
+
+        if (email !== userData?.email) {
+          const emailValidationError = validateEmail(email);
+          if (emailValidationError) {
+            setEmailError(emailValidationError);
+            return;
+          }
+          const isAvailable = await checkEmailAvailability(email, user.uid);
+          if (!isAvailable) {
+            setEmailError('Email is already in use.');
+            return;
+          }
+        }
         const docRef = doc(db, 'users', user.uid);
         await updateDoc(docRef, {
           username,
@@ -91,11 +133,25 @@ export const Account = () => {
             },
           },
         });
+        setUserData((prevUserData) => ({
+          ...prevUserData!,
+          username,
+          email,
+          accountDetails: {
+            ...prevUserData?.accountDetails,
+            diet,
+            intolerances,
+            cuisinePreferences: {
+              includedCuisines,
+              excludedCuisines,
+            },
+          },
+        }));
+        setIsEditingUserInfo(false);
+        setIsEditingPreferences(false);
         toast.success('Account details updated successfully!', {
           position: 'bottom-left',
         });
-        setIsEditingUserInfo(false);
-        setIsEditingPreferences(false);
       }
     } catch (error) {
       console.error('Failed to update user details:', error);
@@ -120,6 +176,8 @@ export const Account = () => {
     }
     setIsEditingUserInfo(false);
     setIsEditingPreferences(false);
+    setUsernameError('');
+    setEmailError('');
     toast.info('Changes discarded.', { position: 'bottom-left' });
   };
 
@@ -142,7 +200,15 @@ export const Account = () => {
       <Divider sx={{ my: 2 }} />
       <Box display='flex' justifyContent='space-between' alignItems='center'>
         <Typography variant='h6'>User Information</Typography>
-        <IconButton onClick={() => setIsEditingUserInfo(!isEditingUserInfo)}>
+        <IconButton
+          onClick={() => {
+            setIsEditingUserInfo(!isEditingUserInfo);
+            if (!isEditingUserInfo) {
+              const error = validateUsername(username);
+              setUsernameError(error);
+            }
+          }}
+        >
           <EditIcon />
         </IconButton>
       </Box>
@@ -150,20 +216,37 @@ export const Account = () => {
         <TextField
           label='Username'
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => {
+            const newValue = e.target.value;
+            setUsername(newValue);
+            if (isEditingUserInfo) {
+              const error = validateUsername(newValue);
+              setUsernameError(error);
+            }
+          }}
           disabled={!isEditingUserInfo}
           fullWidth
           margin='normal'
+          error={Boolean(usernameError)}
+          helperText={usernameError}
         />
         <TextField
           label='Email'
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => {
+            const newValue = e.target.value;
+            setEmail(newValue);
+            if (isEditingUserInfo) {
+              const error = validateEmail(newValue);
+              setEmailError(error);
+            }
+          }}
           disabled={!isEditingUserInfo}
           fullWidth
           margin='normal'
+          error={Boolean(emailError)}
+          helperText={emailError}
         />
-        {/* Add Change Password functionality here */}
       </Box>
       <Divider sx={{ my: 2 }} />
       <Box display='flex' justifyContent='space-between' alignItems='center'>
@@ -253,6 +336,7 @@ export const Account = () => {
             }}
             startIcon={<SaveIcon />}
             onClick={handleSaveChanges}
+            disabled={Boolean(usernameError) || Boolean(emailError) || !hasChanges}
           >
             Save Changes
           </Button>

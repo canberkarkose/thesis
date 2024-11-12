@@ -1,4 +1,6 @@
-import { doc, getDoc } from 'firebase/firestore';
+import {
+  doc, getDoc, collection, query, where, getDocs
+} from 'firebase/firestore';
 
 import { User } from 'firebase/auth';
 
@@ -25,4 +27,74 @@ export const fetchUserData = async (user: User | null): Promise<UserData | null>
     }
   }
   return null;
+};
+
+export const checkEmailAvailability = async (
+  email: string,
+  currentUserId: string
+): Promise<boolean> => {
+  const usersRef = collection(db, 'users');
+  const q = query(usersRef, where('email', '==', email));
+  const querySnapshot = await getDocs(q);
+  let emailAvailable = true;
+  querySnapshot.forEach((docc) => {
+    if (docc.id !== currentUserId) {
+      emailAvailable = false;
+    }
+  });
+  return emailAvailable;
+};
+
+export const validateUsername = (value: string): string => {
+  const trimmedValue = value.trim();
+  if (trimmedValue.length === 0) {
+    return 'Username cannot be empty.';
+  } if (trimmedValue.length < 3 || trimmedValue.length > 50) {
+    return 'Username must be between 3 and 50 characters.';
+  }
+  return '';
+};
+
+export const validateEmail = (rawEmail: string): string => {
+  const email = rawEmail.trim();
+  if (!email) {
+    return 'Email cannot be empty.';
+  }
+  const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(decodeURIComponent(email));
+  if (!isValid) {
+    return 'Please enter a valid email address.';
+  }
+  return '';
+};
+
+export const hasUnsavedChanges = (
+  userData: UserData | null,
+  username: string,
+  email: string,
+  diet: string,
+  intolerances: string[],
+  includedCuisines: string[],
+  excludedCuisines: string[]
+): boolean => {
+  if (!userData) return false;
+
+  const isUsernameChanged = username !== userData.username;
+  const isEmailChanged = email !== userData.email;
+
+  const isDietChanged = diet !== (userData.accountDetails?.diet || '');
+  const isIntolerancesChanged = JSON.stringify(intolerances)
+    !== JSON.stringify(userData.accountDetails?.intolerances || []);
+  const isIncludedCuisinesChanged = JSON.stringify(includedCuisines)
+    !== JSON.stringify(userData.accountDetails?.cuisinePreferences?.includedCuisines || []);
+  const isExcludedCuisinesChanged = JSON.stringify(excludedCuisines)
+    !== JSON.stringify(userData.accountDetails?.cuisinePreferences?.excludedCuisines || []);
+
+  return (
+    isUsernameChanged
+    || isEmailChanged
+    || isDietChanged
+    || isIntolerancesChanged
+    || isIncludedCuisinesChanged
+    || isExcludedCuisinesChanged
+  );
 };
