@@ -10,9 +10,18 @@ import {
   Divider,
   Autocomplete,
   Checkbox,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  InputAdornment
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+
+import { updateEmail, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth';
 
 import { doc, updateDoc } from 'firebase/firestore';
 
@@ -57,6 +66,10 @@ export const Account = () => {
 
   const [usernameError, setUsernameError] = useState('');
   const [emailError, setEmailError] = useState('');
+  const [password, setPassword] = useState('');
+  const [isReauthRequired, setIsReauthRequired] = useState(false);
+  const [passwordError, setPasswordError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const hasChanges = useMemo(() => hasUnsavedChanges(
     userData,
@@ -95,63 +108,83 @@ export const Account = () => {
     }
   }, [userData]);
 
+  const updateFirestoreUser = async () => {
+    if (!user) return;
+    const docRef = doc(db, 'users', user.uid);
+    await updateDoc(docRef, {
+      username,
+      email,
+      accountDetails: {
+        diet,
+        intolerances,
+        cuisinePreferences: {
+          includedCuisines,
+          excludedCuisines,
+        },
+      },
+    });
+
+    setUserData((prevUserData) => ({
+      ...prevUserData!,
+      username,
+      email,
+      accountDetails: {
+        ...prevUserData?.accountDetails,
+        diet,
+        intolerances,
+        cuisinePreferences: {
+          includedCuisines,
+          excludedCuisines,
+        },
+      },
+    }));
+  };
+
   const handleSaveChanges = async () => {
     try {
       if (user) {
+        let shouldReauth = false;
+        // Handle Username Changes
         if (username !== userData?.username) {
-          // Check if the new username is available
-          const isAvailable = await checkUsernameAvailabilityHttp(username);
-          if (!isAvailable) {
-            // Username is already taken
+          const isUsernameAvailable = await checkUsernameAvailabilityHttp(username);
+          if (!isUsernameAvailable) {
             setUsernameError('Username is already taken');
-            return; // Do not proceed further
+            return; // Stop further execution
           }
         }
-
+        // Handle Email Changes
         if (email !== userData?.email) {
+          // Validate email
           const emailValidationError = validateEmail(email);
           if (emailValidationError) {
             setEmailError(emailValidationError);
             return;
           }
-          const isAvailable = await checkEmailAvailability(email, user.uid);
-          if (!isAvailable) {
+          // Check email availability
+          const isEmailAvailable = await checkEmailAvailability(email, user.uid);
+          if (!isEmailAvailable) {
             setEmailError('Email is already in use.');
             return;
           }
+          // Flag to trigger re-authentication
+          shouldReauth = true;
         }
-        const docRef = doc(db, 'users', user.uid);
-        await updateDoc(docRef, {
-          username,
-          email,
-          accountDetails: {
-            diet,
-            intolerances,
-            cuisinePreferences: {
-              includedCuisines,
-              excludedCuisines,
-            },
-          },
-        });
-        setUserData((prevUserData) => ({
-          ...prevUserData!,
-          username,
-          email,
-          accountDetails: {
-            ...prevUserData?.accountDetails,
-            diet,
-            intolerances,
-            cuisinePreferences: {
-              includedCuisines,
-              excludedCuisines,
-            },
-          },
-        }));
-        setIsEditingUserInfo(false);
-        setIsEditingPreferences(false);
+        if (shouldReauth) {
+          // Open re-authentication dialog
+          setIsReauthRequired(true);
+          return; // Wait for re-authentication
+        }
+        // If no email change, proceed to update Firestore
+        await updateFirestoreUser();
+        // Show success message
         toast.success('Account details updated successfully!', {
           position: 'bottom-left',
         });
+        // Exit edit modes
+        setIsEditingUserInfo(false);
+        setIsEditingPreferences(false);
+        setUsernameError('');
+        setEmailError('');
       }
     } catch (error) {
       console.error('Failed to update user details:', error);
@@ -159,6 +192,45 @@ export const Account = () => {
         position: 'bottom-left',
       });
     }
+  };
+
+  const handleReauthenticate = async () => {
+    try {
+      if (!user || !userData) return;
+      // Create credentials with the user's current email and entered password
+      const credential = EmailAuthProvider.credential(userData.email, password);
+      // Re-authenticate the user
+      await reauthenticateWithCredential(user, credential);
+      // Update email in Firebase Auth
+      await updateEmail(user, email);
+      // Update Firestore
+      await updateFirestoreUser();
+      // Reset states and close dialog
+      setIsEditingUserInfo(false);
+      setIsEditingPreferences(false);
+      setIsReauthRequired(false);
+      setPassword('');
+      setUsernameError('');
+      setEmailError('');
+      // Show success message
+      toast.success('Account details updated successfully!', {
+        position: 'bottom-left',
+      });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.error('Re-authentication failed:', error);
+      if (error.code === 'auth/wrong-password') {
+        setPasswordError('Incorrect password. Please try again.');
+      } else if (error.code === 'auth/too-many-requests') {
+        setPasswordError('Too many requests. Please try again later.');
+      } else {
+        toast.error('Failed to re-authenticate. Please try again later.', { position: 'bottom-left' });
+      }
+    }
+  };
+
+  const handleClickShowPassword = () => {
+    setShowPassword((prev) => !prev);
   };
 
   const handleDiscardChanges = () => {
@@ -178,6 +250,9 @@ export const Account = () => {
     setIsEditingPreferences(false);
     setUsernameError('');
     setEmailError('');
+    setPassword('');
+    setPasswordError('');
+    setIsReauthRequired(false);
     toast.info('Changes discarded.', { position: 'bottom-left' });
   };
 
@@ -204,8 +279,15 @@ export const Account = () => {
           onClick={() => {
             setIsEditingUserInfo(!isEditingUserInfo);
             if (!isEditingUserInfo) {
-              const error = validateUsername(username);
-              setUsernameError(error);
+              // Entering edit mode, validate the current username and email
+              const usernameErr = validateUsername(username);
+              setUsernameError(usernameErr);
+              const emailErr = validateEmail(email);
+              setEmailError(emailErr);
+            } else {
+              // Exiting edit mode, clear validation errors
+              setUsernameError('');
+              setEmailError('');
             }
           }}
         >
@@ -353,6 +435,65 @@ export const Account = () => {
             Discard Changes
           </Button>
         </Box>
+      )}
+      {isReauthRequired && (
+        <Dialog open={isReauthRequired} onClose={() => setIsReauthRequired(false)}>
+          <DialogTitle>Confirm Your Password</DialogTitle>
+          <DialogContent>
+            <Typography variant='body1'>
+              Please enter your password to confirm the changes.
+            </Typography>
+            <TextField
+              label='Password'
+              type={showPassword ? 'text' : 'password'}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              fullWidth
+              margin='normal'
+              error={Boolean(passwordError)}
+              helperText={passwordError || ' '}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <IconButton
+                      aria-label={showPassword ? 'Hide password' : 'Show password'}
+                      onClick={handleClickShowPassword}
+                      edge='end'
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => {
+                setIsReauthRequired(false);
+                setPassword('');
+                setPasswordError('');
+              }}
+              color='secondary'
+              variant='outlined'
+              sx={{
+                '&:hover': {
+                  bgcolor: '#cecececa',
+                },
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleReauthenticate}
+              color='primary'
+              variant='contained'
+              disabled={!password}
+            >
+              Confirm
+            </Button>
+          </DialogActions>
+        </Dialog>
       )}
     </Container>
   );
