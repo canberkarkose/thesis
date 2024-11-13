@@ -16,7 +16,6 @@ export const dataTestIds = {
       logo: 'app-header-logo',
       accountButton: 'app-header-account-button',
       menu: 'app-header-menu',
-      menuItemProfile: 'app-header-menu-item-profile',
       menuItemAccount: 'app-header-menu-item-account',
       menuItemLogout: 'app-header-menu-item-logout',
     },

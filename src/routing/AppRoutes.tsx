@@ -17,6 +17,7 @@ import { GroceryList } from '@components/pages/App/GroceryList/GroceryList';
 import { MealPlanner } from '@components/pages/App/MealPlanner/MealPlanner';
 import { Recipes } from '@components/pages/App/Recipes/Recipes';
 import { HowItWorks } from '@components/pages/HowItWorks/HowItworks';
+import { Account } from '@components/pages/App/Account/Account';
 
 export const AppRoutes = () => (
   <Routes>
@@ -37,6 +38,7 @@ export const AppRoutes = () => (
         <Route path='grocery-list' element={<GroceryList />} />
         <Route path='meal-planner' element={<MealPlanner />} />
         <Route path='recipes' element={<Recipes />} />
+        <Route path='account' element={<Account />} />
         <Route
           path='*'
           element={<ErrorPage isAuthenticated />}
