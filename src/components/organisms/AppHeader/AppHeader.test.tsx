@@ -66,7 +66,7 @@ describe('AppHeader component', () => {
     );
 
     fireEvent.click(getByTestId(dataTestIds.components.appHeader.accountButton));
-    const profileMenuItem = getByTestId(dataTestIds.components.appHeader.menuItemProfile);
+    const profileMenuItem = getByTestId(dataTestIds.components.appHeader.menuItemAccount);
     fireEvent.click(profileMenuItem);
 
     // eslint-disable-next-line max-len
