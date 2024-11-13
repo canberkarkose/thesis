@@ -22,6 +22,8 @@ import SaveIcon from '@mui/icons-material/Save';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
+import { useNavigate } from 'react-router-dom';
+
 import {
   updateEmail, reauthenticateWithCredential, EmailAuthProvider, updatePassword
 } from 'firebase/auth';
@@ -39,6 +41,7 @@ import {
   hasUnsavedChanges,
   validateEmail,
   checkEmailAvailability,
+  deleteUserData, reauthenticateUser, deleteFirebaseAuthUser
 } from './Account.helpers';
 
 import { useAuth } from '@src/contexts/AuthContext';
@@ -83,6 +86,17 @@ export const Account = () => {
   const [currentPasswordError, setCurrentPasswordError] = useState('');
   const [newPasswordError, setNewPasswordError] = useState('');
   const [confirmNewPasswordError, setConfirmNewPasswordError] = useState('');
+
+  // Inside the Account component
+
+  // Delete Account Dialog States
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [deletePassword, setDeletePassword] = useState('');
+  const [deletePasswordError, setDeletePasswordError] = useState('');
+  const [showDeletePassword, setShowDeletePassword] = useState(false);
+
+  // Initialize navigation
+  const navigate = useNavigate();
 
   const hasChanges = useMemo(() => hasUnsavedChanges(
     userData,
@@ -151,6 +165,40 @@ export const Account = () => {
         },
       },
     }));
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!user) return;
+
+    try {
+      // Re-authenticate the user
+      await reauthenticateUser(user, deletePassword);
+
+      // Delete user data from Firestore
+      await deleteUserData(user.uid);
+
+      // Delete the user from Firebase Auth
+      await deleteFirebaseAuthUser(user);
+
+      // Reset state and close dialog
+      setIsDeleteDialogOpen(false);
+      setDeletePassword('');
+      setDeletePasswordError('');
+      setShowDeletePassword(false);
+
+      // Redirect to /register
+      navigate('/register');
+
+      // Show success toast
+      toast.success('Account deleted successfully.', { position: 'bottom-left' });
+    } catch (error: any) {
+      console.error('Account deletion failed:', error);
+      if (error.code === 'auth/wrong-password') {
+        setDeletePasswordError('Incorrect password. Please try again.');
+      } else {
+        toast.error('Failed to delete account. Please try again later.', { position: 'bottom-left' });
+      }
+    }
   };
 
   const validatePassword = (pwd: string) => ({
@@ -373,165 +421,166 @@ export const Account = () => {
   }
 
   return (
-    <Container>
-      <Typography variant='h4'>Account Details</Typography>
-      <Divider sx={{ my: 2 }} />
-      <Box display='flex' justifyContent='space-between' alignItems='center'>
-        <Typography variant='h6'>User Information</Typography>
-        <IconButton
-          onClick={() => {
-            setIsEditingUserInfo(!isEditingUserInfo);
-            if (!isEditingUserInfo) {
-              // Entering edit mode, validate the current username and email
-              const usernameErr = validateUsername(username);
-              setUsernameError(usernameErr);
-              const emailErr = validateEmail(email);
-              setEmailError(emailErr);
-            } else {
-              // Exiting edit mode, clear validation errors
-              setUsernameError('');
-              setEmailError('');
-            }
-          }}
-        >
-          <EditIcon />
-        </IconButton>
-      </Box>
-      <Box mt={2}>
-        <TextField
-          label='Username'
-          value={username}
-          onChange={(e) => {
-            const newValue = e.target.value;
-            setUsername(newValue);
-            if (isEditingUserInfo) {
-              const error = validateUsername(newValue);
-              setUsernameError(error);
-            }
-          }}
-          disabled={!isEditingUserInfo}
-          fullWidth
-          margin='normal'
-          error={Boolean(usernameError)}
-          helperText={usernameError}
-        />
-        <TextField
-          label='Email'
-          value={email}
-          onChange={(e) => {
-            const newValue = e.target.value;
-            setEmail(newValue);
-            if (isEditingUserInfo) {
-              const error = validateEmail(newValue);
-              setEmailError(error);
-            }
-          }}
-          disabled={!isEditingUserInfo}
-          fullWidth
-          margin='normal'
-          error={Boolean(emailError)}
-          helperText={emailError}
-        />
-        <Typography variant='body1' gutterBottom sx={{ mt: 2, mb: 2 }}>
-          To change your password, click the button below.
-        </Typography>
-        <Button
-          variant='contained'
-          sx={{
-            bgcolor: '#5b9d3e',
-            '&:hover': {
-              bgcolor: 'success.dark',
-            },
-            mb: 2
-          }}
-          onClick={() => {
-            setIsPasswordChangeDialogOpen(true);
-            setCurrentShowPassword(false);
-            setNewShowPassword(false);
-            setConfirmShowPassword(false);
-          }}
-          disabled={!isEditingUserInfo}
-        >
-          Change Password
-        </Button>
-      </Box>
-      <Divider sx={{ my: 2 }} />
-      <Box display='flex' justifyContent='space-between' alignItems='center'>
-        <Typography variant='h6'>Account Preferences</Typography>
-        <IconButton onClick={() => setIsEditingPreferences(!isEditingPreferences)}>
-          <EditIcon />
-        </IconButton>
-      </Box>
-      <Box mt={2}>
-        <TextField
-          label='Diet'
-          value={diet}
-          onChange={(e) => setDiet(e.target.value)}
-          disabled={!isEditingPreferences}
-          select
-          fullWidth
-          margin='normal'
-          SelectProps={{ native: true }}
-        >
-          {dietOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </TextField>
-        <Autocomplete
-          multiple
-          options={intolerancesTypes}
-          value={intolerances}
-          onChange={(_event, newValue) => setIntolerances(newValue)}
-          disabled={!isEditingPreferences}
-          disableCloseOnSelect
-          renderOption={(props, option, { selected }) => (
-            <li {...props}>
-              <Checkbox style={{ marginRight: 8 }} checked={selected} />
-              {option}
-            </li>
-          )}
-          renderInput={(params) => (
-            <TextField {...params} label='Intolerances' margin='normal' />
-          )}
-        />
-        <Autocomplete
-          multiple
-          options={cuisines}
-          value={includedCuisines}
-          onChange={(_event, newValue) => setIncludedCuisines(newValue)}
-          disabled={!isEditingPreferences}
-          disableCloseOnSelect
-          renderOption={(props, option, { selected }) => (
-            <li {...props}>
-              <Checkbox style={{ marginRight: 8 }} checked={selected} />
-              {option}
-            </li>
-          )}
-          renderInput={(params) => (
-            <TextField {...params} label='Included Cuisines' margin='normal' />
-          )}
-        />
-        <Autocomplete
-          multiple
-          options={cuisines}
-          value={excludedCuisines}
-          onChange={(_event, newValue) => setExcludedCuisines(newValue)}
-          disabled={!isEditingPreferences}
-          disableCloseOnSelect
-          renderOption={(props, option, { selected }) => (
-            <li {...props}>
-              <Checkbox style={{ marginRight: 8 }} checked={selected} />
-              {option}
-            </li>
-          )}
-          renderInput={(params) => (
-            <TextField {...params} label='Excluded Cuisines' margin='normal' />
-          )}
-        />
-      </Box>
-      {(isEditingUserInfo || isEditingPreferences) && (
+    <>
+      <Container>
+        <Typography variant='h4'>Account Details</Typography>
+        <Divider sx={{ my: 2 }} />
+        <Box display='flex' justifyContent='space-between' alignItems='center'>
+          <Typography variant='h6'>User Information</Typography>
+          <IconButton
+            onClick={() => {
+              setIsEditingUserInfo(!isEditingUserInfo);
+              if (!isEditingUserInfo) {
+                // Entering edit mode, validate the current username and email
+                const usernameErr = validateUsername(username);
+                setUsernameError(usernameErr);
+                const emailErr = validateEmail(email);
+                setEmailError(emailErr);
+              } else {
+                // Exiting edit mode, clear validation errors
+                setUsernameError('');
+                setEmailError('');
+              }
+            }}
+          >
+            <EditIcon />
+          </IconButton>
+        </Box>
+        <Box mt={2}>
+          <TextField
+            label='Username'
+            value={username}
+            onChange={(e) => {
+              const newValue = e.target.value;
+              setUsername(newValue);
+              if (isEditingUserInfo) {
+                const error = validateUsername(newValue);
+                setUsernameError(error);
+              }
+            }}
+            disabled={!isEditingUserInfo}
+            fullWidth
+            margin='normal'
+            error={Boolean(usernameError)}
+            helperText={usernameError}
+          />
+          <TextField
+            label='Email'
+            value={email}
+            onChange={(e) => {
+              const newValue = e.target.value;
+              setEmail(newValue);
+              if (isEditingUserInfo) {
+                const error = validateEmail(newValue);
+                setEmailError(error);
+              }
+            }}
+            disabled={!isEditingUserInfo}
+            fullWidth
+            margin='normal'
+            error={Boolean(emailError)}
+            helperText={emailError}
+          />
+          <Typography variant='body1' gutterBottom sx={{ mt: 2, mb: 2 }}>
+            To change your password, click the button below.
+          </Typography>
+          <Button
+            variant='contained'
+            sx={{
+              bgcolor: '#5b9d3e',
+              '&:hover': {
+                bgcolor: 'success.dark',
+              },
+              mb: 2
+            }}
+            onClick={() => {
+              setIsPasswordChangeDialogOpen(true);
+              setCurrentShowPassword(false);
+              setNewShowPassword(false);
+              setConfirmShowPassword(false);
+            }}
+            disabled={!isEditingUserInfo}
+          >
+            Change Password
+          </Button>
+        </Box>
+        <Divider sx={{ my: 2 }} />
+        <Box display='flex' justifyContent='space-between' alignItems='center'>
+          <Typography variant='h6'>Account Preferences</Typography>
+          <IconButton onClick={() => setIsEditingPreferences(!isEditingPreferences)}>
+            <EditIcon />
+          </IconButton>
+        </Box>
+        <Box mt={2}>
+          <TextField
+            label='Diet'
+            value={diet}
+            onChange={(e) => setDiet(e.target.value)}
+            disabled={!isEditingPreferences}
+            select
+            fullWidth
+            margin='normal'
+            SelectProps={{ native: true }}
+          >
+            {dietOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </TextField>
+          <Autocomplete
+            multiple
+            options={intolerancesTypes}
+            value={intolerances}
+            onChange={(_event, newValue) => setIntolerances(newValue)}
+            disabled={!isEditingPreferences}
+            disableCloseOnSelect
+            renderOption={(props, option, { selected }) => (
+              <li {...props}>
+                <Checkbox style={{ marginRight: 8 }} checked={selected} />
+                {option}
+              </li>
+            )}
+            renderInput={(params) => (
+              <TextField {...params} label='Intolerances' margin='normal' />
+            )}
+          />
+          <Autocomplete
+            multiple
+            options={cuisines}
+            value={includedCuisines}
+            onChange={(_event, newValue) => setIncludedCuisines(newValue)}
+            disabled={!isEditingPreferences}
+            disableCloseOnSelect
+            renderOption={(props, option, { selected }) => (
+              <li {...props}>
+                <Checkbox style={{ marginRight: 8 }} checked={selected} />
+                {option}
+              </li>
+            )}
+            renderInput={(params) => (
+              <TextField {...params} label='Included Cuisines' margin='normal' />
+            )}
+          />
+          <Autocomplete
+            multiple
+            options={cuisines}
+            value={excludedCuisines}
+            onChange={(_event, newValue) => setExcludedCuisines(newValue)}
+            disabled={!isEditingPreferences}
+            disableCloseOnSelect
+            renderOption={(props, option, { selected }) => (
+              <li {...props}>
+                <Checkbox style={{ marginRight: 8 }} checked={selected} />
+                {option}
+              </li>
+            )}
+            renderInput={(params) => (
+              <TextField {...params} label='Excluded Cuisines' margin='normal' />
+            )}
+          />
+        </Box>
+        {(isEditingUserInfo || isEditingPreferences) && (
         <Box display='flex' justifyContent='center' gap={2} sx={{ mt: 2 }}>
           <Button
             variant='contained'
@@ -560,179 +609,172 @@ export const Account = () => {
             Discard Changes
           </Button>
         </Box>
-      )}
-      <Dialog
-        open={isPasswordChangeDialogOpen}
-        onClose={() => {
-          setIsPasswordChangeDialogOpen(false);
-          // Reset all password fields and errors
-          setCurrentPassword('');
-          setNewPassword('');
-          setConfirmNewPassword('');
-          setCurrentPasswordError('');
-          setNewPasswordError('');
-          setConfirmNewPasswordError('');
-          setCurrentShowPassword(false);
-          setNewShowPassword(false);
-          setConfirmShowPassword(false);
-        }}
-      >
-        <DialogTitle>Change Password</DialogTitle>
-        <DialogContent>
-          <Typography variant='body1' gutterBottom>
-            To change your password, please enter your current password and then your new password.
-          </Typography>
-          <TextField
-            label='Current Password'
-            type={currentShowPassword ? 'text' : 'password'}
-            value={currentPassword}
-            onChange={(e) => {
-              setCurrentPassword(e.target.value);
-              if (currentPasswordError && e.target.value) {
-                setCurrentPasswordError('');
-              }
-            }}
-            fullWidth
-            margin='normal'
-            error={Boolean(currentPasswordError)}
-            helperText={currentPasswordError || ' '}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position='end'>
-                  <IconButton
-                    aria-label={currentShowPassword ? 'Hide password' : 'Show password'}
-                    onClick={() => setCurrentShowPassword(!currentShowPassword)}
-                    edge='end'
-                  >
-                    {currentShowPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-
-          <TextField
-            label='New Password'
-            type={newShowPassword ? 'text' : 'password'}
-            value={newPassword}
-            onChange={(e) => {
-              const { value } = e.target;
-              setNewPassword(value);
-              const validation = validatePassword(value);
-
-              // Check if new password matches current password
-              if (value && value === currentPassword) {
-                setNewPasswordError('New password must be different from the current password.');
-              } else if (!validation.letter
+        )}
+        <Dialog
+          open={isPasswordChangeDialogOpen}
+          onClose={() => {
+            setIsPasswordChangeDialogOpen(false);
+            // Reset all password fields and errors
+            setCurrentPassword('');
+            setNewPassword('');
+            setConfirmNewPassword('');
+            setCurrentPasswordError('');
+            setNewPasswordError('');
+            setConfirmNewPasswordError('');
+            setCurrentShowPassword(false);
+            setNewShowPassword(false);
+            setConfirmShowPassword(false);
+          }}
+        >
+          <DialogTitle>Change Password</DialogTitle>
+          <DialogContent>
+            <Typography variant='body1' gutterBottom>
+              To change your password, please enter your current password and then your new password.
+            </Typography>
+            <TextField
+              label='Current Password'
+              type={currentShowPassword ? 'text' : 'password'}
+              value={currentPassword}
+              onChange={(e) => {
+                setCurrentPassword(e.target.value);
+                if (currentPasswordError && e.target.value) {
+                  setCurrentPasswordError('');
+                }
+              }}
+              fullWidth
+              margin='normal'
+              error={Boolean(currentPasswordError)}
+              helperText={currentPasswordError || ' '}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <IconButton
+                      aria-label={currentShowPassword ? 'Hide password' : 'Show password'}
+                      onClick={() => setCurrentShowPassword(!currentShowPassword)}
+                      edge='end'
+                    >
+                      {currentShowPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <TextField
+              label='New Password'
+              type={newShowPassword ? 'text' : 'password'}
+              value={newPassword}
+              onChange={(e) => {
+                const { value } = e.target;
+                setNewPassword(value);
+                const validation = validatePassword(value);
+                // Check if new password matches current password
+                if (value && value === currentPassword) {
+                  setNewPasswordError('New password must be different from the current password.');
+                } else if (!validation.letter
                 || !validation.numberOrSpecialChar
                 || !validation.length) {
-                setNewPasswordError('Password must be at least 7 characters long and include at least one letter and one number or special character (!@#$%^&*).');
-              } else {
+                  setNewPasswordError('Password must be at least 7 characters long and include at least one letter and one number or special character (!@#$%^&*).');
+                } else {
+                  setNewPasswordError('');
+                }
+                // Validate confirm password if it's already filled
+                if (confirmNewPassword && value !== confirmNewPassword) {
+                  setConfirmNewPasswordError('Passwords do not match.');
+                } else {
+                  setConfirmNewPasswordError('');
+                }
+              }}
+              fullWidth
+              margin='normal'
+              error={Boolean(newPasswordError)}
+              helperText={newPasswordError || ' '}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <IconButton
+                      aria-label={newShowPassword ? 'Hide password' : 'Show password'}
+                      onClick={() => setNewShowPassword(!newShowPassword)}
+                      edge='end'
+                    >
+                      {newShowPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <TextField
+              label='Confirm New Password'
+              type={confirmShowPassword ? 'text' : 'password'}
+              value={confirmNewPassword}
+              onChange={(e) => {
+                const { value } = e.target;
+                setConfirmNewPassword(value);
+                if (newPassword !== value) {
+                  setConfirmNewPasswordError('Passwords do not match.');
+                } else {
+                  setConfirmNewPasswordError('');
+                }
+              }}
+              fullWidth
+              margin='normal'
+              error={Boolean(confirmNewPasswordError)}
+              helperText={confirmNewPasswordError || ' '}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <IconButton
+                      aria-label={confirmShowPassword ? 'Hide password' : 'Show password'}
+                      onClick={() => setConfirmShowPassword(!confirmShowPassword)}
+                      edge='end'
+                    >
+                      {confirmShowPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => {
+                setIsPasswordChangeDialogOpen(false);
+                // Reset all password fields and errors
+                setCurrentPassword('');
+                setNewPassword('');
+                setConfirmNewPassword('');
+                setCurrentPasswordError('');
                 setNewPasswordError('');
-              }
-
-              // Validate confirm password if it's already filled
-              if (confirmNewPassword && value !== confirmNewPassword) {
-                setConfirmNewPasswordError('Passwords do not match.');
-              } else {
                 setConfirmNewPasswordError('');
-              }
-            }}
-            fullWidth
-            margin='normal'
-            error={Boolean(newPasswordError)}
-            helperText={newPasswordError || ' '}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position='end'>
-                  <IconButton
-                    aria-label={newShowPassword ? 'Hide password' : 'Show password'}
-                    onClick={() => setNewShowPassword(!newShowPassword)}
-                    edge='end'
-                  >
-                    {newShowPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-
-          <TextField
-            label='Confirm New Password'
-            type={confirmShowPassword ? 'text' : 'password'}
-            value={confirmNewPassword}
-            onChange={(e) => {
-              const { value } = e.target;
-              setConfirmNewPassword(value);
-              if (newPassword !== value) {
-                setConfirmNewPasswordError('Passwords do not match.');
-              } else {
-                setConfirmNewPasswordError('');
-              }
-            }}
-            fullWidth
-            margin='normal'
-            error={Boolean(confirmNewPasswordError)}
-            helperText={confirmNewPasswordError || ' '}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position='end'>
-                  <IconButton
-                    aria-label={confirmShowPassword ? 'Hide password' : 'Show password'}
-                    onClick={() => setConfirmShowPassword(!confirmShowPassword)}
-                    edge='end'
-                  >
-                    {confirmShowPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => {
-              setIsPasswordChangeDialogOpen(false);
-              // Reset all password fields and errors
-              setCurrentPassword('');
-              setNewPassword('');
-              setConfirmNewPassword('');
-              setCurrentPasswordError('');
-              setNewPasswordError('');
-              setConfirmNewPasswordError('');
-              setCurrentShowPassword(false);
-              setNewShowPassword(false);
-              setConfirmShowPassword(false);
-            }}
-            color='secondary'
-            variant='outlined'
-            sx={{
-              '&:hover': {
-                bgcolor: '#cecececa',
-              },
-            }}
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={handleChangePassword}
-            color='primary'
-            variant='contained'
-            disabled={
-        !currentPassword
-        || !newPassword
-        || !confirmNewPassword
-        || Boolean(currentPasswordError)
-        || Boolean(newPasswordError)
-        || Boolean(confirmNewPasswordError)
-      }
-          >
-            Change Password
-          </Button>
-        </DialogActions>
-      </Dialog>
-      {isReauthRequired && (
+                setCurrentShowPassword(false);
+                setNewShowPassword(false);
+                setConfirmShowPassword(false);
+              }}
+              color='secondary'
+              variant='outlined'
+              sx={{
+                '&:hover': {
+                  bgcolor: '#cecececa',
+                },
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleChangePassword}
+              color='primary'
+              variant='contained'
+              disabled={!currentPassword
+              || !newPassword
+              || !confirmNewPassword
+              || Boolean(currentPasswordError)
+              || Boolean(newPasswordError)
+              || Boolean(confirmNewPasswordError)}
+            >
+              Change Password
+            </Button>
+          </DialogActions>
+        </Dialog>
+        {isReauthRequired && (
         <Dialog open={isReauthRequired} onClose={() => setIsReauthRequired(false)}>
           <DialogTitle>Confirm Your Password</DialogTitle>
           <DialogContent>
@@ -752,12 +794,12 @@ export const Account = () => {
                 endAdornment: (
                   <InputAdornment position='end'>
                     <IconButton
-                      aria-label={showPassword ? 'Hide password' : 'Show password'}
-                      onClick={handleClickShowPassword}
-                      edge='end'
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                onClick={handleClickShowPassword}
+                edge='end'
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
                   </InputAdornment>
                 ),
               }}
@@ -790,7 +832,91 @@ export const Account = () => {
             </Button>
           </DialogActions>
         </Dialog>
-      )}
-    </Container>
+        )}
+        <Dialog
+          open={isDeleteDialogOpen}
+          onClose={() => {
+            setIsDeleteDialogOpen(false);
+            setDeletePassword('');
+            setDeletePasswordError('');
+            setShowDeletePassword(false);
+          }}
+        >
+          <DialogTitle>Delete Account</DialogTitle>
+          <DialogContent>
+            <Typography variant='body1' gutterBottom>
+              Please enter your password to confirm the deletion of your account.
+              This action is irreversible.
+            </Typography>
+            <TextField
+              label='Password'
+              type={showDeletePassword ? 'text' : 'password'}
+              value={deletePassword}
+              onChange={(e) => {
+                const { value } = e.target;
+                setDeletePassword(value);
+                if (deletePasswordError && value) {
+                  setDeletePasswordError('');
+                }
+              }}
+              fullWidth
+              margin='normal'
+              error={Boolean(deletePasswordError)}
+              helperText={deletePasswordError || ' '}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <IconButton
+                      aria-label={showDeletePassword ? 'Hide password' : 'Show password'}
+                      onClick={() => setShowDeletePassword(!showDeletePassword)}
+                      edge='end'
+                    >
+                      {showDeletePassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => {
+                setIsDeleteDialogOpen(false);
+                setDeletePassword('');
+                setDeletePasswordError('');
+                setShowDeletePassword(false);
+              }}
+              color='secondary'
+              variant='outlined'
+              sx={{
+                '&:hover': {
+                  bgcolor: '#cecececa',
+                },
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleDeleteAccount}
+              color='error'
+              variant='contained'
+              disabled={!deletePassword}
+            >
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Container>
+      <Box mt={3} display='flex' justifyContent='center'>
+        <Button
+          variant='contained'
+          color='error'
+          onClick={() => setIsDeleteDialogOpen(true)}
+          disabled={isEditingUserInfo || isEditingPreferences}
+        >
+          Delete Account
+        </Button>
+      </Box>
+    </>
   );
 };

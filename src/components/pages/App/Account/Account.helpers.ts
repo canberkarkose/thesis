@@ -1,8 +1,11 @@
 import {
-  doc, getDoc, collection, query, where, getDocs
+  doc, getDoc, collection, query, where, getDocs,
+  deleteDoc
 } from 'firebase/firestore';
 
-import { User } from 'firebase/auth';
+import {
+  deleteUser, EmailAuthProvider, reauthenticateWithCredential, User
+} from 'firebase/auth';
 
 import { toast } from 'react-toastify';
 
@@ -97,4 +100,31 @@ export const hasUnsavedChanges = (
     || isIncludedCuisinesChanged
     || isExcludedCuisinesChanged
   );
+};
+
+/**
+ * Deletes the user document from Firestore.
+ * @param userId - The UID of the user to delete.
+ */
+export const deleteUserData = async (userId: string): Promise<void> => {
+  const userDocRef = doc(db, 'users', userId);
+  await deleteDoc(userDocRef);
+};
+
+/**
+ * Re-authenticates the user with the provided password.
+ * @param user - The current Firebase user.
+ * @param password - The user's password for re-authentication.
+ */
+export const reauthenticateUser = async (user: User, password: string): Promise<void> => {
+  const credential = EmailAuthProvider.credential(user.email!, password);
+  await reauthenticateWithCredential(user, credential);
+};
+
+/**
+ * Deletes the user from Firebase Auth.
+ * @param user - The current Firebase user.
+ */
+export const deleteFirebaseAuthUser = async (user: User): Promise<void> => {
+  await deleteUser(user);
 };
