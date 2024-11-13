@@ -629,7 +629,8 @@ export const Account = () => {
           <DialogTitle>Change Password</DialogTitle>
           <DialogContent>
             <Typography variant='body1' gutterBottom>
-              To change your password, please enter your current password and then your new password.
+              To change your password,
+              please enter your current password and then your new password.
             </Typography>
             <TextField
               label='Current Password'
@@ -794,12 +795,12 @@ export const Account = () => {
                 endAdornment: (
                   <InputAdornment position='end'>
                     <IconButton
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
-                onClick={handleClickShowPassword}
-                edge='end'
-              >
-                {showPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
+                      aria-label={showPassword ? 'Hide password' : 'Show password'}
+                      onClick={handleClickShowPassword}
+                      edge='end'
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
                   </InputAdornment>
                 ),
               }}
