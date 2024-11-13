@@ -108,6 +108,12 @@ export const Account = () => {
     excludedCuisines
   ), [userData, username, email, diet, intolerances, includedCuisines, excludedCuisines]);
 
+  const availableIncludedCuisines = useMemo(() => cuisines
+    .filter((cuisine) => !excludedCuisines.includes(cuisine)), [cuisines, excludedCuisines]);
+
+  const availableExcludedCuisines = useMemo(() => cuisines
+    .filter((cuisine) => !includedCuisines.includes(cuisine)), [cuisines, includedCuisines]);
+
   useEffect(() => {
     const getUserData = async () => {
       const data = await fetchUserData(user);
@@ -547,9 +553,13 @@ export const Account = () => {
           />
           <Autocomplete
             multiple
-            options={cuisines}
+            options={availableIncludedCuisines}
             value={includedCuisines}
-            onChange={(_event, newValue) => setIncludedCuisines(newValue)}
+            onChange={(_event, newValue) => {
+              setIncludedCuisines(newValue);
+              setExcludedCuisines((prevExcluded) => prevExcluded
+                .filter((cuisine) => !newValue.includes(cuisine)));
+            }}
             disabled={!isEditingPreferences}
             disableCloseOnSelect
             renderOption={(props, option, { selected }) => (
@@ -564,9 +574,13 @@ export const Account = () => {
           />
           <Autocomplete
             multiple
-            options={cuisines}
+            options={availableExcludedCuisines}
             value={excludedCuisines}
-            onChange={(_event, newValue) => setExcludedCuisines(newValue)}
+            onChange={(_event, newValue) => {
+              setExcludedCuisines(newValue);
+              setIncludedCuisines((prevIncluded) => prevIncluded
+                .filter((cuisine) => !newValue.includes(cuisine)));
+            }}
             disabled={!isEditingPreferences}
             disableCloseOnSelect
             renderOption={(props, option, { selected }) => (
