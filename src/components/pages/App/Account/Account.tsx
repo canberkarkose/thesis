@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/jsx-props-no-spreading */
 import { useState, useEffect, useMemo } from 'react';
 import {
@@ -21,7 +22,9 @@ import SaveIcon from '@mui/icons-material/Save';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-import { updateEmail, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth';
+import {
+  updateEmail, reauthenticateWithCredential, EmailAuthProvider, updatePassword
+} from 'firebase/auth';
 
 import { doc, updateDoc } from 'firebase/firestore';
 
@@ -70,6 +73,16 @@ export const Account = () => {
   const [isReauthRequired, setIsReauthRequired] = useState(false);
   const [passwordError, setPasswordError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [isPasswordChangeDialogOpen, setIsPasswordChangeDialogOpen] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [currentShowPassword, setCurrentShowPassword] = useState(false);
+  const [newShowPassword, setNewShowPassword] = useState(false);
+  const [confirmShowPassword, setConfirmShowPassword] = useState(false);
+  const [currentPasswordError, setCurrentPasswordError] = useState('');
+  const [newPasswordError, setNewPasswordError] = useState('');
+  const [confirmNewPasswordError, setConfirmNewPasswordError] = useState('');
 
   const hasChanges = useMemo(() => hasUnsavedChanges(
     userData,
@@ -139,6 +152,12 @@ export const Account = () => {
       },
     }));
   };
+
+  const validatePassword = (pwd: string) => ({
+    letter: /[a-zA-Z]/.test(pwd),
+    numberOrSpecialChar: /[\d!@#$%^&*]/.test(pwd),
+    length: pwd.length >= 7,
+  });
 
   const handleSaveChanges = async () => {
     try {
@@ -231,6 +250,90 @@ export const Account = () => {
 
   const handleClickShowPassword = () => {
     setShowPassword((prev) => !prev);
+  };
+
+  const handleChangePassword = async () => {
+    // Reset previous errors
+    setCurrentPasswordError('');
+    setNewPasswordError('');
+    setConfirmNewPasswordError('');
+
+    // Destructure password validation
+    const { letter, numberOrSpecialChar, length } = validatePassword(newPassword);
+    let isValid = true;
+
+    // Validate Current Password
+    if (!currentPassword) {
+      setCurrentPasswordError('Current password is required.');
+      isValid = false;
+    }
+
+    // Validate New Password
+    if (!newPassword) {
+      setNewPasswordError('New password is required.');
+      isValid = false;
+    } else {
+      if (newPassword === currentPassword) {
+        setNewPasswordError('New password must be different from the current password.');
+        isValid = false;
+      }
+      if (!letter) {
+        setNewPasswordError('Password must contain at least one letter.');
+        isValid = false;
+      }
+      if (!numberOrSpecialChar) {
+        setNewPasswordError('Password must contain at least one number or special character (!@#$%^&*).');
+        isValid = false;
+      }
+      if (!length) {
+        setNewPasswordError('Password must be at least 7 characters long.');
+        isValid = false;
+      }
+    }
+
+    // Validate Confirm New Password
+    if (!confirmNewPassword) {
+      setConfirmNewPasswordError('Please confirm your new password.');
+      isValid = false;
+    } else if (newPassword !== confirmNewPassword) {
+      setConfirmNewPasswordError('Passwords do not match.');
+      isValid = false;
+    }
+
+    if (!isValid) return;
+
+    try {
+      if (!user || !userData) return;
+
+      // Create credentials with the user's current email and entered current password
+      const credential = EmailAuthProvider.credential(userData.email, currentPassword);
+
+      // Re-authenticate the user
+      await reauthenticateWithCredential(user, credential);
+
+      // Update the password in Firebase Auth
+      await updatePassword(user, newPassword);
+
+      // Optionally, you can notify the user to re-login or inform them of the successful change
+      toast.success('Password changed successfully!', { position: 'bottom-left' });
+
+      // Reset and close the dialog
+      setIsPasswordChangeDialogOpen(false);
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmNewPassword('');
+      setNewPasswordError('');
+      setConfirmNewPasswordError('');
+    } catch (error: any) {
+      console.error('Password change failed:', error);
+      if (error.code === 'auth/wrong-password') {
+        setCurrentPasswordError('Incorrect current password.');
+      } else if (error.code === 'auth/weak-password') {
+        setNewPasswordError('Password is too weak.');
+      } else {
+        toast.error('Failed to change password. Please try again later.', { position: 'bottom-left' });
+      }
+    }
   };
 
   const handleDiscardChanges = () => {
@@ -329,6 +432,28 @@ export const Account = () => {
           error={Boolean(emailError)}
           helperText={emailError}
         />
+        <Typography variant='body1' gutterBottom sx={{ mt: 2, mb: 2 }}>
+          To change your password, click the button below.
+        </Typography>
+        <Button
+          variant='contained'
+          sx={{
+            bgcolor: '#5b9d3e',
+            '&:hover': {
+              bgcolor: 'success.dark',
+            },
+            mb: 2
+          }}
+          onClick={() => {
+            setIsPasswordChangeDialogOpen(true);
+            setCurrentShowPassword(false);
+            setNewShowPassword(false);
+            setConfirmShowPassword(false);
+          }}
+          disabled={!isEditingUserInfo}
+        >
+          Change Password
+        </Button>
       </Box>
       <Divider sx={{ my: 2 }} />
       <Box display='flex' justifyContent='space-between' alignItems='center'>
@@ -436,6 +561,177 @@ export const Account = () => {
           </Button>
         </Box>
       )}
+      <Dialog
+        open={isPasswordChangeDialogOpen}
+        onClose={() => {
+          setIsPasswordChangeDialogOpen(false);
+          // Reset all password fields and errors
+          setCurrentPassword('');
+          setNewPassword('');
+          setConfirmNewPassword('');
+          setCurrentPasswordError('');
+          setNewPasswordError('');
+          setConfirmNewPasswordError('');
+          setCurrentShowPassword(false);
+          setNewShowPassword(false);
+          setConfirmShowPassword(false);
+        }}
+      >
+        <DialogTitle>Change Password</DialogTitle>
+        <DialogContent>
+          <Typography variant='body1' gutterBottom>
+            To change your password, please enter your current password and then your new password.
+          </Typography>
+          <TextField
+            label='Current Password'
+            type={currentShowPassword ? 'text' : 'password'}
+            value={currentPassword}
+            onChange={(e) => {
+              setCurrentPassword(e.target.value);
+              if (currentPasswordError && e.target.value) {
+                setCurrentPasswordError('');
+              }
+            }}
+            fullWidth
+            margin='normal'
+            error={Boolean(currentPasswordError)}
+            helperText={currentPasswordError || ' '}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position='end'>
+                  <IconButton
+                    aria-label={currentShowPassword ? 'Hide password' : 'Show password'}
+                    onClick={() => setCurrentShowPassword(!currentShowPassword)}
+                    edge='end'
+                  >
+                    {currentShowPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          <TextField
+            label='New Password'
+            type={newShowPassword ? 'text' : 'password'}
+            value={newPassword}
+            onChange={(e) => {
+              const { value } = e.target;
+              setNewPassword(value);
+              const validation = validatePassword(value);
+
+              // Check if new password matches current password
+              if (value && value === currentPassword) {
+                setNewPasswordError('New password must be different from the current password.');
+              } else if (!validation.letter
+                || !validation.numberOrSpecialChar
+                || !validation.length) {
+                setNewPasswordError('Password must be at least 7 characters long and include at least one letter and one number or special character (!@#$%^&*).');
+              } else {
+                setNewPasswordError('');
+              }
+
+              // Validate confirm password if it's already filled
+              if (confirmNewPassword && value !== confirmNewPassword) {
+                setConfirmNewPasswordError('Passwords do not match.');
+              } else {
+                setConfirmNewPasswordError('');
+              }
+            }}
+            fullWidth
+            margin='normal'
+            error={Boolean(newPasswordError)}
+            helperText={newPasswordError || ' '}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position='end'>
+                  <IconButton
+                    aria-label={newShowPassword ? 'Hide password' : 'Show password'}
+                    onClick={() => setNewShowPassword(!newShowPassword)}
+                    edge='end'
+                  >
+                    {newShowPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          <TextField
+            label='Confirm New Password'
+            type={confirmShowPassword ? 'text' : 'password'}
+            value={confirmNewPassword}
+            onChange={(e) => {
+              const { value } = e.target;
+              setConfirmNewPassword(value);
+              if (newPassword !== value) {
+                setConfirmNewPasswordError('Passwords do not match.');
+              } else {
+                setConfirmNewPasswordError('');
+              }
+            }}
+            fullWidth
+            margin='normal'
+            error={Boolean(confirmNewPasswordError)}
+            helperText={confirmNewPasswordError || ' '}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position='end'>
+                  <IconButton
+                    aria-label={confirmShowPassword ? 'Hide password' : 'Show password'}
+                    onClick={() => setConfirmShowPassword(!confirmShowPassword)}
+                    edge='end'
+                  >
+                    {confirmShowPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setIsPasswordChangeDialogOpen(false);
+              // Reset all password fields and errors
+              setCurrentPassword('');
+              setNewPassword('');
+              setConfirmNewPassword('');
+              setCurrentPasswordError('');
+              setNewPasswordError('');
+              setConfirmNewPasswordError('');
+              setCurrentShowPassword(false);
+              setNewShowPassword(false);
+              setConfirmShowPassword(false);
+            }}
+            color='secondary'
+            variant='outlined'
+            sx={{
+              '&:hover': {
+                bgcolor: '#cecececa',
+              },
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleChangePassword}
+            color='primary'
+            variant='contained'
+            disabled={
+        !currentPassword
+        || !newPassword
+        || !confirmNewPassword
+        || Boolean(currentPasswordError)
+        || Boolean(newPasswordError)
+        || Boolean(confirmNewPasswordError)
+      }
+          >
+            Change Password
+          </Button>
+        </DialogActions>
+      </Dialog>
       {isReauthRequired && (
         <Dialog open={isReauthRequired} onClose={() => setIsReauthRequired(false)}>
           <DialogTitle>Confirm Your Password</DialogTitle>
