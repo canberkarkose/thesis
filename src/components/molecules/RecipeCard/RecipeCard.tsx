@@ -12,7 +12,7 @@ import {
 interface RecipeCardProps {
   image?: string;
   title: string;
-  description: string;
+  description?: string;
   onSeeMore: () => void;
 }
 
@@ -22,9 +22,12 @@ export const RecipeCard = ({
   const titleRef = useRef<HTMLDivElement>(null);
   const [isTitleTruncated, setIsTitleTruncated] = useState(false);
 
-  const sanitizedDescription = sanitizeHtml(description, {
-    allowedTags: sanitizeHtml.defaults.allowedTags.filter((tag: string) => tag !== 'a'),
-  });
+  let sanitizedDescription = '';
+  if (description) {
+    sanitizedDescription = sanitizeHtml(description, {
+      allowedTags: sanitizeHtml.defaults.allowedTags.filter((tag: string) => tag !== 'a'),
+    });
+  }
 
   useEffect(() => {
     if (titleRef.current) {
@@ -81,21 +84,23 @@ export const RecipeCard = ({
             {title}
           </Typography>
         )}
-        <DescriptionContainer>
-          <Typography
-            variant='body2'
-            sx={{
-              overflow: 'hidden',
-              display: '-webkit-box',
-              WebkitBoxOrient: 'vertical',
-              WebkitLineClamp: 8,
-              textOverflow: 'ellipsis',
-              fontSize: '15px',
-            }}
-          >
-            {parse(sanitizedDescription)}
-          </Typography>
-        </DescriptionContainer>
+        {description && (
+          <DescriptionContainer>
+            <Typography
+              variant='body2'
+              sx={{
+                overflow: 'hidden',
+                display: '-webkit-box',
+                WebkitBoxOrient: 'vertical',
+                WebkitLineClamp: 8,
+                textOverflow: 'ellipsis',
+                fontSize: '15px',
+              }}
+            >
+              {parse(sanitizedDescription)}
+            </Typography>
+          </DescriptionContainer>
+        )}
         <Button
           variant='contained'
           sx={{

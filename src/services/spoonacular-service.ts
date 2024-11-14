@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
 
 const X_RAPIDAPI_KEY = import.meta.env.VITE_X_RAPIDAPI_KEY;
@@ -6,12 +7,20 @@ const COMPLEX_SEARCH_URL_RAPIDAPI = 'https://spoonacular-recipe-food-nutrition-v
 const RANDOM_SEARCH_URL_RAPIDAPI = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random';
 const GET_RECIPE_INFORMATION_URL_RAPIDAPI = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/{id}/information';
 
-interface FetchRecipesParams {
+export interface FetchRecipesParams {
   diet?: string;
   intolerances?: string;
   cuisines?: string;
   excludeCuisines?: string;
   type?: string;
+  minCalories?: number;
+  maxCalories?: number;
+  minSugar?: number;
+  maxSugar?: number;
+  query?: string;
+  maxReadyTime?: number;
+  number?: number;
+  offset?: number;
 }
 
 interface FetchRandomRecipesParams {
@@ -19,26 +28,50 @@ interface FetchRandomRecipesParams {
 }
 
 export const fetchRecipes = async ({
-  diet, intolerances, cuisines, type, excludeCuisines
+  diet,
+  intolerances,
+  cuisines,
+  excludeCuisines,
+  type,
+  minCalories,
+  maxCalories,
+  minSugar,
+  maxSugar,
+  query,
+  maxReadyTime,
+  number
 }: FetchRecipesParams) => {
   try {
+    const params: any = {
+      diet: diet || undefined,
+      intolerances: intolerances || undefined,
+      cuisine: cuisines || undefined,
+      excludeCuisine: excludeCuisines || undefined,
+      type: type || undefined,
+      query: query || undefined,
+      maxReadyTime: maxReadyTime || undefined,
+      minCalories: minCalories || undefined,
+      maxCalories: maxCalories || undefined,
+      minSugar: minSugar || undefined,
+      maxSugar: maxSugar || undefined,
+      number: number || 10,
+    };
+
+    Object.keys(params).forEach(
+      (key) => params[key] === undefined && delete params[key]
+    );
+
     const response = await axios.get(COMPLEX_SEARCH_URL_RAPIDAPI, {
       headers: {
         'x-rapidapi-key': X_RAPIDAPI_KEY,
         'x-rapidapi-host': X_RAPIDAPI_HOST,
       },
-      params: {
-        diet: diet ?? undefined,
-        intolerances: intolerances ?? undefined,
-        cuisine: cuisines ?? undefined,
-        excludeCuisine: excludeCuisines ?? undefined,
-        type: type ?? undefined,
-      },
+      params,
     });
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error fetching recipes:', error);
-    throw new Error('Failed to fetch recipes. Please try again later.');
+    throw new Error(error.response?.data?.message || 'Failed to fetch recipes. Please try again later.');
   }
 };
 
