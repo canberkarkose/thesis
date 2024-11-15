@@ -13,7 +13,8 @@ export const RecipeCardContainer = styled(Box)(() => ({
   '&:hover': {
     transform: 'scale(1.02)',
   },
-  padding: '16px'
+  padding: '16px',
+  position: 'relative',
 }));
 
 export const RecipeImage = styled('img')({

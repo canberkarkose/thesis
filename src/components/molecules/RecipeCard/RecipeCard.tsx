@@ -1,9 +1,11 @@
 import {
-  Box, Typography, Tooltip, Button
+  Box, Typography, Tooltip, Button,
+  IconButton
 } from '@mui/material';
 import { useRef, useState, useEffect } from 'react';
 import parse from 'html-react-parser';
 import sanitizeHtml from 'sanitize-html';
+import AddIcon from '@mui/icons-material/Add';
 
 import {
   RecipeCardContainer, RecipeImage, DescriptionContainer, PlaceholderImage
@@ -14,10 +16,13 @@ interface RecipeCardProps {
   title: string;
   description?: string;
   onSeeMore: () => void;
+  showAddButton?: boolean;
+  onAddToMealPlan?: () => void;
+  isAddButtonDisabled?: boolean;
 }
 
 export const RecipeCard = ({
-  image, title, description, onSeeMore
+  image, title, description, onSeeMore, showAddButton, onAddToMealPlan, isAddButtonDisabled
 }: RecipeCardProps) => {
   const titleRef = useRef<HTMLDivElement>(null);
   const [isTitleTruncated, setIsTitleTruncated] = useState(false);
@@ -118,6 +123,27 @@ export const RecipeCard = ({
           See More
         </Button>
       </Box>
+      {showAddButton && (
+        <Tooltip title='Add to meal plan' arrow>
+          <IconButton
+            onClick={onAddToMealPlan}
+            disabled={isAddButtonDisabled}
+            sx={{
+              position: 'absolute',
+              top: '8px',
+              right: '8px',
+              backgroundColor: '#89a313',
+              color: '#fff',
+              '&:hover': {
+                backgroundColor: '#5d6e0d',
+              },
+            }}
+            size='large'
+          >
+            <AddIcon />
+          </IconButton>
+        </Tooltip>
+      )}
     </RecipeCardContainer>
   );
 };

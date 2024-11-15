@@ -2,11 +2,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
 
+import { toast } from 'react-toastify';
+
 import { fetchUserData } from '../Account/Account.helpers';
 
 import { MealPlannerPresentation } from './MealPlannerPresentation';
 
-import { fetchRecipes, FetchRecipesParams } from '@src/services/spoonacular-service';
+import { fetchRecipeInformation, fetchRecipes, FetchRecipesParams } from '@src/services/spoonacular-service';
 import { paramsType } from '@components/molecules/MealGenerator/MealGenerator';
 import { useAuth } from '@src/contexts/AuthContext';
 
@@ -28,6 +30,10 @@ export const MealPlanner = () => {
   const [apiLoading, setApiLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedRecipeInfo, setSelectedRecipeInfo] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalLoading, setIsModalLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const getUserData = async () => {
@@ -35,8 +41,8 @@ export const MealPlanner = () => {
         const data = await fetchUserData(user);
         setUserData(data);
         setIsLoading(false);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
+      } catch (err) {
+        console.error('Error fetching user data:', err);
         setIsLoading(false);
       }
     };
@@ -107,7 +113,7 @@ export const MealPlanner = () => {
       maxCalories: params.maxCalories || undefined,
       minSugar: params.minSugar || undefined,
       maxSugar: params.maxSugar || undefined,
-      number: 100, // Fetch up to 100 recipes
+      number: 100,
     };
 
     try {
@@ -132,18 +138,36 @@ export const MealPlanner = () => {
         setApiError('No recipes found.');
         setPagesOfMeals([]);
       }
-    } catch (error: any) {
-      console.error('Error fetching recipes:', error);
-      setApiError(error.message || 'Failed to fetch recipes.');
+    } catch (err: any) {
+      console.error('Error fetching recipes:', err);
+      setApiError(err.message || 'Failed to fetch recipes.');
       setPagesOfMeals([]);
     } finally {
       setApiLoading(false);
     }
   };
 
+  const handleSeeMore = async (id: number) => {
+    try {
+      setIsModalLoading(true);
+      setIsModalOpen(true);
+      const data = await fetchRecipeInformation(id);
+      setSelectedRecipeInfo(data);
+    } catch (err) {
+      console.error('Failed to fetch recipe information:', err);
+      setError('Failed to fetch recipe information. Please try again later.');
+    } finally {
+      setIsModalLoading(false);
+    }
+  };
+
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
+
+  if (error) {
+    toast.error(error, { position: 'bottom-left' });
+  }
 
   return (
     <MealPlannerPresentation
@@ -154,6 +178,11 @@ export const MealPlanner = () => {
       currentPage={currentPage}
       totalPages={pagesOfMeals.length}
       onPageChange={handlePageChange}
+      onSeeMore={handleSeeMore}
+      selectedRecipeInfo={selectedRecipeInfo}
+      isModalOpen={isModalOpen}
+      isModalLoading={isModalLoading}
+      onCloseModal={() => setIsModalOpen(false)}
     />
   );
 };

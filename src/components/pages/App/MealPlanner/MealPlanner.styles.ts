@@ -14,6 +14,6 @@ export const GeneratedMealsContainer = styled(Box)(({ theme }) => ({
   backgroundColor: '#f0f4f8',
   borderRadius: theme.spacing(2),
   boxShadow: theme.shadows[3],
-  width: '80%',
+  width: '90%',
   margin: 'auto',
 }));
