@@ -29,9 +29,12 @@ export type paramsType = {
 interface MealGeneratorProps {
   isLoading: boolean;
   onGenerate: (params: paramsType) => void;
+  resetSelectedRecipe: () => void;
 }
 
-export const MealGenerator: React.FC<MealGeneratorProps> = ({ isLoading, onGenerate }) => {
+export const MealGenerator: React.FC<MealGeneratorProps> = (
+  { isLoading, onGenerate, resetSelectedRecipe }
+) => {
   const [selectedTab, setSelectedTab] = useState(0);
   const [formValues, setFormValues] = useState<{ [key: string]: string }>({});
 
@@ -69,6 +72,7 @@ export const MealGenerator: React.FC<MealGeneratorProps> = ({ isLoading, onGener
         params.maxCalories = formValues.maxCalories ? Number(formValues.maxCalories) : undefined;
       }
       onGenerate(params);
+      resetSelectedRecipe();
     } catch (error) {
       console.error('Error generating meals:', error);
     }

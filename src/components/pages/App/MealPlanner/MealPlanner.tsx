@@ -34,6 +34,7 @@ export const MealPlanner = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalLoading, setIsModalLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [type, setType] = useState<string>('');
 
   useEffect(() => {
     const getUserData = async () => {
@@ -101,6 +102,8 @@ export const MealPlanner = () => {
   const handleGenerateMeals = async (params: paramsType) => {
     setApiLoading(true);
     setApiError(null);
+    setCurrentPage(1);
+    setType(params.type as string);
 
     const combinedParams: FetchRecipesParams = {
       type: params.type,
@@ -183,6 +186,7 @@ export const MealPlanner = () => {
       isModalOpen={isModalOpen}
       isModalLoading={isModalLoading}
       onCloseModal={() => setIsModalOpen(false)}
+      type={type}
     />
   );
 };

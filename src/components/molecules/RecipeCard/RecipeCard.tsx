@@ -6,6 +6,7 @@ import { useRef, useState, useEffect } from 'react';
 import parse from 'html-react-parser';
 import sanitizeHtml from 'sanitize-html';
 import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 
 import {
   RecipeCardContainer, RecipeImage, DescriptionContainer, PlaceholderImage
@@ -19,10 +20,18 @@ interface RecipeCardProps {
   showAddButton?: boolean;
   onAddToMealPlan?: () => void;
   isAddButtonDisabled?: boolean;
+  isActive?: boolean;
 }
 
 export const RecipeCard = ({
-  image, title, description, onSeeMore, showAddButton, onAddToMealPlan, isAddButtonDisabled
+  image,
+  title,
+  description,
+  onSeeMore,
+  showAddButton,
+  onAddToMealPlan,
+  isAddButtonDisabled,
+  isActive
 }: RecipeCardProps) => {
   const titleRef = useRef<HTMLDivElement>(null);
   const [isTitleTruncated, setIsTitleTruncated] = useState(false);
@@ -124,7 +133,7 @@ export const RecipeCard = ({
         </Button>
       </Box>
       {showAddButton && (
-        <Tooltip title='Add to meal plan' arrow>
+        <Tooltip title={isActive ? 'Cancel' : 'Add to meal plan'} arrow>
           <IconButton
             onClick={onAddToMealPlan}
             disabled={isAddButtonDisabled}
@@ -132,15 +141,18 @@ export const RecipeCard = ({
               position: 'absolute',
               top: '8px',
               right: '8px',
-              backgroundColor: '#89a313',
+              backgroundColor: isActive ? '#d9534f' : '#89a313',
               color: '#fff',
               '&:hover': {
-                backgroundColor: '#5d6e0d',
+                backgroundColor: isActive ? '#c9302c' : '#5d6e0d',
+              },
+              '&:disabled': {
+                backgroundColor: '#ccc',
               },
             }}
             size='large'
           >
-            <AddIcon />
+            {isActive ? <RemoveIcon /> : <AddIcon />}
           </IconButton>
         </Tooltip>
       )}

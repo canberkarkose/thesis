@@ -18,10 +18,14 @@ import {
   query,
   where,
   getDocs,
-  getDoc
+  getDoc,
+  updateDoc,
+  deleteField
 } from 'firebase/firestore';
 
 import { app, db } from '../firebase-config';
+
+import { Recipe } from '@components/organisms/MealCalendar/MealCalendar';
 
 const auth = getAuth(app);
 
@@ -180,6 +184,58 @@ export const logout = async () => {
     await signOut(auth);
   } catch (error) {
     console.error('Error signing out:', error);
+    throw error;
+  }
+};
+
+export const addMealToUserPlan = async (
+  userId: string,
+  date: string,
+  slot: string,
+  recipe: Recipe
+) => {
+  const docRef = doc(db, 'users', userId);
+
+  try {
+    await updateDoc(docRef, {
+      [`Meals.${date}.${slot}`]: {
+        id: recipe.id,
+        title: recipe.title,
+        image: recipe.image || null,
+      },
+    });
+  } catch (error) {
+    console.error("Error adding meal to user's plan:", error);
+    throw error;
+  }
+};
+
+export const deleteMealFromUserPlan = async (
+  userId: string,
+  date: string,
+  slotLabel: string
+) => {
+  const docRef = doc(db, 'users', userId);
+
+  try {
+    await updateDoc(docRef, {
+      [`Meals.${date}.${slotLabel}`]: deleteField(),
+    });
+
+    // Check if the date has any remaining slots
+    const docSnapshot = await getDoc(docRef);
+    if (docSnapshot.exists()) {
+      const data = docSnapshot.data();
+      const dayMeals = data.Meals?.[date] || {};
+      if (Object.keys(dayMeals).length === 0) {
+        // Delete the date field
+        await updateDoc(docRef, {
+          [`Meals.${date}`]: deleteField(),
+        });
+      }
+    }
+  } catch (error) {
+    console.error("Error deleting meal from user's plan:", error);
     throw error;
   }
 };
