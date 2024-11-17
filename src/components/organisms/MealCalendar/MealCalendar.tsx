@@ -2,6 +2,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // MealCalendar.tsx
+/* eslint-disable import/no-cycle */
 
 import { useEffect, useState } from 'react';
 import {
@@ -24,7 +25,6 @@ import {
 
 import { useAuth } from '@src/contexts/AuthContext';
 
-// eslint-disable-next-line import/no-cycle
 import { addMealToUserPlan, deleteMealFromUserPlan } from '@src/services/auth-service';
 import { MealSlot } from '@components/molecules/MealSlot/MealSlot';
 import { DateNavigator } from '@components/molecules/DateNavigator/DateNavigator';
