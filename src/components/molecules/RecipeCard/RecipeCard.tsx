@@ -1,9 +1,12 @@
 import {
-  Box, Typography, Tooltip, Button
+  Box, Typography, Tooltip, Button,
+  IconButton
 } from '@mui/material';
 import { useRef, useState, useEffect } from 'react';
 import parse from 'html-react-parser';
 import sanitizeHtml from 'sanitize-html';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 
 import {
   RecipeCardContainer, RecipeImage, DescriptionContainer, PlaceholderImage
@@ -12,19 +15,33 @@ import {
 interface RecipeCardProps {
   image?: string;
   title: string;
-  description: string;
+  description?: string;
   onSeeMore: () => void;
+  showAddButton?: boolean;
+  onAddToMealPlan?: () => void;
+  isAddButtonDisabled?: boolean;
+  isActive?: boolean;
 }
 
 export const RecipeCard = ({
-  image, title, description, onSeeMore
+  image,
+  title,
+  description,
+  onSeeMore,
+  showAddButton,
+  onAddToMealPlan,
+  isAddButtonDisabled,
+  isActive
 }: RecipeCardProps) => {
   const titleRef = useRef<HTMLDivElement>(null);
   const [isTitleTruncated, setIsTitleTruncated] = useState(false);
 
-  const sanitizedDescription = sanitizeHtml(description, {
-    allowedTags: sanitizeHtml.defaults.allowedTags.filter((tag: string) => tag !== 'a'),
-  });
+  let sanitizedDescription = '';
+  if (description) {
+    sanitizedDescription = sanitizeHtml(description, {
+      allowedTags: sanitizeHtml.defaults.allowedTags.filter((tag: string) => tag !== 'a'),
+    });
+  }
 
   useEffect(() => {
     if (titleRef.current) {
@@ -81,21 +98,23 @@ export const RecipeCard = ({
             {title}
           </Typography>
         )}
-        <DescriptionContainer>
-          <Typography
-            variant='body2'
-            sx={{
-              overflow: 'hidden',
-              display: '-webkit-box',
-              WebkitBoxOrient: 'vertical',
-              WebkitLineClamp: 8,
-              textOverflow: 'ellipsis',
-              fontSize: '15px',
-            }}
-          >
-            {parse(sanitizedDescription)}
-          </Typography>
-        </DescriptionContainer>
+        {description && (
+          <DescriptionContainer>
+            <Typography
+              variant='body2'
+              sx={{
+                overflow: 'hidden',
+                display: '-webkit-box',
+                WebkitBoxOrient: 'vertical',
+                WebkitLineClamp: 8,
+                textOverflow: 'ellipsis',
+                fontSize: '15px',
+              }}
+            >
+              {parse(sanitizedDescription)}
+            </Typography>
+          </DescriptionContainer>
+        )}
         <Button
           variant='contained'
           sx={{
@@ -113,6 +132,30 @@ export const RecipeCard = ({
           See More
         </Button>
       </Box>
+      {showAddButton && (
+        <Tooltip title={isActive ? 'Cancel' : 'Add to meal plan'} arrow>
+          <IconButton
+            onClick={onAddToMealPlan}
+            disabled={isAddButtonDisabled}
+            sx={{
+              position: 'absolute',
+              top: '8px',
+              right: '8px',
+              backgroundColor: isActive ? '#d9534f' : '#89a313',
+              color: '#fff',
+              '&:hover': {
+                backgroundColor: isActive ? '#c9302c' : '#5d6e0d',
+              },
+              '&:disabled': {
+                backgroundColor: '#ccc',
+              },
+            }}
+            size='large'
+          >
+            {isActive ? <RemoveIcon /> : <AddIcon />}
+          </IconButton>
+        </Tooltip>
+      )}
     </RecipeCardContainer>
   );
 };
