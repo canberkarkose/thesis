@@ -6,6 +6,7 @@ const X_RAPIDAPI_HOST = import.meta.env.VITE_X_RAPIDAPI_HOST;
 const COMPLEX_SEARCH_URL_RAPIDAPI = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/complexSearch';
 const RANDOM_SEARCH_URL_RAPIDAPI = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random';
 const GET_RECIPE_INFORMATION_URL_RAPIDAPI = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/{id}/information';
+const GET_RECIPE_INFORMATION_BULK_URL_RAPIDAPI = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/informationBulk';
 
 export interface FetchRecipesParams {
   diet?: string;
@@ -105,6 +106,25 @@ export const fetchRecipeInformation = async (id: number) => {
         },
         params: {
           includeNutrition: true
+        },
+      });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching recipe information:', error);
+    throw new Error('Failed to fetch recipe information. Please try again later.');
+  }
+};
+
+export const fetchRecipeInformationBulk = async (ids: number[]) => {
+  try {
+    const response = await axios
+      .get(GET_RECIPE_INFORMATION_BULK_URL_RAPIDAPI, {
+        headers: {
+          'x-rapidapi-key': X_RAPIDAPI_KEY,
+          'x-rapidapi-host': X_RAPIDAPI_HOST,
+        },
+        params: {
+          ids: ids.join(','),
         },
       });
     return response.data;

@@ -298,12 +298,25 @@ export const MealCalendar = (
           {Array.from({ length: 7 }).map((_, index) => {
             const dayDate = new Date(currentDate.getTime());
             dayDate.setDate(currentDate.getDate() + index);
+            const isToday = dayDate.toDateString() === today.toDateString();
             return (
               // eslint-disable-next-line react/no-array-index-key
               <DayContainer item xs={12} sm={3} md={1.7} key={index}>
-                <Typography variant='h6' textAlign='center'>
-                  {dayDate.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric' })}
-                </Typography>
+                <Box
+                  display='flex'
+                  justifyContent='center'
+                  alignItems='center'
+                  sx={{
+                    backgroundColor: isToday ? '#89a313' : 'transparent',
+                    borderRadius: isToday ? '50%' : '0',
+                    color: isToday ? 'white' : 'black',
+                    padding: '4px',
+                  }}
+                >
+                  <Typography variant='h6' textAlign='center'>
+                    {dayDate.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric' })}
+                  </Typography>
+                </Box>
                 {renderMealSlots(getFormattedDate(dayDate))}
               </DayContainer>
             );
