@@ -125,6 +125,7 @@ export const fetchRecipeInformationBulk = async (ids: number[]) => {
         },
         params: {
           ids: ids.join(','),
+          includeNutrition: true
         },
       });
     return response.data;

@@ -189,13 +189,11 @@ export const GroceryList = () => {
 
   const handleIngredientCheck = (ingredientId: number, checked: boolean) => {
     setLastInteractedIngredientId(ingredientId);
-    // Update local state
     setCheckedIngredients((prev) => ({
       ...prev,
       [ingredientId]: checked,
     }));
 
-    // Update Firestore
     if (user) {
       const userDocRef = doc(db, 'users', user.uid);
       const updatedGroceryItems = {
@@ -203,15 +201,12 @@ export const GroceryList = () => {
         [ingredientId]: checked,
       };
 
-      // Remove unchecked items from Firestore
       if (!checked) {
         delete updatedGroceryItems[ingredientId];
       }
 
-      // Get current week number
       const currentWeekNumber = getCurrentWeekNumber();
 
-      // Update Firestore with GroceryItems and current week number
       updateDoc(userDocRef, {
         GroceryItems: updatedGroceryItems,
         groceryWeek: currentWeekNumber,
@@ -263,6 +258,7 @@ export const GroceryList = () => {
           exclusive
           onChange={handleViewToggle}
           aria-label='View Toggle'
+          disabled={loading || loadingData}
         >
           <StyledToggleButton value='daily' aria-label='Daily View'>
             Daily
@@ -272,12 +268,12 @@ export const GroceryList = () => {
           </StyledToggleButton>
         </StyledToggleButtonGroup>
       </Box>
-
       <GroceryTable
         groupedIngredients={groupedIngredients}
         loading={loading || loadingData}
         onIngredientCheck={handleIngredientCheck}
         lastInteractedIngredientId={lastInteractedIngredientId}
+        isWeeklyView={isWeeklyView}
       />
     </Box>
   );

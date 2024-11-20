@@ -35,13 +35,15 @@ interface GroceryTableProps {
   loading: boolean;
   onIngredientCheck: (ingredientId: number, checked: boolean) => void;
   lastInteractedIngredientId: number | null;
+  isWeeklyView: boolean;
 }
 
 export const GroceryTable = ({
   groupedIngredients,
   loading,
   onIngredientCheck,
-  lastInteractedIngredientId
+  lastInteractedIngredientId,
+  isWeeklyView
 }: GroceryTableProps) => {
   const navigate = useNavigate();
   const tableContainerRef = useRef<HTMLDivElement>(null);
@@ -99,13 +101,23 @@ export const GroceryTable = ({
             No ingredients to display.
           </Typography>
           <Typography variant='body1' gutterBottom>
-            You don&apos;t have any meals planned.
+            You don&apos;t have any meals planned for
+            {' '}
+            {isWeeklyView ? 'this week' : 'today'}
+            .
           </Typography>
           <Button
             variant='contained'
-            color='primary'
             onClick={() => {
               navigate('/app/meal-planner');
+            }}
+            sx={{
+              mt: 2,
+              color: 'white',
+              backgroundColor: '#5c9c3e',
+              '&:hover': {
+                backgroundColor: '#406d2b',
+              },
             }}
           >
             Go to Meal Planner
