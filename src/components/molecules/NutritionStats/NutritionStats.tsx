@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import {
   Box, Typography, Button, CircularProgress, Tabs, Tab,
+  useTheme,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import HighchartsReact from 'highcharts-react-official';
@@ -42,6 +43,7 @@ const calculateAverages = (recipesData: any[]) => {
 };
 
 export const NutritionStats = ({ recipesData, loading, setIsWeeklyView }: NutritionStatsProps) => {
+  const theme = useTheme();
   const navigate = useNavigate();
   const hasRecipes = recipesData && recipesData.length > 0;
   const [isWeekly, setWeekly] = useState(true);
@@ -62,6 +64,9 @@ export const NutritionStats = ({ recipesData, loading, setIsWeeklyView }: Nutrit
     chart: {
       type: 'column',
       height: '300px',
+    },
+    credits: {
+      enabled: false
     },
     title: {
       text: '',
@@ -105,7 +110,7 @@ export const NutritionStats = ({ recipesData, loading, setIsWeeklyView }: Nutrit
       rules: [
         {
           condition: {
-            maxWidth: 500,
+            maxWidth: 200,
           },
           chartOptions: {
             legend: {
@@ -120,7 +125,6 @@ export const NutritionStats = ({ recipesData, loading, setIsWeeklyView }: Nutrit
   return (
     <Box
       sx={{
-        width: '48%',
         height: '500px',
         padding: '16px',
         borderRadius: '8px',
@@ -128,6 +132,7 @@ export const NutritionStats = ({ recipesData, loading, setIsWeeklyView }: Nutrit
         boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
         display: 'flex',
         flexDirection: 'column',
+        marginTop: theme.spacing(2),
       }}
     >
       <Box
@@ -193,7 +198,7 @@ export const NutritionStats = ({ recipesData, loading, setIsWeeklyView }: Nutrit
       <Box
         sx={{
           flexGrow: 1,
-          border: '1px solid rgba(0, 0, 0, 0.1)',
+          border: hasRecipes ? '1px solid rgba(0, 0, 0, 0.1)' : 'none',
           borderRadius: '8px',
           padding: '16px',
           display: 'flex',
@@ -204,11 +209,30 @@ export const NutritionStats = ({ recipesData, loading, setIsWeeklyView }: Nutrit
       >
         {loading && <CircularProgress sx={{ mt: '150px' }} />}
         {!loading && !hasRecipes && (
-          <Box sx={{ textAlign: 'center', marginTop: '125px' }}>
-            <Typography variant='body1' sx={{ marginBottom: '16px' }}>
-              {isWeekly ? 'No recipes planned for this week.' : 'No recipes planned for today.'}
+          <Box sx={{ textAlign: 'center', marginTop: '19%' }}>
+            <Typography variant='h4' gutterBottom>
+              No nutrition data available
             </Typography>
-            <Button variant='contained' color='primary' onClick={() => navigate('/app/meal-planner')}>
+            <Typography variant='body1' gutterBottom>
+              You don&apos;t have any meals planned for
+              {' '}
+              {isWeekly ? 'this week' : 'today'}
+              .
+            </Typography>
+            <Button
+              variant='contained'
+              onClick={() => {
+                navigate('/app/meal-planner');
+              }}
+              sx={{
+                mt: 2,
+                color: 'white',
+                backgroundColor: '#5c9c3e',
+                '&:hover': {
+                  backgroundColor: '#406d2b',
+                },
+              }}
+            >
               Go to Meal Planner
             </Button>
           </Box>
