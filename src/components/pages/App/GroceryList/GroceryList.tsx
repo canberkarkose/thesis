@@ -247,6 +247,7 @@ export const GroceryList = () => {
   const handleViewToggle = (_event: any, newView: string) => {
     if (newView !== null) {
       setIsWeeklyView(newView === 'weekly');
+      setLastInteractedIngredientId(null);
     }
   };
 

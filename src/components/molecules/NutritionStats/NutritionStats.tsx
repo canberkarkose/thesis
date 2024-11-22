@@ -145,7 +145,7 @@ export const NutritionStats = ({ recipesData, loading, setIsWeeklyView }: Nutrit
       >
         {/* Title */}
         <Typography variant='h6' sx={{ fontWeight: 'bold' }}>
-          Nutrition Stats
+          Your Nutrition Stats
         </Typography>
         {/* Tabs */}
         <Tabs

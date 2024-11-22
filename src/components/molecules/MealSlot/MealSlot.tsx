@@ -26,7 +26,7 @@ interface MealSlotProps {
   isDaily: boolean;
   isAddable: boolean;
   slotOpacity: number;
-  recipeToAdd: Recipe | null;
+  recipeToAdd?: Recipe | null;
   handleSlotClick: (index: number, date: string) => void;
   onSeeMore: (recipeId: number) => void;
   editMode: boolean;

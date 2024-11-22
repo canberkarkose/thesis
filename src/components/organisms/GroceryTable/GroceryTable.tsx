@@ -64,7 +64,7 @@ export const GroceryTable = ({
         // Scroll the container to the element
         const containerTop = tableContainerRef.current.getBoundingClientRect().top;
         const elementTop = element.getBoundingClientRect().top;
-        const scrollOffset = elementTop - containerTop + tableContainerRef.current.scrollTop - 55;
+        const scrollOffset = elementTop - containerTop + tableContainerRef.current.scrollTop - 20;
         tableContainerRef.current.scrollTo({
           top: scrollOffset,
           behavior: 'smooth',
@@ -78,7 +78,7 @@ export const GroceryTable = ({
       {showControls && setIsWeeklyView && (
         <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
           <Typography variant='h6' sx={{ flexGrow: 1, fontWeight: 'bold', mb: 0.5 }}>
-            Grocery List
+            Your Grocery List
           </Typography>
           <Tabs
             value={isWeeklyView ? 'weekly' : 'daily'}
@@ -178,7 +178,7 @@ export const GroceryTable = ({
           </Button>
         </Box>
       )}
-      {Object.keys(groupedIngredients).map((aisle) => (
+      {!loading && Object.keys(groupedIngredients).map((aisle) => (
         <Box key={aisle} mb={2}>
           <Typography variant='h6' sx={{ backgroundColor: '#f5f5f5', padding: '8px' }}>
             {aisle}
@@ -197,7 +197,6 @@ export const GroceryTable = ({
                       </TableCell>
                     )}
                     {!onIngredientCheck && <TableCell padding='checkbox' />}
-
                     <TableCell>
                       <img
                         src={`https://spoonacular.com/cdn/ingredients_100x100/${ingredient.image}`}
