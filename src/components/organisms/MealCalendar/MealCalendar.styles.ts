@@ -5,11 +5,14 @@ import {
   Box, Button, Grid
 } from '@mui/material';
 
-export const CalendarContainer = styled(Box)(({ theme }) => ({
+export const CalendarContainer = styled(Box)<{
+  isDashboard: boolean
+}>(({ theme, isDashboard }) => ({
   marginTop: theme.spacing(5),
   padding: '16px',
   border: '1px solid #ddd',
   borderRadius: theme.spacing(2),
+  background: isDashboard ? 'rgba(255, 255, 255, 0.8)' : 'none',
   boxShadow: theme.shadows[16],
   minHeight: '675px',
 }));

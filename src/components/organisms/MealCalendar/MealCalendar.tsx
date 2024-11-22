@@ -36,10 +36,11 @@ export interface Recipe {
   image?: string;
 }
 interface MealCalendarProps {
-  recipeToAdd: Recipe | null;
-  onRecipeAdded: () => void;
-  type: string;
+  recipeToAdd?: Recipe | null;
+  onRecipeAdded?: () => void;
+  type?: string;
   onSeeMore: (recipeId: number) => void;
+  isDashboard?: boolean;
 }
 
 interface MealSlot {
@@ -60,7 +61,7 @@ const initialSlots: MealSlot[] = [
 
 export const MealCalendar = (
   {
-    recipeToAdd, onRecipeAdded, type, onSeeMore
+    recipeToAdd, onRecipeAdded, type, onSeeMore, isDashboard = false
   }
   : MealCalendarProps
 ) => {
@@ -133,7 +134,7 @@ export const MealCalendar = (
   }, [recipeToAdd]);
 
   const handleSlotClick = async (slotIndex: number, date: string) => {
-    if (recipeToAdd && user) {
+    if (recipeToAdd && user && !isDashboard) {
       const daySlots = dateSlots[date];
       if (!daySlots) {
         console.error(`No slots found for date: ${date}`);
@@ -142,7 +143,9 @@ export const MealCalendar = (
       const slotLabel = daySlots[slotIndex].label.toLowerCase();
       try {
         await addMealToUserPlan(user.uid, date, slotLabel, recipeToAdd);
-        onRecipeAdded();
+        if (onRecipeAdded) {
+          onRecipeAdded();
+        }
       } catch (error) {
         console.error('Error saving meal to Firebase:', error);
       }
@@ -151,7 +154,7 @@ export const MealCalendar = (
 
   const handleDeleteClick = async (slotIndex: number, date: string) => {
     setEditMode(false);
-    if (user) {
+    if (user && !isDashboard) {
       const daySlots = dateSlots[date];
       if (!daySlots) {
         console.error(`No slots found for date: ${date}`);
@@ -214,7 +217,7 @@ export const MealCalendar = (
     return false;
   };
 
-  const showEditButton = hasMealsInView();
+  const showEditButton = hasMealsInView() && !isDashboard;
 
   const renderMealSlots = (date: string) => {
     const daySlots = dateSlots[date] || initialSlots;
@@ -257,7 +260,7 @@ export const MealCalendar = (
 
   if (loading) {
     return (
-      <CalendarContainer>
+      <CalendarContainer isDashboard={isDashboard}>
         <Box display='flex' justifyContent='center' alignItems='center' minHeight='675px'>
           <CircularProgress />
         </Box>
@@ -266,7 +269,7 @@ export const MealCalendar = (
   }
 
   return (
-    <CalendarContainer>
+    <CalendarContainer isDashboard={isDashboard}>
       <HeaderContainer>
         <Typography variant='h5'>Meal Calendar</Typography>
         <ToggleViewButton onClick={toggleView}>

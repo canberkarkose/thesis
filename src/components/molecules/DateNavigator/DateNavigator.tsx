@@ -21,7 +21,7 @@ interface DateNavigatorProps {
   showEditButton: boolean;
   editMode: boolean;
   setEditMode: (editMode: boolean) => void;
-  recipeToAdd: Recipe | null;
+  recipeToAdd?: Recipe | null;
 }
 
 export const DateNavigator = ({
