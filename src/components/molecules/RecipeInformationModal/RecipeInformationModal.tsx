@@ -3,17 +3,26 @@ import {
   Modal, Box, IconButton, CircularProgress,
   Typography,
   Stepper,
-  Step
+  Step,
+  Tooltip
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 import parse from 'html-react-parser';
 import sanitizeHtml from 'sanitize-html';
 
 import {
-  PieChart, Pie, Cell, Tooltip, Legend
+  PieChart, Pie, Cell, Legend, Tooltip as RechartsTooltip
 } from 'recharts';
+
+import {
+  arrayRemove, arrayUnion, doc, getDoc, updateDoc
+} from 'firebase/firestore';
+
+import { toast } from 'react-toastify';
 
 import {
   ModalContent,
@@ -54,12 +63,15 @@ import {
 import { getImageSrc } from './helpers';
 
 import { RecipeInformation } from '@components/pages/App/Recipes/Recipes.types';
+import { useAuth } from '@src/contexts/AuthContext';
+import { db } from '@src/firebase-config';
 
 interface RecipeInformationModalProps {
   open: boolean;
   onClose: () => void;
   isLoading: boolean;
   recipeInfo: RecipeInformation | null;
+  isLikeable?: boolean;
 }
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
@@ -69,8 +81,11 @@ export const RecipeInformationModal: React.FC<RecipeInformationModalProps> = ({
   onClose,
   isLoading,
   recipeInfo,
+  isLikeable = false,
 }) => {
+  const { user, loading: authLoading } = useAuth();
   const [activeStep, setActiveStep] = useState(0);
+  const [isLiked, setIsLiked] = useState(false);
   useEffect(() => {
     if (open) {
       setActiveStep(0);
@@ -108,6 +123,56 @@ export const RecipeInformationModal: React.FC<RecipeInformationModalProps> = ({
   const hasEquipment = instructions[activeStep]?.equipment?.length > 0;
   const numLists = (hasIngredients ? 1 : 0) + (hasEquipment ? 1 : 0);
 
+  useEffect(() => {
+    const fetchLikedRecipes = async () => {
+      if (!user || !isLikeable || !recipeInfo) return;
+
+      try {
+        const userDocRef = doc(db, 'users', user.uid);
+        const userDoc = await getDoc(userDocRef);
+
+        if (userDoc.exists()) {
+          const data = userDoc.data();
+          const likedRecipes: number[] = data.likedRecipes || [];
+
+          setIsLiked(likedRecipes.includes(recipeInfo.id));
+        } else {
+          toast.error('User document not found', { position: 'bottom-left' });
+        }
+      } catch (error) {
+        toast.error(`Error fetching liked recipes: ${error}`, { position: 'bottom-left' });
+      }
+    };
+
+    if (open && isLikeable && !authLoading) {
+      fetchLikedRecipes();
+    }
+  }, [open, isLikeable, user, authLoading, recipeInfo?.id]);
+
+  const handleLikeToggle = async () => {
+    if (!user) {
+      toast.error('User not authenticated', { position: 'bottom-left' });
+      return;
+    }
+
+    try {
+      const userDocRef = doc(db, 'users', user.uid);
+
+      if (isLiked && recipeInfo) {
+        await updateDoc(userDocRef, {
+          likedRecipes: arrayRemove(recipeInfo.id),
+        });
+      } else {
+        await updateDoc(userDocRef, {
+          likedRecipes: arrayUnion(recipeInfo?.id),
+        });
+      }
+      setIsLiked(!isLiked);
+    } catch (error) {
+      toast.error(`Error updating liked recipes: ${error}`, { position: 'bottom-left' });
+    }
+  };
+
   return (
     <Modal
       open={open}
@@ -125,7 +190,29 @@ export const RecipeInformationModal: React.FC<RecipeInformationModalProps> = ({
           >
             <CloseIcon />
           </IconButton>
-          {isLoading ? (
+          {isLikeable && (
+            <Box
+              sx={{
+                position: 'absolute',
+                top: 10,
+                right: 100,
+                backgroundColor: 'white',
+                borderRadius: '8px',
+                boxShadow: 3,
+              }}
+            >
+              <Tooltip title={isLiked ? 'Unlike' : 'Like'} arrow disableInteractive>
+                <IconButton onClick={handleLikeToggle}>
+                  {isLiked ? (
+                    <FavoriteIcon sx={{ color: 'red' }} />
+                  ) : (
+                    <FavoriteBorderIcon />
+                  )}
+                </IconButton>
+              </Tooltip>
+            </Box>
+          )}
+          {isLoading || authLoading ? (
             <Box
               display='flex'
               justifyContent='center'
@@ -176,7 +263,7 @@ export const RecipeInformationModal: React.FC<RecipeInformationModalProps> = ({
                         />
                       ))}
                     </Pie>
-                    <Tooltip />
+                    <RechartsTooltip />
                     <Legend iconSize={10} />
                   </PieChart>
                 </InfoItem>
