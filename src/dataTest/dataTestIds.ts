@@ -19,5 +19,8 @@ export const dataTestIds = {
       menuItemAccount: 'app-header-menu-item-account',
       menuItemLogout: 'app-header-menu-item-logout',
     },
+    truncatedText: {
+      textElement: 'truncated-text-element',
+    },
   },
 };
