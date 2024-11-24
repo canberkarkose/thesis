@@ -71,7 +71,6 @@ interface RecipeInformationModalProps {
   onClose: () => void;
   isLoading: boolean;
   recipeInfo: RecipeInformation | null;
-  isLikeable?: boolean;
 }
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
@@ -81,7 +80,6 @@ export const RecipeInformationModal: React.FC<RecipeInformationModalProps> = ({
   onClose,
   isLoading,
   recipeInfo,
-  isLikeable = false,
 }) => {
   const { user, loading: authLoading } = useAuth();
   const [activeStep, setActiveStep] = useState(0);
@@ -125,7 +123,7 @@ export const RecipeInformationModal: React.FC<RecipeInformationModalProps> = ({
 
   useEffect(() => {
     const fetchLikedRecipes = async () => {
-      if (!user || !isLikeable || !recipeInfo) return;
+      if (!user || !recipeInfo) return;
 
       try {
         const userDocRef = doc(db, 'users', user.uid);
@@ -144,10 +142,10 @@ export const RecipeInformationModal: React.FC<RecipeInformationModalProps> = ({
       }
     };
 
-    if (open && isLikeable && !authLoading) {
+    if (open && !authLoading) {
       fetchLikedRecipes();
     }
-  }, [open, isLikeable, user, authLoading, recipeInfo?.id]);
+  }, [open, user, authLoading, recipeInfo?.id]);
 
   const handleLikeToggle = async () => {
     if (!user) {
@@ -190,28 +188,26 @@ export const RecipeInformationModal: React.FC<RecipeInformationModalProps> = ({
           >
             <CloseIcon />
           </IconButton>
-          {isLikeable && (
-            <Box
-              sx={{
-                position: 'absolute',
-                top: 10,
-                right: 100,
-                backgroundColor: 'white',
-                borderRadius: '8px',
-                boxShadow: 3,
-              }}
-            >
-              <Tooltip title={isLiked ? 'Unlike' : 'Like'} arrow disableInteractive>
-                <IconButton onClick={handleLikeToggle}>
-                  {isLiked ? (
-                    <FavoriteIcon sx={{ color: 'red' }} />
-                  ) : (
-                    <FavoriteBorderIcon />
-                  )}
-                </IconButton>
-              </Tooltip>
-            </Box>
-          )}
+          <Box
+            sx={{
+              position: 'absolute',
+              top: 10,
+              right: 100,
+              backgroundColor: 'white',
+              borderRadius: '8px',
+              boxShadow: 3,
+            }}
+          >
+            <Tooltip title={isLiked ? 'Unlike' : 'Like'} arrow disableInteractive>
+              <IconButton onClick={handleLikeToggle}>
+                {isLiked ? (
+                  <FavoriteIcon sx={{ color: 'red' }} />
+                ) : (
+                  <FavoriteBorderIcon />
+                )}
+              </IconButton>
+            </Tooltip>
+          </Box>
           {isLoading || authLoading ? (
             <Box
               display='flex'

@@ -305,7 +305,6 @@ export const Recipes = () => {
         onClose={() => setIsModalOpen(false)}
         isLoading={isModalLoading}
         recipeInfo={selectedRecipeInfo}
-        isLikeable
       />
     </>
   );

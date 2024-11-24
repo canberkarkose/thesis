@@ -114,6 +114,7 @@ export const MealPlannerPresentation = ({
                   '& > *': {
                     width: '100%',
                     maxWidth: '250px',
+                    minWidth: '250px',
                   },
                 }}
               >
