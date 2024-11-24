@@ -8,6 +8,7 @@ export const RecipeCardContainer = styled(Box)(() => ({
   overflow: 'hidden',
   width: '100%',
   maxWidth: '350px',
+  minWidth: '350px',
   margin: '16px',
   transition: 'transform 0.2s ease-in-out',
   '&:hover': {

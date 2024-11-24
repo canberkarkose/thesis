@@ -1,7 +1,6 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// MealCalendar.tsx
 /* eslint-disable import/no-cycle */
 
 import { useEffect, useState } from 'react';
@@ -20,8 +19,10 @@ import {
 } from './MealCalendar.styles';
 
 import {
-  getLastSunday, getNextSaturday, initializeSlots, getFormattedDate
+  initializeSlots, getFormattedDate
 } from './helpers/calendarUtils';
+
+import { getLastSunday, getNextSaturday } from '@src/helpers/dateHelpers';
 
 import { useAuth } from '@src/contexts/AuthContext';
 

@@ -41,6 +41,7 @@ export interface RecipeInformation extends Recipe {
       }[];
     }[];
   }[];
+  dishTypes?: string[];
   readyInMinutes: number;
   servings: number;
 }
