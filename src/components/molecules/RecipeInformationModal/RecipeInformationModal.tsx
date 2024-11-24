@@ -1,3 +1,5 @@
+// RecipeInformationModal.tsx
+
 import React, { useState, useEffect } from 'react';
 import { Modal, Box, CircularProgress } from '@mui/material';
 import Slide from '@mui/material/Slide';
@@ -9,10 +11,7 @@ import {
 import { toast } from 'react-toastify';
 
 import {
-  ModalContent,
-  ModalContainer,
-  InfoRow,
-  InfoItem,
+  ModalContent, ModalContainer, InfoRow, InfoItem
 } from './RecipeInformationModal.styles';
 
 import { ModalHeader } from './ModalHeader';
@@ -21,6 +20,8 @@ import { CaloricBreakdownChart } from './CaloricBreakdownChart';
 import { RecipeInfoDetails } from './RecipeInfoDetails';
 import { IngredientsList } from './IngredientsList';
 import { InstructionsStepper } from './InstructionsStepper';
+
+import { MealPlanCalendar } from './MealPlanCalendar'; // Import the MealPlanCalendar component
 
 import { db } from '@src/firebase-config';
 import { useAuth } from '@src/contexts/AuthContext';
@@ -42,6 +43,8 @@ export const RecipeInformationModal: React.FC<RecipeInformationModalProps> = ({
   const { user, loading: authLoading } = useAuth();
   const [activeStep, setActiveStep] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
+  const [selectedMealType, setSelectedMealType] = useState<string | null>(null);
+  const [showCalendar, setShowCalendar] = useState(false);
 
   useEffect(() => {
     if (open) {
@@ -127,6 +130,35 @@ export const RecipeInformationModal: React.FC<RecipeInformationModalProps> = ({
     }
   };
 
+  const getMealTypeOptions = () => {
+    const dishTypes = recipeInfo?.dishTypes || [];
+    const mealTypes: string[] = [];
+
+    const breakfastTypes = ['morning meal', 'brunch', 'breakfast'];
+    const isBreakfast = dishTypes.some((type) => breakfastTypes.includes(type));
+    const isDessert = dishTypes.includes('dessert');
+
+    if (dishTypes.length === 0) {
+      mealTypes.push('breakfast', 'lunch', 'dinner', 'dessert');
+    } else {
+      if (isBreakfast) mealTypes.push('breakfast');
+      if (isDessert) mealTypes.push('dessert');
+      if (!isBreakfast && !isDessert) mealTypes.push('lunch', 'dinner');
+    }
+
+    return mealTypes;
+  };
+
+  const handleMealTypeSelect = (mealType: string) => {
+    setSelectedMealType(mealType);
+    setShowCalendar(true);
+  };
+
+  const handleCalendarClose = () => {
+    setShowCalendar(false);
+    setSelectedMealType(null);
+  };
+
   return (
     <Modal
       open={open}
@@ -149,7 +181,16 @@ export const RecipeInformationModal: React.FC<RecipeInformationModalProps> = ({
                 title={title}
                 isLiked={isLiked}
                 handleLikeToggle={handleLikeToggle}
+                mealTypeOptions={getMealTypeOptions()}
+                onMealTypeSelect={handleMealTypeSelect}
               />
+              {showCalendar && selectedMealType && (
+                <MealPlanCalendar
+                  onClose={handleCalendarClose}
+                  mealType={selectedMealType}
+                  recipeInfo={recipeInfo}
+                />
+              )}
               <RecipeImageSection image={image} title={title} summary={sanitizedSummary} />
               <InfoRow>
                 <InfoItem>

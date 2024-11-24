@@ -194,7 +194,7 @@ export const MealGenerator: React.FC<MealGeneratorProps> = (
         aria-label='Meal Type Tabs'
       >
         {mealTypes.map((meal, index) => (
-          <Tab key={meal} label={meal} id={`meal-tab-${index}`} aria-controls={`meal-tabpanel-${index}`} />
+          <Tab key={meal} label={meal} disabled={isLoading} id={`meal-tab-${index}`} aria-controls={`meal-tabpanel-${index}`} />
         ))}
       </TabsContainer>
       <TabPanel>
