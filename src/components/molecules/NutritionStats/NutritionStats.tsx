@@ -269,8 +269,6 @@ export const NutritionStats = ({ recipesData, loading, setIsWeeklyView }: Nutrit
                 highcharts={Highcharts}
                 options={chartOptions}
               />
-              +
-              {' '}
             </div>
           </>
         )}
