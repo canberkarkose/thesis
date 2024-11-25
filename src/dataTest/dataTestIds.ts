@@ -48,5 +48,17 @@ export const dataTestIds = {
       recipeTitle: (index: number) => `meal-slot-recipe-title-${index}`,
       recipeImage: (index: number) => `meal-slot-recipe-image-${index}`,
     },
+    nutritionStats: {
+      container: 'nutrition-stats-container',
+      tabs: 'nutrition-stats-tabs',
+      dailyTab: 'nutrition-stats-daily-tab',
+      weeklyTab: 'nutrition-stats-weekly-tab',
+      content: 'nutrition-stats-content',
+      loadingIndicator: 'nutrition-stats-loading-indicator',
+      noData: 'nutrition-stats-no-data',
+      goToMealPlannerButton: 'nutrition-stats-go-to-meal-planner-button',
+      averageCalories: 'nutrition-stats-average-calories',
+      chart: 'nutrition-stats-chart',
+    },
   },
 };
