@@ -60,5 +60,16 @@ export const dataTestIds = {
       averageCalories: 'nutrition-stats-average-calories',
       chart: 'nutrition-stats-chart',
     },
+    recipeCard: {
+      container: 'recipe-card-container',
+      image: 'recipe-card-image',
+      placeholderImage: 'recipe-card-placeholder-image',
+      title: 'recipe-card-title',
+      description: 'recipe-card-description',
+      seeMoreButton: 'recipe-card-see-more-button',
+      addButton: 'recipe-card-add-button',
+      addIcon: 'recipe-card-add-icon',
+      removeIcon: 'recipe-card-remove-icon',
+    },
   },
 };
