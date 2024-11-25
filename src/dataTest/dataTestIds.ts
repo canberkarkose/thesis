@@ -22,5 +22,11 @@ export const dataTestIds = {
     truncatedText: {
       textElement: 'truncated-text-element',
     },
+    dateNavigator: {
+      previousButton: 'date-navigator-previous-button',
+      nextButton: 'date-navigator-next-button',
+      dateDisplay: 'date-navigator-date-display',
+      editButton: 'date-navigator-edit-button',
+    },
   },
 };

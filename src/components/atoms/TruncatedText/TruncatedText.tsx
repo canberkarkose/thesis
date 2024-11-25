@@ -22,7 +22,7 @@ export const TruncatedText: React.FC<TruncatedTextProps> = ({ text, variant = 'b
   }, [text]);
 
   return (
-    <Tooltip title={isTruncated ? text : ''}>
+    <Tooltip title={isTruncated ? text : ''} arrow disableInteractive>
       <Typography
         ref={textRef}
         variant={variant}

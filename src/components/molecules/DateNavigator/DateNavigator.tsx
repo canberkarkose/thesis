@@ -1,9 +1,15 @@
-/* eslint-disable import/no-cycle */
+import React from 'react';
 import {
-  Box, Button, IconButton, Tooltip, Typography
+  Box,
+  Button,
+  IconButton,
+  Tooltip,
+  Typography,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import CancelIcon from '@mui/icons-material/Cancel';
+
+import { dataTestIds } from '../../../dataTest/dataTestIds';
 
 import { DateNavigatorContainer } from './DateNavigator.styles';
 
@@ -24,7 +30,7 @@ interface DateNavigatorProps {
   recipeToAdd?: Recipe | null;
 }
 
-export const DateNavigator = ({
+export const DateNavigator: React.FC<DateNavigatorProps> = ({
   isViewDaily,
   currentDate,
   minDailyDate,
@@ -37,15 +43,17 @@ export const DateNavigator = ({
   editMode,
   setEditMode,
   recipeToAdd,
-}: DateNavigatorProps) => (
+}) => (
   <DateNavigatorContainer>
     <Box width='48px' />
     <Box display='flex' alignItems='center' justifyContent='center' flexGrow={1}>
       <Button
+        data-testid={dataTestIds.components.dateNavigator.previousButton}
         onClick={() => changeDate('back')}
         variant='outlined'
         disabled={
-          currentDate.getTime() <= (isViewDaily ? minDailyDate.getTime() : minWeeklyDate.getTime())
+          currentDate.getTime()
+          <= (isViewDaily ? minDailyDate.getTime() : minWeeklyDate.getTime())
         }
         sx={{
           '&:hover': {
@@ -56,14 +64,20 @@ export const DateNavigator = ({
       >
         {isViewDaily ? 'Previous Day' : 'Previous Week'}
       </Button>
-      <Typography variant='body1' sx={{ mt: 0.7, mx: 2 }}>
+      <Typography
+        data-testid={dataTestIds.components.dateNavigator.dateDisplay}
+        variant='body1'
+        sx={{ mt: 0.7, mx: 2 }}
+      >
         {formatDisplayDate()}
       </Typography>
       <Button
+        data-testid={dataTestIds.components.dateNavigator.nextButton}
         onClick={() => changeDate('forward')}
         variant='outlined'
         disabled={
-          currentDate.getTime() >= (isViewDaily ? maxDailyDate.getTime() : maxWeeklyDate.getTime())
+          currentDate.getTime()
+          >= (isViewDaily ? maxDailyDate.getTime() : maxWeeklyDate.getTime())
         }
         sx={{
           '&:hover': {
@@ -76,8 +90,14 @@ export const DateNavigator = ({
       </Button>
     </Box>
     <Box display='flex' alignItems='center' justifyContent='flex-end' width='48px'>
-      <Tooltip title={editMode ? 'Cancel' : 'Edit'} arrow disableInteractive>
+      <Tooltip
+        title={editMode ? 'Cancel' : 'Edit'}
+        arrow
+        disableInteractive
+        enterDelay={0}
+      >
         <IconButton
+          data-testid={dataTestIds.components.dateNavigator.editButton}
           onClick={() => setEditMode(!editMode)}
           disabled={recipeToAdd !== null}
           sx={{

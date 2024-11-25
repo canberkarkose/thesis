@@ -22,7 +22,7 @@ import { useEffect, useRef } from 'react';
 
 import { GroceryTableContainer } from './GroceryTable.styles';
 
-import TruncatedText from '@components/atoms/TruncatedText/TruncatedText';
+import { TruncatedText } from '@components/atoms/TruncatedText/TruncatedText';
 
 interface Ingredient {
   id: number;
