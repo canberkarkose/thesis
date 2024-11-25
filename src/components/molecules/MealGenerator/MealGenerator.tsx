@@ -7,6 +7,8 @@ import {
   Box,
 } from '@mui/material';
 
+import { dataTestIds } from '../../../dataTest/dataTestIds';
+
 import {
   GeneratorContainer,
   TabsContainer,
@@ -67,7 +69,7 @@ export const MealGenerator: React.FC<MealGeneratorProps> = (
         params.maxSugar = formValues.maxSugar ? Number(formValues.maxSugar) : undefined;
       }
 
-      if (type === 'main_course' || type === 'breakfast') {
+      if (type === 'main course' || type === 'breakfast') {
         params.minCalories = formValues.minCalories ? Number(formValues.minCalories) : undefined;
         params.maxCalories = formValues.maxCalories ? Number(formValues.maxCalories) : undefined;
       }
@@ -91,6 +93,7 @@ export const MealGenerator: React.FC<MealGeneratorProps> = (
               name='query'
               value={formValues.query || ''}
               onChange={handleInputChange}
+              data-testid={dataTestIds.components.mealGenerator.queryInput}
             />
             <InputField
               label='Min Calories'
@@ -100,6 +103,7 @@ export const MealGenerator: React.FC<MealGeneratorProps> = (
               name='minCalories'
               value={formValues.minCalories || ''}
               onChange={handleInputChange}
+              data-testid={dataTestIds.components.mealGenerator.minCaloriesInput}
             />
             <InputField
               label='Max Calories'
@@ -109,6 +113,7 @@ export const MealGenerator: React.FC<MealGeneratorProps> = (
               name='maxCalories'
               value={formValues.maxCalories || ''}
               onChange={handleInputChange}
+              data-testid={dataTestIds.components.mealGenerator.maxCaloriesInput}
             />
           </>
         );
@@ -122,6 +127,7 @@ export const MealGenerator: React.FC<MealGeneratorProps> = (
               name='query'
               value={formValues.query || ''}
               onChange={handleInputChange}
+              data-testid={dataTestIds.components.mealGenerator.queryInput}
             />
             <InputField
               label='Min Calories'
@@ -131,6 +137,7 @@ export const MealGenerator: React.FC<MealGeneratorProps> = (
               name='minCalories'
               value={formValues.minCalories || ''}
               onChange={handleInputChange}
+              data-testid={dataTestIds.components.mealGenerator.minCaloriesInput}
             />
             <InputField
               label='Max Calories'
@@ -140,6 +147,7 @@ export const MealGenerator: React.FC<MealGeneratorProps> = (
               name='maxCalories'
               value={formValues.maxCalories || ''}
               onChange={handleInputChange}
+              data-testid={dataTestIds.components.mealGenerator.maxCaloriesInput}
             />
           </>
         );
@@ -153,6 +161,7 @@ export const MealGenerator: React.FC<MealGeneratorProps> = (
               name='query'
               value={formValues.query || ''}
               onChange={handleInputChange}
+              data-testid={dataTestIds.components.mealGenerator.queryInput}
             />
             <InputField
               label='Min Sugar (grams)'
@@ -162,6 +171,7 @@ export const MealGenerator: React.FC<MealGeneratorProps> = (
               name='minSugar'
               value={formValues.minSugar || ''}
               onChange={handleInputChange}
+              data-testid={dataTestIds.components.mealGenerator.minSugarInput}
             />
             <InputField
               label='Max Sugar (grams)'
@@ -171,6 +181,7 @@ export const MealGenerator: React.FC<MealGeneratorProps> = (
               name='maxSugar'
               value={formValues.maxSugar || ''}
               onChange={handleInputChange}
+              data-testid={dataTestIds.components.mealGenerator.maxSugarInput}
             />
           </>
         );
@@ -180,7 +191,7 @@ export const MealGenerator: React.FC<MealGeneratorProps> = (
   };
 
   return (
-    <GeneratorContainer>
+    <GeneratorContainer data-testid={dataTestIds.components.mealGenerator.container}>
       <Box display='flex' justifyContent='center'>
         <Typography variant='h4' gutterBottom>
           Meal Generator
@@ -194,7 +205,14 @@ export const MealGenerator: React.FC<MealGeneratorProps> = (
         aria-label='Meal Type Tabs'
       >
         {mealTypes.map((meal, index) => (
-          <Tab key={meal} label={meal} disabled={isLoading} id={`meal-tab-${index}`} aria-controls={`meal-tabpanel-${index}`} />
+          <Tab
+            key={meal}
+            label={meal}
+            disabled={isLoading}
+            id={`meal-tab-${index}`}
+            aria-controls={`meal-tabpanel-${index}`}
+            data-testid={dataTestIds.components.mealGenerator.tab(meal.toLowerCase())}
+          />
         ))}
       </TabsContainer>
       <TabPanel>
@@ -206,6 +224,7 @@ export const MealGenerator: React.FC<MealGeneratorProps> = (
               height: '210px',
               alignItems: 'center',
             }}
+            data-testid={dataTestIds.components.mealGenerator.loadingIndicator}
           >
             <CircularProgress />
           </Box>
@@ -217,6 +236,7 @@ export const MealGenerator: React.FC<MealGeneratorProps> = (
           onClick={handleGenerate}
           disabled={isLoading}
           startIcon={isLoading && <CircularProgress size={20} />}
+          data-testid={dataTestIds.components.mealGenerator.generateButton}
         >
           {isLoading ? 'Generating...' : 'Generate Meals'}
         </GenerateButton>

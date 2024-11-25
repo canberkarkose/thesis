@@ -28,5 +28,16 @@ export const dataTestIds = {
       dateDisplay: 'date-navigator-date-display',
       editButton: 'date-navigator-edit-button',
     },
+    mealGenerator: {
+      container: 'meal-generator-container',
+      tab: (mealType: string) => `meal-generator-tab-${mealType}`,
+      queryInput: 'meal-generator-query-input',
+      minCaloriesInput: 'meal-generator-min-calories-input',
+      maxCaloriesInput: 'meal-generator-max-calories-input',
+      minSugarInput: 'meal-generator-min-sugar-input',
+      maxSugarInput: 'meal-generator-max-sugar-input',
+      generateButton: 'meal-generator-generate-button',
+      loadingIndicator: 'meal-generator-loading-indicator',
+    },
   },
 };
