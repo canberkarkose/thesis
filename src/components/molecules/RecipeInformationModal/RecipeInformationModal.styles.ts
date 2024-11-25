@@ -136,6 +136,7 @@ export const InfoText = styled(Box)(() => ({
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center',
+  whiteSpace: 'nowrap',
 }));
 
 export const InfoTitle = styled(Typography)(() => ({
