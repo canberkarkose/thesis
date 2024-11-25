@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 export const dataTestIds = {
   components: {
     spaceContainer: 'space-container',
@@ -38,6 +39,14 @@ export const dataTestIds = {
       maxSugarInput: 'meal-generator-max-sugar-input',
       generateButton: 'meal-generator-generate-button',
       loadingIndicator: 'meal-generator-loading-indicator',
+    },
+    mealSlot: {
+      container: (index: number) => `meal-slot-${index}`,
+      addButton: (index: number) => `meal-slot-add-button-${index}`,
+      removeButton: (index: number) => `meal-slot-remove-button-${index}`,
+      emptyText: (index: number) => `meal-slot-empty-text-${index}`,
+      recipeTitle: (index: number) => `meal-slot-recipe-title-${index}`,
+      recipeImage: (index: number) => `meal-slot-recipe-image-${index}`,
     },
   },
 };

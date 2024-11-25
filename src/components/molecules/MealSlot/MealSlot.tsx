@@ -2,7 +2,9 @@
 /* eslint-disable import/no-cycle */
 import { IconButton, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'; // Use a '-' icon
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+
+import { dataTestIds } from '../../../dataTest/dataTestIds';
 
 import {
   StyledMealSlot,
@@ -51,17 +53,19 @@ export const MealSlot = ({
     title={slot.recipe && !isDaily ? slot.recipe.title : ''}
     arrow
     disableInteractive
+    enterDelay={0}
   >
     <StyledMealSlot
       key={slot.label}
       isDaily={isDaily}
       editMode={editMode}
       hasRecipe={!!slot.recipe}
+      data-testid={dataTestIds.components.mealSlot.container(index)}
       sx={{
         opacity: slotOpacity,
-        cursor: (slot.recipe && !editMode && !recipeToAdd) ? 'pointer' : 'default',
+        cursor: slot.recipe && !editMode && !recipeToAdd ? 'pointer' : 'default',
         '&:hover': {
-          transform: (slot.recipe && !editMode && !recipeToAdd) ? 'scale(1.05)' : 'none',
+          transform: slot.recipe && !editMode && !recipeToAdd ? 'scale(1.05)' : 'none',
         },
       }}
       onClick={
@@ -74,15 +78,19 @@ export const MealSlot = ({
       {slot.recipe ? (
         <>
           {isDaily && (
-            <RecipeTitleContainer>{slot.recipe.title}</RecipeTitleContainer>
+            <RecipeTitleContainer data-testid={dataTestIds.components.mealSlot.recipeTitle(index)}>
+              {slot.recipe.title}
+            </RecipeTitleContainer>
           )}
           <RecipeImage
+            data-testid={dataTestIds.components.mealSlot.recipeImage(index)}
             src={slot.recipe.image}
             alt={slot.recipe.title}
             isDaily={isDaily}
           />
           {editMode && (
             <IconButton
+              data-testid={dataTestIds.components.mealSlot.removeButton(index)}
               onClick={() => handleDeleteClick(index, date)}
               sx={{
                 color: 'red',
@@ -101,11 +109,16 @@ export const MealSlot = ({
           )}
         </>
       ) : recipeToAdd && isAddable ? (
-        <IconButton onClick={() => isAddable && handleSlotClick(index, date)}>
+        <IconButton
+          data-testid={dataTestIds.components.mealSlot.addButton(index)}
+          onClick={() => isAddable && handleSlotClick(index, date)}
+        >
           <AddIcon />
         </IconButton>
       ) : (
-        <EmptySlotText>Empty</EmptySlotText>
+        <EmptySlotText data-testid={dataTestIds.components.mealSlot.emptyText(index)}>
+          Empty
+        </EmptySlotText>
       )}
     </StyledMealSlot>
   </Tooltip>
