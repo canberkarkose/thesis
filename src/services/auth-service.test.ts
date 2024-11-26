@@ -224,6 +224,30 @@ describe('Auth Service Helpers', () => {
       expect(setPersistence).toHaveBeenCalledWith(undefined, 'browserSessionPersistence');
       expect(signInWithEmailAndPassword).toHaveBeenCalledWith(undefined, 'test@example.com', 'wrongpassword');
     });
+
+    it('throws and logs an error when fetching email and sign-in fails', async () => {
+      (setPersistence as jest.Mock).mockResolvedValueOnce(null);
+      (collection as jest.Mock).mockReturnValue('usersCollection');
+      (query as jest.Mock).mockReturnValue('queryObject');
+      (where as jest.Mock).mockReturnValue('whereClause');
+      (getDocs as jest.Mock).mockResolvedValueOnce({
+        empty: false,
+        forEach: (cb: any) => cb({ data: () => ({ email: 'user@example.com' }) }),
+      });
+      (signInWithEmailAndPassword as jest.Mock).mockRejectedValueOnce(new Error('Sign-In Error'));
+
+      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+      await expect(login('username', 'wrongpassword')).rejects.toThrow('Sign-In Error');
+      expect(setPersistence).toHaveBeenCalledWith(undefined, 'browserSessionPersistence');
+      expect(collection).toHaveBeenCalledWith(db, 'users');
+      expect(query).toHaveBeenCalledWith('usersCollection', 'whereClause');
+      expect(getDocs).toHaveBeenCalledWith('queryObject');
+      expect(signInWithEmailAndPassword).toHaveBeenCalledWith(undefined, 'user@example.com', 'wrongpassword');
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Login failed:', expect.any(Error));
+
+      consoleErrorSpy.mockRestore();
+    });
   });
 
   describe('resetPassword', () => {
@@ -342,6 +366,50 @@ describe('Auth Service Helpers', () => {
       expect(updateDoc).toHaveBeenCalledWith('docRef', {
         'Meals.2024-05-01': deleteField(),
       });
+    });
+
+    it('deletes the date field if no meals remain for the date', async () => {
+      const mockDocSnap = {
+        exists: jest.fn().mockReturnValue(true),
+        data: jest.fn().mockReturnValue({
+          Meals: {
+            '2024-05-01': {}, // No meals remain
+          },
+        }),
+      };
+
+      (doc as jest.Mock).mockReturnValue('docRef');
+      (updateDoc as jest.Mock).mockResolvedValueOnce(null);
+      (getDoc as jest.Mock).mockResolvedValueOnce(mockDocSnap);
+
+      await deleteMealFromUserPlan('user123', '2024-05-01', 'Lunch');
+
+      expect(doc).toHaveBeenCalledWith(db, 'users', 'user123');
+      expect(updateDoc).toHaveBeenCalledWith('docRef', {
+        'Meals.2024-05-01.Lunch': deleteField(),
+      });
+      expect(getDoc).toHaveBeenCalledWith('docRef');
+      expect(updateDoc).toHaveBeenCalledWith('docRef', {
+        'Meals.2024-05-01': deleteField(),
+      });
+    });
+
+    it('throws an error if updateDoc fails', async () => {
+      (doc as jest.Mock).mockReturnValue('docRef');
+      const mockError = new Error('Update failed');
+      (updateDoc as jest.Mock).mockRejectedValueOnce(mockError);
+
+      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+      await expect(deleteMealFromUserPlan('user123', '2024-05-01', 'Lunch')).rejects.toThrow('Update failed');
+
+      expect(doc).toHaveBeenCalledWith(db, 'users', 'user123');
+      expect(updateDoc).toHaveBeenCalledWith('docRef', {
+        'Meals.2024-05-01.Lunch': deleteField(),
+      });
+      expect(consoleErrorSpy).toHaveBeenCalledWith("Error deleting meal from user's plan:", mockError);
+
+      consoleErrorSpy.mockRestore();
     });
   });
 });
