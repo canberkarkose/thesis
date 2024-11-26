@@ -28,7 +28,7 @@ import { app, db } from '../firebase-config';
 
 import { Recipe } from '@components/organisms/MealCalendar/MealCalendar';
 
-const auth = getAuth(app);
+export const auth = getAuth(app);
 
 export const checkUsernameAvailabilityHttp = async (username: string): Promise<boolean> => {
   try {
@@ -84,7 +84,7 @@ export const signUp = async (email: string, username: string, password: string) 
   }
 };
 
-const checkIfUserExists = async (userId: string): Promise<boolean> => {
+export const checkIfUserExists = async (userId: string): Promise<boolean> => {
   const docRef = doc(db, 'users', userId);
   const docSnap = await getDoc(docRef);
 
@@ -225,7 +225,7 @@ export const deleteMealFromUserPlan = async (
 
     // Check if the date has any remaining slots
     const docSnapshot = await getDoc(docRef);
-    if (docSnapshot.exists()) {
+    if (docSnapshot?.exists()) {
       const data = docSnapshot.data();
       const dayMeals = data.Meals?.[date] || {};
       if (Object.keys(dayMeals).length === 0) {

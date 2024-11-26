@@ -22,7 +22,6 @@ module.exports = {
           VITE_FIREBASE_MEASUREMENT_ID: 'test-measurement-id',
           VITE_X_RAPIDAPI_KEY: 'test-rapidapi-key',
           VITE_X_RAPIDAPI_HOST: 'test-rapidapi-host',
-          // ... include any other environment variables
         },
       },
     ],
