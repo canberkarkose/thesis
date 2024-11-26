@@ -1,5 +1,4 @@
-// MealCalendar.styles.ts
-
+/* istanbul ignore file */
 import styled from '@mui/material/styles/styled';
 import {
   Box, Button, Grid
