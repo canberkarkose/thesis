@@ -8,6 +8,8 @@ import sanitizeHtml from 'sanitize-html';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 
+import { dataTestIds } from '../../../dataTest/dataTestIds';
+
 import {
   RecipeCardContainer, RecipeImage, DescriptionContainer, PlaceholderImage
 } from './RecipeCard.styles';
@@ -50,11 +52,15 @@ export const RecipeCard = ({
   }, [title]);
 
   return (
-    <RecipeCardContainer>
+    <RecipeCardContainer data-testid={dataTestIds.components.recipeCard.container}>
       {image ? (
-        <RecipeImage src={image} alt={title} />
+        <RecipeImage
+          src={image}
+          alt={title}
+          data-testid={dataTestIds.components.recipeCard.image}
+        />
       ) : (
-        <PlaceholderImage>
+        <PlaceholderImage data-testid={dataTestIds.components.recipeCard.placeholderImage}>
           <Typography variant='body2' color='textSecondary' fontSize='1rem'>
             Image Unavailable
           </Typography>
@@ -69,6 +75,7 @@ export const RecipeCard = ({
               fontWeight='bold'
               gutterBottom
               textAlign='center'
+              data-testid={dataTestIds.components.recipeCard.title}
               sx={{
                 mt: -2,
                 overflow: 'hidden',
@@ -87,6 +94,7 @@ export const RecipeCard = ({
             fontWeight='bold'
             gutterBottom
             textAlign='center'
+            data-testid={dataTestIds.components.recipeCard.title}
             sx={{
               mt: -2,
               overflow: 'hidden',
@@ -99,7 +107,7 @@ export const RecipeCard = ({
           </Typography>
         )}
         {description && (
-          <DescriptionContainer>
+          <DescriptionContainer data-testid={dataTestIds.components.recipeCard.description}>
             <Typography
               variant='body2'
               sx={{
@@ -117,6 +125,7 @@ export const RecipeCard = ({
         )}
         <Button
           variant='contained'
+          data-testid={dataTestIds.components.recipeCard.seeMoreButton}
           sx={{
             mt: '16px',
             ml: 'auto',
@@ -135,6 +144,7 @@ export const RecipeCard = ({
       {showAddButton && (
         <Tooltip title={isActive ? 'Cancel' : 'Add to meal plan'} arrow>
           <IconButton
+            data-testid={dataTestIds.components.recipeCard.addButton}
             onClick={onAddToMealPlan}
             disabled={isAddButtonDisabled}
             sx={{
@@ -152,7 +162,9 @@ export const RecipeCard = ({
             }}
             size='large'
           >
-            {isActive ? <RemoveIcon /> : <AddIcon />}
+            {isActive
+              ? <RemoveIcon data-testid={dataTestIds.components.recipeCard.removeIcon} />
+              : <AddIcon data-testid={dataTestIds.components.recipeCard.addIcon} />}
           </IconButton>
         </Tooltip>
       )}

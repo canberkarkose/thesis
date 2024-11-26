@@ -2,6 +2,8 @@
 import React from 'react';
 import { Box, Stepper, Step } from '@mui/material';
 
+import { dataTestIds } from '../../../../dataTest/dataTestIds';
+
 import {
   InstructionsContainer,
   InstructionTitle,
@@ -16,8 +18,8 @@ import {
   InstructionListText,
   InstructionListTitle,
   PlaceholderInstructionListImage,
-} from './RecipeInformationModal.styles';
-import { getImageSrc } from './helpers';
+} from '../RecipeInformationModal.styles';
+import { getImageSrc } from '../helpers/helpers';
 
 interface InstructionsStepperProps {
   instructions: any[];
@@ -35,7 +37,7 @@ export const InstructionsStepper: React.FC<InstructionsStepperProps> = ({
   const numLists = (hasIngredients ? 1 : 0) + (hasEquipment ? 1 : 0);
 
   return (
-    <InstructionsContainer>
+    <InstructionsContainer data-testid={dataTestIds.components.instructionsStepper.container}>
       <InstructionTitle>Step by Step Implementation</InstructionTitle>
       <Stepper
         nonLinear

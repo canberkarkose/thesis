@@ -9,6 +9,8 @@ import { useNavigate } from 'react-router-dom';
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts';
 
+import { dataTestIds } from '../../../dataTest/dataTestIds';
+
 interface NutritionStatsProps {
   recipesData: any[];
   loading: boolean;
@@ -124,6 +126,7 @@ export const NutritionStats = ({ recipesData, loading, setIsWeeklyView }: Nutrit
 
   return (
     <Box
+      data-testid={dataTestIds.components.nutritionStats.container}
       sx={{
         height: '500px',
         padding: '16px',
@@ -151,6 +154,7 @@ export const NutritionStats = ({ recipesData, loading, setIsWeeklyView }: Nutrit
         <Tabs
           value={isWeekly ? 'weekly' : 'daily'}
           onChange={handleTabChange}
+          data-testid={dataTestIds.components.nutritionStats.tabs}
           sx={{
             minHeight: '18px',
             '& .MuiTabs-flexContainer': {
@@ -165,6 +169,7 @@ export const NutritionStats = ({ recipesData, loading, setIsWeeklyView }: Nutrit
             label='Daily'
             value='daily'
             disabled={loading}
+            data-testid={dataTestIds.components.nutritionStats.dailyTab}
             sx={{
               textTransform: 'none',
               fontWeight: 'bold',
@@ -181,6 +186,7 @@ export const NutritionStats = ({ recipesData, loading, setIsWeeklyView }: Nutrit
             label='Weekly'
             value='weekly'
             disabled={loading}
+            data-testid={dataTestIds.components.nutritionStats.weeklyTab}
             sx={{
               textTransform: 'none',
               fontWeight: 'bold',
@@ -196,6 +202,7 @@ export const NutritionStats = ({ recipesData, loading, setIsWeeklyView }: Nutrit
       </Box>
       {/* Content */}
       <Box
+        data-testid={dataTestIds.components.nutritionStats.content}
         sx={{
           flexGrow: 1,
           border: hasRecipes ? '1px solid rgba(0, 0, 0, 0.1)' : 'none',
@@ -207,9 +214,9 @@ export const NutritionStats = ({ recipesData, loading, setIsWeeklyView }: Nutrit
           justifyContent: 'space-between',
         }}
       >
-        {loading && <CircularProgress sx={{ mt: '150px' }} />}
+        {loading && <CircularProgress data-testid={dataTestIds.components.nutritionStats.loadingIndicator} sx={{ mt: '150px' }} />}
         {!loading && !hasRecipes && (
-          <Box sx={{ textAlign: 'center', marginTop: '19%' }}>
+          <Box data-testid={dataTestIds.components.nutritionStats.noData} sx={{ textAlign: 'center', marginTop: '19%' }}>
             <Typography variant='h4' gutterBottom>
               No nutrition data available
             </Typography>
@@ -224,6 +231,7 @@ export const NutritionStats = ({ recipesData, loading, setIsWeeklyView }: Nutrit
               onClick={() => {
                 navigate('/app/meal-planner');
               }}
+              data-testid={dataTestIds.components.nutritionStats.goToMealPlannerButton}
               sx={{
                 mt: 2,
                 color: 'white',
@@ -241,6 +249,7 @@ export const NutritionStats = ({ recipesData, loading, setIsWeeklyView }: Nutrit
           <>
             {/* Total Calories */}
             <Typography
+              data-testid={dataTestIds.components.nutritionStats.averageCalories}
               variant='h6'
               sx={{
                 fontWeight: 'bold',
@@ -255,7 +264,12 @@ export const NutritionStats = ({ recipesData, loading, setIsWeeklyView }: Nutrit
               kcal
             </Typography>
             {/* Highchart */}
-            <HighchartsReact highcharts={Highcharts} options={chartOptions} />
+            <div data-testid={dataTestIds.components.nutritionStats.chart}>
+              <HighchartsReact
+                highcharts={Highcharts}
+                options={chartOptions}
+              />
+            </div>
           </>
         )}
       </Box>

@@ -4,7 +4,9 @@ import {
   PieChart, Pie, Cell, Legend, Tooltip as RechartsTooltip
 } from 'recharts';
 
-import { CalorieBreakdownText } from './RecipeInformationModal.styles';
+import { dataTestIds } from '../../../../dataTest/dataTestIds';
+
+import { CalorieBreakdownText } from '../RecipeInformationModal.styles';
 
 interface CaloricBreakdownChartProps {
   pieChartData: { name: string; value: number }[];
@@ -15,7 +17,7 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
 export const CaloricBreakdownChart: React.FC<CaloricBreakdownChartProps> = ({
   pieChartData,
 }) => (
-  <>
+  <div data-testid={dataTestIds.components.caloricBreakdownChart.container}>
     <CalorieBreakdownText>Caloric Breakdown</CalorieBreakdownText>
     <PieChart width={200} height={200}>
       <Pie
@@ -34,5 +36,5 @@ export const CaloricBreakdownChart: React.FC<CaloricBreakdownChartProps> = ({
       <RechartsTooltip />
       <Legend iconSize={10} />
     </PieChart>
-  </>
+  </div>
 );

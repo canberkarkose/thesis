@@ -7,7 +7,7 @@ import {
   InfoTitle,
   InfoValue,
   CaloriesContainer,
-} from './RecipeInformationModal.styles';
+} from '../RecipeInformationModal.styles';
 
 interface RecipeInfoDetailsProps {
   readyInMinutes: number | string;

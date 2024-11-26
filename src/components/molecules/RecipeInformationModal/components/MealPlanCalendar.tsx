@@ -10,6 +10,8 @@ import { doc, getDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { format } from 'date-fns';
 
+import { dataTestIds } from '../../../../dataTest/dataTestIds';
+
 import { addMealToUserPlan } from '@src/services/auth-service';
 
 import { getLastSunday, getNextSaturday } from '@src/helpers/dateHelpers';
@@ -121,7 +123,7 @@ export const MealPlanCalendar: React.FC<MealPlanCalendarProps> = ({
   };
 
   return (
-    <Dialog open onClose={onClose}>
+    <Dialog open onClose={onClose} data-testid={dataTestIds.components.mealPlanCalendar.dialog}>
       <DialogTitle>
         Select a date for your
         {' '}

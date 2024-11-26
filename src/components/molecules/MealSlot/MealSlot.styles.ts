@@ -1,4 +1,4 @@
-import styled from '@mui/material/styles/styled';
+import styled from '@emotion/styled';
 import { Box, Typography } from '@mui/material';
 
 export const StyledMealSlot = styled(Box)<{
