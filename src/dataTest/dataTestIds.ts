@@ -71,5 +71,47 @@ export const dataTestIds = {
       addIcon: 'recipe-card-add-icon',
       removeIcon: 'recipe-card-remove-icon',
     },
+    recipeInformationModal: {
+      modal: 'recipe-information-modal',
+      slide: 'recipe-information-modal-slide',
+      modalContent: 'recipe-information-modal-content',
+      loadingIndicator: 'recipe-information-modal-loading-indicator',
+      modalContainer: 'recipe-information-modal-container',
+      modalHeader: 'recipe-information-modal-header',
+      mealPlanCalendar: 'recipe-information-modal-meal-plan-calendar',
+      recipeImageSection: 'recipe-information-modal-recipe-image-section',
+      infoRow: 'recipe-information-modal-info-row',
+      caloricBreakdownChart: 'recipe-information-modal-caloric-breakdown-chart',
+      recipeInfoDetails: 'recipe-information-modal-recipe-info-details',
+      ingredientsList: 'recipe-information-modal-ingredients-list',
+      instructionsStepper: 'recipe-information-modal-instructions-stepper',
+    },
+    modalHeader: {
+      closeButton: 'modal-header-close-button',
+      likeButton: 'modal-header-like-button',
+      calendarButton: 'modal-header-calendar-button',
+      title: 'modal-header-title',
+    },
+    recipeImageSection: {
+      container: 'recipe-image-section-container',
+      image: 'recipe-image-section-image',
+      placeholderImage: 'recipe-image-section-placeholder-image',
+      description: 'recipe-image-section-description',
+    },
+    caloricBreakdownChart: {
+      container: 'caloric-breakdown-chart-container',
+    },
+    ingredientsList: {
+      container: 'ingredients-list-container',
+      ingredientItem: (id: number) => `ingredient-item-${id}`,
+      ingredientImage: (id: number) => `ingredient-image-${id}`,
+      placeholderImage: (id: number) => `ingredient-placeholder-image-${id}`,
+    },
+    instructionsStepper: {
+      container: 'instructions-stepper-container',
+    },
+    mealPlanCalendar: {
+      dialog: 'meal-plan-calendar-dialog',
+    },
   },
 };

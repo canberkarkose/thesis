@@ -8,11 +8,11 @@ import { dataTestIds } from '../../../dataTest/dataTestIds';
 
 import { NutritionStats } from './NutritionStats';
 
+const mockNavigate = jest.fn();
 // mock useNavigate hook
-const navigateMock = jest.fn();
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
-  useNavigate: () => navigateMock,
+  useNavigate: () => mockNavigate,
 }));
 
 describe('NutritionStats Component', () => {
@@ -113,7 +113,7 @@ describe('NutritionStats Component', () => {
     const goToMealPlannerButton = screen.getByTestId(dataTestIds.components.nutritionStats.goToMealPlannerButton);
     fireEvent.click(goToMealPlannerButton);
 
-    expect(navigateMock).toHaveBeenCalledWith('/app/meal-planner');
+    expect(mockNavigate).toHaveBeenCalledWith('/app/meal-planner');
   });
 
   it('calculates averages correctly', () => {

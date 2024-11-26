@@ -9,7 +9,9 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
-import { Title } from './RecipeInformationModal.styles';
+import { dataTestIds } from '../../../../dataTest/dataTestIds';
+
+import { Title } from '../RecipeInformationModal.styles';
 
 interface ModalHeaderProps {
   onClose: () => void;
@@ -25,7 +27,7 @@ export const ModalHeader: React.FC<ModalHeaderProps> = ({
   title,
   isLiked,
   handleLikeToggle,
-  mealTypeOptions = [],
+  mealTypeOptions,
   onMealTypeSelect,
 }) => {
   const [mealTypeMenuAnchorEl, setMealTypeMenuAnchorEl] = useState<null | HTMLElement>(null);
@@ -47,7 +49,11 @@ export const ModalHeader: React.FC<ModalHeaderProps> = ({
 
   return (
     <>
-      <IconButton onClick={onClose} sx={{ position: 'absolute', top: 8, right: 8 }}>
+      <IconButton
+        onClick={onClose}
+        sx={{ position: 'absolute', top: 8, right: 8 }}
+        data-testid={dataTestIds.components.modalHeader.closeButton}
+      >
         <CloseIcon />
       </IconButton>
       <Box
@@ -72,8 +78,11 @@ export const ModalHeader: React.FC<ModalHeaderProps> = ({
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         >
-          {mealTypeOptions.map((mealType) => (
-            <MenuItem key={mealType} onClick={() => handleMealTypeClick(mealType)}>
+          {mealTypeOptions?.map((mealType) => (
+            <MenuItem
+              key={mealType}
+              onClick={() => handleMealTypeClick(mealType)}
+            >
               Add to
               {' '}
               {mealType}
@@ -98,7 +107,13 @@ export const ModalHeader: React.FC<ModalHeaderProps> = ({
         </Tooltip>
       </Box>
       <Box sx={{ mb: 1 }}>
-        <Title variant='h5' sx={{ wordBreak: 'break-word', mx: 20 }}>{title}</Title>
+        <Title
+          variant='h5'
+          sx={{ wordBreak: 'break-word', mx: 20 }}
+          data-testid={dataTestIds.components.modalHeader.title}
+        >
+          {title}
+        </Title>
       </Box>
     </>
   );

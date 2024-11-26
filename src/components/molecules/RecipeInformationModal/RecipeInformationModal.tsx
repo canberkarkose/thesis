@@ -1,5 +1,3 @@
-// RecipeInformationModal.tsx
-
 import React, { useState, useEffect } from 'react';
 import { Modal, Box, CircularProgress } from '@mui/material';
 import Slide from '@mui/material/Slide';
@@ -10,18 +8,22 @@ import {
 } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 
+import { dataTestIds } from '../../../dataTest/dataTestIds';
+
 import {
   ModalContent, ModalContainer, InfoRow, InfoItem
 } from './RecipeInformationModal.styles';
 
-import { ModalHeader } from './ModalHeader';
-import { RecipeImageSection } from './RecipeImageSection';
-import { CaloricBreakdownChart } from './CaloricBreakdownChart';
-import { RecipeInfoDetails } from './RecipeInfoDetails';
-import { IngredientsList } from './IngredientsList';
-import { InstructionsStepper } from './InstructionsStepper';
+import { ModalHeader } from './components/ModalHeader';
+import { RecipeImageSection } from './components/RecipeImageSection';
+import { CaloricBreakdownChart } from './components/CaloricBreakdownChart';
+import { RecipeInfoDetails } from './components/RecipeInfoDetails';
+import { IngredientsList } from './components/IngredientsList';
+import { InstructionsStepper } from './components/InstructionsStepper';
 
-import { MealPlanCalendar } from './MealPlanCalendar'; // Import the MealPlanCalendar component
+import { MealPlanCalendar } from './components/MealPlanCalendar'; // Import the MealPlanCalendar component
+
+import { getMealTypeOptions } from './helpers/helpers';
 
 import { db } from '@src/firebase-config';
 import { useAuth } from '@src/contexts/AuthContext';
@@ -130,25 +132,6 @@ export const RecipeInformationModal: React.FC<RecipeInformationModalProps> = ({
     }
   };
 
-  const getMealTypeOptions = () => {
-    const dishTypes = recipeInfo?.dishTypes || [];
-    const mealTypes: string[] = [];
-
-    const breakfastTypes = ['morning meal', 'brunch', 'breakfast'];
-    const isBreakfast = dishTypes.some((type) => breakfastTypes.includes(type));
-    const isDessert = dishTypes.includes('dessert');
-
-    if (dishTypes.length === 0) {
-      mealTypes.push('breakfast', 'lunch', 'dinner', 'dessert');
-    } else {
-      if (isBreakfast) mealTypes.push('breakfast');
-      if (isDessert) mealTypes.push('dessert');
-      if (!isBreakfast && !isDessert) mealTypes.push('lunch', 'dinner');
-    }
-
-    return mealTypes;
-  };
-
   const handleMealTypeSelect = (mealType: string) => {
     setSelectedMealType(mealType);
     setShowCalendar(true);
@@ -167,43 +150,72 @@ export const RecipeInformationModal: React.FC<RecipeInformationModalProps> = ({
       aria-describedby='modal-with-recipe-information'
       closeAfterTransition
       keepMounted
+      data-testid={dataTestIds.components.recipeInformationModal.modal}
     >
-      <Slide in={open} timeout={500} direction='down' mountOnEnter unmountOnExit>
-        <ModalContent>
+      <Slide
+        in={open}
+        timeout={500}
+        direction='down'
+        mountOnEnter
+        unmountOnExit
+        data-testid={dataTestIds.components.recipeInformationModal.slide}
+      >
+        <ModalContent data-testid={dataTestIds.components.recipeInformationModal.modalContent}>
           {isLoading || authLoading ? (
-            <Box display='flex' justifyContent='center' alignItems='center' flexGrow={1}>
+            <Box
+              display='flex'
+              justifyContent='center'
+              alignItems='center'
+              flexGrow={1}
+              data-testid={dataTestIds.components.recipeInformationModal.loadingIndicator}
+            >
               <CircularProgress />
             </Box>
           ) : (
-            <ModalContainer>
+            <ModalContainer
+              data-testid={dataTestIds.components.recipeInformationModal.modalContainer}
+            >
               <ModalHeader
                 onClose={onClose}
                 title={title}
                 isLiked={isLiked}
                 handleLikeToggle={handleLikeToggle}
-                mealTypeOptions={getMealTypeOptions()}
+                mealTypeOptions={getMealTypeOptions(recipeInfo)}
                 onMealTypeSelect={handleMealTypeSelect}
+                data-testid={dataTestIds.components.recipeInformationModal.modalHeader}
               />
               {showCalendar && selectedMealType && (
                 <MealPlanCalendar
                   onClose={handleCalendarClose}
                   mealType={selectedMealType}
                   recipeInfo={recipeInfo}
+                  data-testid={dataTestIds.components.recipeInformationModal.mealPlanCalendar}
                 />
               )}
-              <RecipeImageSection image={image} title={title} summary={sanitizedSummary} />
-              <InfoRow>
-                <InfoItem>
+              <RecipeImageSection
+                image={image}
+                title={title}
+                summary={sanitizedSummary}
+                data-testid={dataTestIds.components.recipeInformationModal.recipeImageSection}
+              />
+              <InfoRow data-testid={dataTestIds.components.recipeInformationModal.infoRow}>
+                <InfoItem
+                  data-testid={dataTestIds.components.recipeInformationModal.caloricBreakdownChart}
+                >
                   <CaloricBreakdownChart pieChartData={pieChartData} />
                 </InfoItem>
-                <InfoItem>
+                <InfoItem
+                  data-testid={dataTestIds.components.recipeInformationModal.recipeInfoDetails}
+                >
                   <RecipeInfoDetails
                     readyInMinutes={readyInMinutes}
                     servings={servings}
                     caloriesPerServing={caloriesPerServing}
                   />
                 </InfoItem>
-                <InfoItem>
+                <InfoItem
+                  data-testid={dataTestIds.components.recipeInformationModal.ingredientsList}
+                >
                   <IngredientsList extendedIngredients={extendedIngredients} />
                 </InfoItem>
               </InfoRow>
@@ -212,6 +224,7 @@ export const RecipeInformationModal: React.FC<RecipeInformationModalProps> = ({
                   instructions={instructions}
                   activeStep={activeStep}
                   setActiveStep={setActiveStep}
+                  data-testid={dataTestIds.components.recipeInformationModal.instructionsStepper}
                 />
               )}
             </ModalContainer>

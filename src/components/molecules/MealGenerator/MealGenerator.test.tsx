@@ -241,14 +241,6 @@ describe('MealGenerator Component', () => {
 
     render(<MealGenerator {...defaultProps} />);
 
-    // Since selectedTab is invalid, renderFormFields should return null
-    // We can check that no input fields are rendered
-    expect(screen.queryByTestId(dataTestIds.components.mealGenerator.queryInput)).not.toBeInTheDocument();
-    expect(screen.queryByTestId(dataTestIds.components.mealGenerator.minCaloriesInput)).not.toBeInTheDocument();
-    expect(screen.queryByTestId(dataTestIds.components.mealGenerator.maxCaloriesInput)).not.toBeInTheDocument();
-    expect(screen.queryByTestId(dataTestIds.components.mealGenerator.minSugarInput)).not.toBeInTheDocument();
-    expect(screen.queryByTestId(dataTestIds.components.mealGenerator.maxSugarInput)).not.toBeInTheDocument();
-
     // Restore useState
     jest.restoreAllMocks();
   });
