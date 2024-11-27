@@ -12,11 +12,11 @@ import { DemoContentWrapper } from './templates/DemoContentWrapper';
 
 import { ButtonsContainer } from './LandingPageDemo.styles';
 
-import orange from '@src/assets/orange.svg?url';
-import eggplant from '@src/assets/eggplant.svg?url';
-import pear from '@src/assets/pear.svg?url';
-import apple from '@src/assets/apple.svg?url';
-import lemon from '@src/assets/lemon.svg?url';
+import orange from '@src/assets/orange.svg';
+import eggplant from '@src/assets/eggplant.svg';
+import pear from '@src/assets/pear.svg';
+import apple from '@src/assets/apple.svg';
+import lemon from '@src/assets/lemon.svg';
 
 interface LandingPageDemoPresentationProps {
   onSelectDemo: (option: 'manual' | 'quiz') => void;

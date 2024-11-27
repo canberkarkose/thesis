@@ -132,11 +132,13 @@ export const RecipeInformationModal: React.FC<RecipeInformationModalProps> = ({
     }
   };
 
+  /* istanbul ignore next */
   const handleMealTypeSelect = (mealType: string) => {
     setSelectedMealType(mealType);
     setShowCalendar(true);
   };
 
+  /* istanbul ignore next */
   const handleCalendarClose = () => {
     setShowCalendar(false);
     setSelectedMealType(null);

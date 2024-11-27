@@ -25,7 +25,7 @@ export const DemoContentWrapper = ({
   <DemoContainer isOpeningScreen={isOpeningScreen} isQuiz={isQuiz}>
     <Box display='flex' alignItems='center' sx={{ left: shouldDisplayGoBackButton ? -10 : undefined }}>
       {shouldDisplayGoBackButton && (
-        <IconButton onClick={onBack} sx={{ right: 5, marginBottom: '16px' }}>
+        <IconButton onClick={onBack} sx={{ right: 5, marginBottom: '16px' }} data-testid='manual-go-back'>
           <ArrowBackIcon />
         </IconButton>
       )}

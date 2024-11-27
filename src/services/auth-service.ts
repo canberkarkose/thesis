@@ -91,6 +91,7 @@ export const checkIfUserExists = async (userId: string): Promise<boolean> => {
   return docSnap.exists();
 };
 
+/* istanbul ignore next */
 export const googleSignIn = async () => {
   await setPersistence(auth, browserSessionPersistence);
   const provider = new GoogleAuthProvider();

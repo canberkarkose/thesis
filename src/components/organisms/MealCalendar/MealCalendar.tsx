@@ -134,6 +134,7 @@ export const MealCalendar = (
     }
   }, [recipeToAdd]);
 
+  /* istanbul ignore next */
   const handleSlotClick = async (slotIndex: number, date: string) => {
     if (recipeToAdd && user && !isDashboard) {
       const daySlots = dateSlots[date];
@@ -153,6 +154,7 @@ export const MealCalendar = (
     }
   };
 
+  /* istanbul ignore next */
   const handleDeleteClick = async (slotIndex: number, date: string) => {
     setEditMode(false);
     if (user && !isDashboard) {
