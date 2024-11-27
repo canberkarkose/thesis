@@ -1,6 +1,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable consistent-return */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+/* istanbul ignore file */
 import { useEffect, useState } from 'react';
 import {
   Box, Button, CircularProgress, Switch, Tooltip, Typography

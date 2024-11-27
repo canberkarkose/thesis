@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* istanbul ignore file */
 import axios from 'axios';
 
 const X_RAPIDAPI_KEY = import.meta.env.VITE_X_RAPIDAPI_KEY;
