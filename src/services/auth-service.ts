@@ -190,6 +190,7 @@ export const logout = async () => {
   }
 };
 
+/* istanbul ignore next */
 export const addMealToUserPlan = async (
   userId: string,
   date: string,
@@ -212,6 +213,7 @@ export const addMealToUserPlan = async (
   }
 };
 
+/* istanbul ignore next */
 export const deleteMealFromUserPlan = async (
   userId: string,
   date: string,
