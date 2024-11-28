@@ -5,13 +5,13 @@ import { MainContentContainer, GlobalBackground } from '../LandingPage/LandingPa
 import { LandingPageFooter } from '../../organisms/LandingPageFooter/LandingPageFooter';
 import { LandingPageHeader } from '../../organisms/LandingPageHeader/LandingPageHeader';
 
-import signupImage from '../../../assets/signup_image.png';
-import dashboardIimage from '../../../assets/dashboard_image.png';
-import mealGeneratorImage from '../../../assets/meal_generator_image.png';
-import groceryListImage from '../../../assets/grocery_list_image.png';
-import recipesImage from '../../../assets/recipes_image.png';
-
 import { Step } from './Step';
+
+import dashboardImage from '@src/assets/dashboard_image.png';
+import mealGeneratorImage from '@src/assets/meal_generator_image.png';
+import groceryListImage from '@src/assets/grocery_list_image.png';
+import recipesImage from '@src/assets/recipes_image.png';
+import signupImage from '@src/assets/signup_image.png';
 
 export const HowItWorks: React.FC = () => (
   <>
@@ -36,7 +36,7 @@ export const HowItWorks: React.FC = () => (
           reverse={false}
         />
         <Step
-          imageSrc={dashboardIimage}
+          imageSrc={dashboardImage}
           title='Step 2: Access Your Dashboard'
           description="Once your details are filled, you'll be directed to your personalized dashboard. Here, you&apos;ll find all your generated meals, grocery lists, and saved recipes. Your dashboard will evolve as you interact with the app!"
           reverse

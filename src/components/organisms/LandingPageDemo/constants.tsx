@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import {
   StyledBiryani, StyledRamen, StyledSalad, StyledTaco,
   StyledTurkey, StyledItalianFood

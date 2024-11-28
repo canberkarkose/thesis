@@ -17,6 +17,9 @@ const config: Config = {
       transform: {
         '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest',
       },
+      transformIgnorePatterns: [
+        '/node_modules/(?!(react-syntax-highlighter|@mui)/)',
+      ],
       moduleNameMapper: {
         '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
         '^@src/(.*)$': '<rootDir>/src/$1',

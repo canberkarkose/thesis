@@ -136,6 +136,7 @@ export const ManualDemo = ({ onBack, onGenerateMeals }: ManualDemoProps) => {
                         backgroundColor: selectedCuisines.includes(cuisine.value) ? '#004d00' : '#f0f0f0',
                       }
                     }}
+                    data-testid={`cuisine-${cuisine.value}`}
                   >
                     {cuisine.icon}
                   </Button>

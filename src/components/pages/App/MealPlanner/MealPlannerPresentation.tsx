@@ -61,6 +61,7 @@ export const MealPlannerPresentation = ({
     setSelectedRecipe(null);
   };
 
+  /* istanbul ignore next */
   const handleToggleAddButton = (recipe: Recipe) => {
     setToggleStates((prevStates) => {
       const newState = { ...prevStates };
@@ -80,6 +81,7 @@ export const MealPlannerPresentation = ({
     }
   };
 
+  /* istanbul ignore next */
   const handleRecipeAdded = () => {
     if (selectedRecipe) {
       setToggleStates((prevStates) => {

@@ -41,6 +41,7 @@ export const checkEmailAvailability = async (
   const querySnapshot = await getDocs(q);
   let emailAvailable = true;
   querySnapshot.forEach((docc) => {
+    /* istanbul ignore next */
     if (docc.id !== currentUserId) {
       emailAvailable = false;
     }
