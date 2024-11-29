@@ -1,4 +1,3 @@
-// helpers.test.ts
 import { getImageSrc, getMealTypeOptions } from './helpers';
 
 import { RecipeInformation } from '@components/pages/App/Recipes/Recipes.types';

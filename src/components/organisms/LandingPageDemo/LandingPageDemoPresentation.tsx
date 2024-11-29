@@ -27,7 +27,6 @@ export const LandingPageDemoPresentation = ({ onSelectDemo }: LandingPageDemoPre
 
   useEffect(() => {
     initParticlesEngine(async (engine: Engine) => {
-      // Load slim version to reduce bundle size
       await loadSlim(engine);
     }).then(() => {
       setInit(true);

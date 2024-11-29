@@ -181,9 +181,6 @@ export const Recipes = () => {
     }
   };
 
-  // Remove the early return of loading state
-
-  // TODO: THIS IS TEMPORARY REMOVE ERRORPAGE AND USE SOMETHING ELSE
   if (error) {
     return <ErrorPage errorMessage={error} isAuthenticated />;
   }

@@ -183,8 +183,6 @@ describe('DashboardPresentation Component', () => {
 
     // Assert
     expect(screen.getByText('Welcome,')).toBeInTheDocument();
-    // Depending on how the component handles null userData, adjust assertions
-    // For example, it might render "Welcome, " without a username
   });
 
   it('does not render RecipeInformationModal when isModalOpen is false', () => {

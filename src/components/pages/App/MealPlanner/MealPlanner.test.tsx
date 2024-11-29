@@ -1,14 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/button-has-type */
 /* eslint-disable react/jsx-props-no-spreading */
-// renderPaginationButtons.test.tsx
 import {
   render, screen, fireEvent
 } from '@testing-library/react';
 
 import { renderPaginationButtons } from './MealPlanner.helper';
-
-// MealPlannerPresentation.test.tsx
 
 import { MealPlannerPresentation } from './MealPlannerPresentation';
 

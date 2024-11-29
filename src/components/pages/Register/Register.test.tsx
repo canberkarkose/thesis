@@ -1,4 +1,3 @@
-// Register.test.tsx
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   render,

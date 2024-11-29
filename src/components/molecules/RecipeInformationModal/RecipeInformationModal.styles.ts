@@ -125,7 +125,6 @@ export const InfoRowInner = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   gap: theme.spacing(4),
   marginTop: theme.spacing(1),
-  // Responsive adjustments
   [theme.breakpoints.down('sm')]: {
     flexDirection: 'column',
     alignItems: 'center',

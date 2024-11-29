@@ -1,5 +1,4 @@
 /* eslint-disable react/jsx-props-no-spreading */
-// MealSlot.test.tsx
 
 import { render, screen, fireEvent } from '@testing-library/react';
 
@@ -225,8 +224,6 @@ describe('MealSlot Component', () => {
     );
     fireEvent.mouseOver(mealSlot);
 
-    // Since disablePortal is set during tests, the tooltip will be in the same DOM
-    // We can check that the tooltip does not appear
     const tooltip = screen.queryByRole('tooltip');
     expect(tooltip).not.toBeInTheDocument();
   });

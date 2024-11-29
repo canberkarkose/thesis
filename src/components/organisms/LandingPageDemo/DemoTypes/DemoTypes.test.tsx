@@ -130,11 +130,11 @@ describe('Demo Components', () => {
 
       // Select the cuisine
       fireEvent.click(cuisineButton);
-      expect(cuisineButton).toHaveClass('MuiButton-contained'); // Assuming selected state uses `contained`
+      expect(cuisineButton).toHaveClass('MuiButton-contained');
 
       // Deselect the cuisine
       fireEvent.click(cuisineButton);
-      expect(cuisineButton).toHaveClass('MuiButton-outlined'); // Assuming deselected state uses `outlined`
+      expect(cuisineButton).toHaveClass('MuiButton-outlined');
     });
 
     it('toggles intolerances when an intolerance button is clicked', () => {
@@ -145,16 +145,16 @@ describe('Demo Components', () => {
         />
       );
 
-      const intoleranceButton = screen.getByText(/Dairy/i); // Replace with a valid intolerance from `demoIntolerances`
+      const intoleranceButton = screen.getByText(/Dairy/i);
       expect(intoleranceButton).toBeInTheDocument();
 
       // Select the intolerance
       fireEvent.click(intoleranceButton);
-      expect(intoleranceButton).toHaveClass('MuiButton-contained'); // Assuming selected state uses `contained`
+      expect(intoleranceButton).toHaveClass('MuiButton-contained');
 
       // Deselect the intolerance
       fireEvent.click(intoleranceButton);
-      expect(intoleranceButton).toHaveClass('MuiButton-outlined'); // Assuming deselected state uses `outlined`
+      expect(intoleranceButton).toHaveClass('MuiButton-outlined');
     });
   });
 

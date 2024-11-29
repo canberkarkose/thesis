@@ -109,10 +109,10 @@ export const demoDietOptions = [
 export const demoIntolerances = ['Dairy', 'Egg', 'Gluten', 'Peanut', 'Soy', 'Tree Nut'];
 
 export const demoCuisines = [
-  { value: 'asian', label: 'Asian', icon: <StyledRamen /> }, // Matched with StyledRamen
-  { value: 'american', label: 'American', icon: <StyledTurkey /> }, // Matched with StyledDinner
-  { value: 'italian', label: 'Italian', icon: <StyledItalianFood /> }, // Matched with StyledSalad
-  { value: 'mexican', label: 'Mexican', icon: <StyledTaco /> }, // Matched with StyledTaco
-  { value: 'greek', label: 'Greek', icon: <StyledSalad /> }, // Matched with StyledSalad
-  { value: 'indian', label: 'Indian', icon: <StyledBiryani /> }, // Matched with StyledBiryani
+  { value: 'asian', label: 'Asian', icon: <StyledRamen /> },
+  { value: 'american', label: 'American', icon: <StyledTurkey /> },
+  { value: 'italian', label: 'Italian', icon: <StyledItalianFood /> },
+  { value: 'mexican', label: 'Mexican', icon: <StyledTaco /> },
+  { value: 'greek', label: 'Greek', icon: <StyledSalad /> },
+  { value: 'indian', label: 'Indian', icon: <StyledBiryani /> },
 ];

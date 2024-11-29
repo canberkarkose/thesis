@@ -1,4 +1,3 @@
-// Login.test.tsx
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   render, screen, fireEvent, waitFor
@@ -14,7 +13,6 @@ import { login } from '../../../services/auth-service';
 
 import { Login } from './Login';
 
-// Mock assets if any
 jest.mock('@src/assets/background.png', () => 'mock-background.png');
 jest.mock('@src/assets/globalBackground.png', () => 'mock-globalBackground.png');
 
@@ -91,7 +89,6 @@ describe('Login Component', () => {
 
     const passwordInput = screen.getByLabelText(/Password/i) as HTMLInputElement;
 
-    // Assuming the toggle button has a test ID of 'toggle-password'
     const toggleButton = screen.getByTestId('toggle-password');
 
     // Initially password should be hidden
@@ -123,7 +120,6 @@ describe('Login Component', () => {
     );
   });
 
-  // New Test to Cover handleSignIn (Successful Login)
   it('logs in successfully and navigates to dashboard', async () => {
     jest.useFakeTimers();
 

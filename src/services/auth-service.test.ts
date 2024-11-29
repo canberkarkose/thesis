@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// authService.test.ts
-
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -37,7 +35,7 @@ import {
   deleteMealFromUserPlan,
 } from './auth-service';
 
-import { Recipe } from '@components/organisms/MealCalendar/MealCalendar'; // Adjust the import path as needed
+import { Recipe } from '@components/organisms/MealCalendar/MealCalendar';
 
 // Mock Firebase auth functions
 jest.mock('firebase/auth', () => ({

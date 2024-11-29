@@ -1,4 +1,3 @@
-// GroceryList.test.tsx
 import { render } from '@testing-library/react';
 
 import { doc, onSnapshot, updateDoc } from 'firebase/firestore';

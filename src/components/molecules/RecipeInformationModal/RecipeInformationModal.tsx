@@ -21,7 +21,7 @@ import { RecipeInfoDetails } from './components/RecipeInfoDetails';
 import { IngredientsList } from './components/IngredientsList';
 import { InstructionsStepper } from './components/InstructionsStepper';
 
-import { MealPlanCalendar } from './components/MealPlanCalendar'; // Import the MealPlanCalendar component
+import { MealPlanCalendar } from './components/MealPlanCalendar';
 
 import { getMealTypeOptions } from './helpers/helpers';
 

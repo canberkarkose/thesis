@@ -57,7 +57,6 @@ describe('AuthContext', () => {
   });
 
   test('throws error when useAuth is used outside of AuthProvider', () => {
-    // Suppress console.error for this test
     const consoleError = console.error;
     console.error = jest.fn();
 
@@ -76,7 +75,6 @@ describe('AuthContext', () => {
       accountDetailsCompleted: true,
       username: 'testuser',
       displayName: 'Test User',
-      // ... other properties
     } as CustomUser;
 
     (onAuthStateChanged as jest.Mock).mockImplementation((_auth, callback) => {

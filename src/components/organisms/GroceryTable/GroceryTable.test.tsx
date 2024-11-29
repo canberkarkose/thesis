@@ -8,7 +8,7 @@ import {
 import '@testing-library/jest-dom';
 import { MemoryRouter, useLocation, useNavigate } from 'react-router-dom';
 
-import { GroceryTable } from './GroceryTable'; // Adjust the import path as needed
+import { GroceryTable } from './GroceryTable';
 
 // Mock useNavigate from react-router-dom
 jest.mock('react-router-dom', () => ({

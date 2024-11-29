@@ -1,4 +1,4 @@
-import { getLastSunday, getNextSaturday } from './dateHelpers'; // Adjust the import path as needed
+import { getLastSunday, getNextSaturday } from './dateHelpers';
 
 describe('Date Helpers', () => {
   describe('getLastSunday', () => {

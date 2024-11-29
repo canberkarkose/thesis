@@ -40,7 +40,6 @@ export const QuizDemo = ({ onBack, onGenerateMeals }: QuizDemoProps) => {
       }[]>([]);
 
   useEffect(() => {
-    // Create questions with access to setter functions
     const dietQuestions = createDietQuestions(setDiet);
     const intoleranceQuestions = createIntoleranceQuestions(setIntolerances);
     const cuisineQuestions = createCuisineQuestions(setCuisines, setExcludeCuisines);

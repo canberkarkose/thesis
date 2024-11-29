@@ -87,8 +87,6 @@ export const Account = () => {
   const [newPasswordError, setNewPasswordError] = useState('');
   const [confirmNewPasswordError, setConfirmNewPasswordError] = useState('');
 
-  // Inside the Account component
-
   // Delete Account Dialog States
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [deletePassword, setDeletePassword] = useState('');

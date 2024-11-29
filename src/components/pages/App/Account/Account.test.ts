@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unsafe-function-type */
-// fetchUserData.test.ts
 import {
   getDoc, doc, collection, getDocs, query, where,
   deleteDoc
@@ -83,7 +82,7 @@ describe('fetchUserData', () => {
 
   it('returns user data when user is provided and document exists', async () => {
     // Arrange
-    const mockUser: User = { uid: '123' } as User; // Simplified mock User
+    const mockUser: User = { uid: '123' } as User;
     const mockUserData = { name: 'John Doe', email: 'john@example.com' };
 
     // Mock the doc and getDoc functions

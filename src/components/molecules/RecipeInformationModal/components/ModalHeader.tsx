@@ -1,5 +1,3 @@
-// ModalHeader.tsx
-
 import React, { useState } from 'react';
 import {
   Box, IconButton, Tooltip, Menu, MenuItem

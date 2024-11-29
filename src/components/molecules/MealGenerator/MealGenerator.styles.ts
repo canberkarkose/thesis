@@ -1,5 +1,3 @@
-// mealGenerator.styles.ts
-
 import { styled } from '@mui/material/styles';
 import {
   Box, Button, Tabs, TextField

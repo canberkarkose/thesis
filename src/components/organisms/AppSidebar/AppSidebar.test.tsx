@@ -1,10 +1,8 @@
-// AppSidebar.test.tsx
-
 import { render, screen, fireEvent } from '@testing-library/react';
 
 import { MemoryRouter, useLocation, useNavigate } from 'react-router-dom';
 
-import { AppSidebar } from './AppSidebar'; // Adjust the import path as needed
+import { AppSidebar } from './AppSidebar';
 
 // Mock react-router-dom
 jest.mock('react-router-dom', () => ({

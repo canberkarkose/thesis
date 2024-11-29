@@ -6,7 +6,6 @@ admin.initializeApp();
 
 const corsHandler = cors({origin: true});
 
-// Another way to handle CORS if the above doesn't work:
 export const checkUsernameAvailabilityHttp = functions.https
   .onRequest((req, res) => {
     corsHandler(req, res, async () => {

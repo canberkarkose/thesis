@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// LandingPageHeader.test.tsx
-
 import { render, screen } from '@testing-library/react';
 
 import '@testing-library/jest-dom';

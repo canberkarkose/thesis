@@ -1,5 +1,3 @@
-// AppHeader.tsx
-
 import {
   IconButton,
   Menu,
@@ -14,7 +12,7 @@ import { toast } from 'react-toastify';
 
 import { dataTestIds } from '../../../dataTest/dataTestIds';
 
-import { BTBLogo } from '../../../assets'; // TODO: should be able to use @src directly but cant check it later
+import { BTBLogo } from '../../../assets';
 
 import { logout } from '../../../services/auth-service';
 
