@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* istanbul ignore file */
 import axios from 'axios';
 
 const BACKEND_URL = 'https://bite-by-byte-22033d60b0f3.herokuapp.com';
@@ -25,7 +24,7 @@ export interface FetchRecipesParams {
   offset?: number;
 }
 
-interface FetchRandomRecipesParams {
+export interface FetchRandomRecipesParams {
   numberOfRecipes: number;
 }
 

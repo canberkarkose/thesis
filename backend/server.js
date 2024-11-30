@@ -90,11 +90,15 @@ app.get('/api/recipes/informationBulk', async (req, res) => {
 });
 
 // Health Check Endpoint
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
   res.send('Backend Server is Running.');
 });
 
+module.exports = app;
+
 // Start Server
-app.listen(PORT, () => {
-  console.log(`Backend server is running on port ${PORT}`);
-});
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`Backend server is running on port ${PORT}`);
+  });
+}
