@@ -194,7 +194,7 @@ describe('GroceryTable Component', () => {
 
     const checkbox = screen.getAllByRole('checkbox')[0];
     fireEvent.click(checkbox);
-    expect(mockOnIngredientCheck).toHaveBeenCalledWith(1, true);
+    expect(mockOnIngredientCheck).toHaveBeenCalledWith(3, true);
   });
 
   test('calls setIsWeeklyView when tab is changed', () => {
