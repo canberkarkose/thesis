@@ -73,6 +73,8 @@ export const GroceryTable = ({
     }
   }, [groupedIngredients, lastInteractedIngredientId]);
 
+  const sortedAisles = Object.keys(groupedIngredients).sort((a, b) => a.localeCompare(b));
+
   return (
     <GroceryTableContainer hasCheckboxes={!!onIngredientCheck} ref={tableContainerRef}>
       {showControls && setIsWeeklyView && (
@@ -178,49 +180,53 @@ export const GroceryTable = ({
           </Button>
         </Box>
       )}
-      {!loading && Object.keys(groupedIngredients).map((aisle) => (
-        <Box key={aisle} mb={2}>
-          <Typography variant='h6' sx={{ backgroundColor: '#f5f5f5', padding: '8px' }}>
-            {aisle}
-          </Typography>
-          <TableContainer component={Paper}>
-            <Table style={{ tableLayout: 'fixed' }}>
-              <TableBody>
-                {groupedIngredients[aisle].map((ingredient) => (
-                  <TableRow key={ingredient.id} id={`ingredient-${ingredient.id}`}>
-                    {onIngredientCheck && (
-                      <TableCell padding='checkbox'>
-                        <Checkbox
-                          checked={ingredient.checked || false}
-                          onChange={(e) => onIngredientCheck(ingredient.id, e.target.checked)}
+      {!loading && sortedAisles.map((aisle) => {
+        const sortedIngredients = [...groupedIngredients[aisle]]
+          .sort((a, b) => a.name.localeCompare(b.name));
+        return (
+          <Box key={aisle} mb={2}>
+            <Typography variant='h6' sx={{ backgroundColor: '#f5f5f5', padding: '8px' }}>
+              {aisle}
+            </Typography>
+            <TableContainer component={Paper}>
+              <Table style={{ tableLayout: 'fixed' }}>
+                <TableBody>
+                  {sortedIngredients.map((ingredient) => (
+                    <TableRow key={ingredient.id} id={`ingredient-${ingredient.id}`}>
+                      {onIngredientCheck && (
+                        <TableCell padding='checkbox'>
+                          <Checkbox
+                            checked={ingredient.checked || false}
+                            onChange={(e) => onIngredientCheck(ingredient.id, e.target.checked)}
+                          />
+                        </TableCell>
+                      )}
+                      {!onIngredientCheck && <TableCell padding='checkbox' />}
+                      <TableCell>
+                        <img
+                          src={`https://spoonacular.com/cdn/ingredients_100x100/${ingredient.image}`}
+                          alt={ingredient.name}
+                          style={{ width: '50px', height: '50px', objectFit: 'cover' }}
                         />
                       </TableCell>
-                    )}
-                    {!onIngredientCheck && <TableCell padding='checkbox' />}
-                    <TableCell>
-                      <img
-                        src={`https://spoonacular.com/cdn/ingredients_100x100/${ingredient.image}`}
-                        alt={ingredient.name}
-                        style={{ width: '50px', height: '50px', objectFit: 'cover' }}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant='body1'>
-                        <TruncatedText text={ingredient.name} />
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant='body2'>
-                        {`${ingredient.amount.toFixed(2)} ${ingredient.unit}`}
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Box>
-      ))}
+                      <TableCell>
+                        <Typography variant='body1'>
+                          <TruncatedText text={ingredient.name} />
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant='body2'>
+                          {`${ingredient.amount.toFixed(2)} ${ingredient.unit}`}
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
+        );
+      })}
     </GroceryTableContainer>
   );
 };

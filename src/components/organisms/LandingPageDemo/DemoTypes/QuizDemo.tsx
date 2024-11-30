@@ -24,9 +24,10 @@ interface QuizDemoProps {
     excludeCuisines: string[],
     maxReadyTime?: number
   ) => void;
+  isLoading?: boolean;
 }
 
-export const QuizDemo = ({ onBack, onGenerateMeals }: QuizDemoProps) => {
+export const QuizDemo = ({ onBack, onGenerateMeals, isLoading }: QuizDemoProps) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [diet, setDiet] = useState<string | undefined>();
   const [intolerances, setIntolerances] = useState<string[]>([]);
@@ -104,21 +105,29 @@ export const QuizDemo = ({ onBack, onGenerateMeals }: QuizDemoProps) => {
           {questions[currentQuestionIndex]?.text}
         </Typography>
         <Box display='flex' justifyContent='center' gap={2} marginTop='20px'>
-          <Button variant='contained' color='primary' onClick={() => handleAnswer(true)}>
-            Yes
-          </Button>
-          <Button
-            variant='contained'
-            sx={{
-              backgroundColor: '#D67333',
-              '&:hover': {
-                backgroundColor: '#84441b'
-              }
-            }}
-            onClick={() => handleAnswer(false)}
-          >
-            No
-          </Button>
+          {isLoading ? (
+            <Button variant='contained' disabled>
+              Generating...
+            </Button>
+          ) : (
+            <>
+              <Button variant='contained' color='primary' onClick={() => handleAnswer(true)}>
+                Yes
+              </Button>
+              <Button
+                variant='contained'
+                sx={{
+                  backgroundColor: '#D67333',
+                  '&:hover': {
+                    backgroundColor: '#84441b'
+                  }
+                }}
+                onClick={() => handleAnswer(false)}
+              >
+                No
+              </Button>
+            </>
+          )}
         </Box>
       </Paper>
     </DemoContentWrapper>

@@ -54,10 +54,18 @@ export const LandingPageDemo = () => {
         <LandingPageDemoPresentation onSelectDemo={handleDemoOptionSelect} />
       )}
       {currentDemoStep === 'manual' && (
-        <ManualDemo onBack={handleBackToStart} onGenerateMeals={handleGenerateMeals} />
+        <ManualDemo
+          onBack={handleBackToStart}
+          onGenerateMeals={handleGenerateMeals}
+          isLoading={isLoading}
+        />
       )}
       {currentDemoStep === 'quiz' && (
-        <QuizDemo onBack={handleBackToStart} onGenerateMeals={handleGenerateMeals} />
+        <QuizDemo
+          onBack={handleBackToStart}
+          onGenerateMeals={handleGenerateMeals}
+          isLoading={isLoading}
+        />
       )}
       {currentDemoStep === 'results' && (
         isLoading ? (
