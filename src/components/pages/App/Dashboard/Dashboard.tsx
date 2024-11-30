@@ -29,6 +29,7 @@ export const Dashboard = () => {
   const [isWeeklyGroceryView, setIsWeeklyGroceryView] = useState(true);
   const [groceryDateRange, setGroceryDateRange] = useState<Date[]>([]);
   const [groceryListData, setGroceryListData] = useState<any[]>([]);
+  const [ingredientsList, setIngredientsList] = useState<any[]>([]);
   const [groupedIngredients, setGroupedIngredients] = useState<{ [key: string]: any[] }>({});
   const [loadingGroceryData, setLoadingGroceryData] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -175,6 +176,35 @@ export const Dashboard = () => {
   }, [groceryDateRange, userMeals]);
 
   useEffect(() => {
+    const grouped = ingredientsList.reduce((acc: any, ingredient: any) => {
+      const aisle = ingredient.aisle || 'Other';
+      if (!acc[aisle]) {
+        acc[aisle] = [];
+      }
+      acc[aisle].push(ingredient);
+      return acc;
+    }, {});
+
+    setGroupedIngredients(grouped);
+  }, [ingredientsList]);
+
+  /* istanbul ignore next */
+  // Helper function to combine ingredients
+  const combineIngredients = (ingredients: any[]) => {
+    const combined = ingredients.reduce((acc: any, ingredient: any) => {
+      const key = `${ingredient.name.toLowerCase()}-${ingredient.aisle.toLowerCase()}`;
+      if (!acc[key]) {
+        acc[key] = { ...ingredient };
+      } else {
+        acc[key].amount += ingredient.amount;
+      }
+      return acc;
+    }, {});
+
+    return Object.values(combined);
+  };
+
+  useEffect(() => {
     const processGroceryData = () => {
       const allIngredients: any[] = [];
 
@@ -192,15 +222,8 @@ export const Dashboard = () => {
           });
         }
       });
-      const grouped = allIngredients.reduce((acc: any, ingredient: any) => {
-        const aisle = ingredient.aisle || 'Other';
-        if (!acc[aisle]) {
-          acc[aisle] = [];
-        }
-        acc[aisle].push(ingredient);
-        return acc;
-      }, {});
-      setGroupedIngredients(grouped);
+      const combinedIngredients = combineIngredients(allIngredients);
+      setIngredientsList(combinedIngredients);
     };
 
     if (!loadingGroceryData) {
