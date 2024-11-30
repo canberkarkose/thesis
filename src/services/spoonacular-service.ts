@@ -2,12 +2,12 @@
 /* istanbul ignore file */
 import axios from 'axios';
 
-const X_RAPIDAPI_KEY = import.meta.env.VITE_X_RAPIDAPI_KEY;
-const X_RAPIDAPI_HOST = import.meta.env.VITE_X_RAPIDAPI_HOST;
-const COMPLEX_SEARCH_URL_RAPIDAPI = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/complexSearch';
-const RANDOM_SEARCH_URL_RAPIDAPI = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random';
-const GET_RECIPE_INFORMATION_URL_RAPIDAPI = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/{id}/information';
-const GET_RECIPE_INFORMATION_BULK_URL_RAPIDAPI = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/informationBulk';
+const BACKEND_URL = 'https://bite-by-byte-22033d60b0f3.herokuapp.com';
+
+const COMPLEX_SEARCH_URL = `${BACKEND_URL}/api/recipes/complexSearch`;
+const RANDOM_SEARCH_URL = `${BACKEND_URL}/api/recipes/random`;
+const GET_RECIPE_INFORMATION_URL = `${BACKEND_URL}/api/recipes/{id}/information`;
+const GET_RECIPE_INFORMATION_BULK_URL = `${BACKEND_URL}/api/recipes/informationBulk`;
 
 export interface FetchRecipesParams {
   diet?: string;
@@ -63,17 +63,13 @@ export const fetchRecipes = async ({
       (key) => params[key] === undefined && delete params[key]
     );
 
-    const response = await axios.get(COMPLEX_SEARCH_URL_RAPIDAPI, {
-      headers: {
-        'x-rapidapi-key': X_RAPIDAPI_KEY,
-        'x-rapidapi-host': X_RAPIDAPI_HOST,
-      },
+    const response = await axios.get(COMPLEX_SEARCH_URL, {
       params,
     });
     return response.data;
   } catch (error: any) {
     console.error('Error fetching recipes:', error);
-    throw new Error(error.response?.data?.message || 'Failed to fetch recipes. Please try again later.');
+    throw new Error(error.response?.data?.error || 'Failed to fetch recipes. Please try again later.');
   }
 };
 
@@ -81,11 +77,7 @@ export const fetchRandomRecipes = async (
   { numberOfRecipes }: FetchRandomRecipesParams
 ) => {
   try {
-    const response = await axios.get(RANDOM_SEARCH_URL_RAPIDAPI, {
-      headers: {
-        'x-rapidapi-key': X_RAPIDAPI_KEY,
-        'x-rapidapi-host': X_RAPIDAPI_HOST,
-      },
+    const response = await axios.get(RANDOM_SEARCH_URL, {
       params: {
         number: numberOfRecipes,
       },
@@ -100,11 +92,7 @@ export const fetchRandomRecipes = async (
 export const fetchRecipeInformation = async (id: number) => {
   try {
     const response = await axios
-      .get(GET_RECIPE_INFORMATION_URL_RAPIDAPI.replace('{id}', id.toString()), {
-        headers: {
-          'x-rapidapi-key': X_RAPIDAPI_KEY,
-          'x-rapidapi-host': X_RAPIDAPI_HOST,
-        },
+      .get(GET_RECIPE_INFORMATION_URL.replace('{id}', id.toString()), {
         params: {
           includeNutrition: true
         },
@@ -119,19 +107,14 @@ export const fetchRecipeInformation = async (id: number) => {
 export const fetchRecipeInformationBulk = async (ids: number[]) => {
   try {
     const response = await axios
-      .get(GET_RECIPE_INFORMATION_BULK_URL_RAPIDAPI, {
-        headers: {
-          'x-rapidapi-key': X_RAPIDAPI_KEY,
-          'x-rapidapi-host': X_RAPIDAPI_HOST,
-        },
+      .get(GET_RECIPE_INFORMATION_BULK_URL, {
         params: {
-          ids: ids.join(','),
-          includeNutrition: true
+          ids: ids.join(',')
         },
       });
     return response.data;
   } catch (error) {
     console.error('Error fetching recipe information:', error);
-    throw new Error('Failed to fetch recipe information. Please try again later.');
+    throw new Error('Failed to fetch bulk recipe information. Please try again later.');
   }
 };

@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 /* eslint-disable no-console */
-// server.js
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
@@ -11,7 +10,9 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
-  origin: '*', // Allow all origins. For better security, specify your frontend URL.
+  origin: '*',
+  methods: 'GET,POST,PUT,DELETE',
+  credentials: true,
 }));
 app.use(express.json());
 
@@ -76,7 +77,10 @@ app.get('/api/recipes/informationBulk', async (req, res) => {
         'x-rapidapi-key': process.env.SPOONACULAR_API_KEY,
         'x-rapidapi-host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com',
       },
-      params: { ids },
+      params: {
+        ids,
+        includeNutrition: true
+      },
     });
     res.json(response.data);
   } catch (error) {
