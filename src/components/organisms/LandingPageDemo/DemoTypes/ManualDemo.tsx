@@ -11,9 +11,10 @@ import { Space } from '@components/atoms/Space/Space';
 interface ManualDemoProps {
   onBack: () => void;
   onGenerateMeals: (diet: string, intolerances: string[], cuisines: string[]) => void;
+  isLoading?: boolean;
 }
 
-export const ManualDemo = ({ onBack, onGenerateMeals }: ManualDemoProps) => {
+export const ManualDemo = ({ onBack, onGenerateMeals, isLoading }: ManualDemoProps) => {
   const [selectedDiet, setSelectedDiet] = useState<string>('anything');
   const [selectedIntolerances, setSelectedIntolerances] = useState<string[]>([]);
   const [selectedCuisines, setSelectedCuisines] = useState<string[]>([]);
@@ -151,8 +152,8 @@ export const ManualDemo = ({ onBack, onGenerateMeals }: ManualDemoProps) => {
         marginTop: '20px', display: 'flex', justifyContent: 'space-between', gap: '20px'
       }}
       >
-        <Button variant='contained' onClick={handleGenerateMeals}>
-          Generate Meals
+        <Button variant='contained' onClick={handleGenerateMeals} disabled={isLoading}>
+          {isLoading ? 'Generating...' : 'Generate Meals'}
         </Button>
       </div>
     </DemoContentWrapper>
