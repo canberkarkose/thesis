@@ -22,6 +22,6 @@
     },
     "types": ["vite/client", "jest", "@testing-library/jest-dom"]
   },
-  "include": ["src/**/*", "vite-env.d.ts"],                           /* Specify an array of glob patterns that match files to be included in compilation. */
+  "include": ["src/**/*"],                           /* Specify an array of glob patterns that match files to be included in compilation. */
   "exclude": ["node_modules", "dist"]                /* Specify an array of glob patterns that match files to be excluded from compilation. */
 }

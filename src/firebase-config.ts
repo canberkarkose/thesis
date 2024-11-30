@@ -4,13 +4,13 @@ import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
+  apiKey: 'AIzaSyDbiptbEIpHhnLR-sF8vvvveGJZrAlEzGY',
+  authDomain: 'bite-by-bite-thesis.firebaseapp.com',
+  projectId: 'bite-by-bite-thesis',
+  storageBucket: 'bite-by-bite-thesis.firebasestorage.app',
+  messagingSenderId: '244664994766',
+  appId: '1:244664994766:web:f0023b96464f995c76799f',
+  measurementId: 'G-Y2P8R9WSXZ'
 };
 
 // Initialize Firebase
