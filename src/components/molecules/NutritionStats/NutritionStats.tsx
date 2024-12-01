@@ -216,7 +216,7 @@ export const NutritionStats = ({ recipesData, loading, setIsWeeklyView }: Nutrit
       >
         {loading && <CircularProgress data-testid={dataTestIds.components.nutritionStats.loadingIndicator} sx={{ mt: '150px' }} />}
         {!loading && !hasRecipes && (
-          <Box data-testid={dataTestIds.components.nutritionStats.noData} sx={{ textAlign: 'center', marginTop: '19%' }}>
+          <Box data-testid={dataTestIds.components.nutritionStats.noData} sx={{ textAlign: 'center', marginTop: '80px' }}>
             <Typography variant='h4' gutterBottom>
               No nutrition data available
             </Typography>

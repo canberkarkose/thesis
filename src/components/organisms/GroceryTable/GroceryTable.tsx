@@ -150,7 +150,7 @@ export const GroceryTable = ({
           alignItems='center'
           height='100%'
           sx={{
-            mt: onIngredientCheck ? '20%' : '25%',
+            mt: onIngredientCheck ? '225px' : '105px',
           }}
         >
           <Typography variant='h4' gutterBottom>
