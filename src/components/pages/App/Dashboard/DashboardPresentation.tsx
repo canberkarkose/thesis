@@ -68,7 +68,6 @@ export const DashboardPresentation: React.FC<DashboardPresentationProps> = ({
         flexWrap: 'wrap',
       }}
     >
-      {/* Title saying welcome user.username */}
       <Box sx={{ flex: '1 1 100%' }}>
         <Typography variant='h3' sx={{ fontWeight: 'bold' }}>
           Welcome,

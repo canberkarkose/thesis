@@ -11,6 +11,13 @@ jest.mock('@src/assets/recipes_image.png', () => 'mock-recipes_image.png');
 jest.mock('@src/assets/globalBackground.png', () => 'globalBackground.png');
 jest.mock('@src/assets/background.png', () => 'backgroundImage.png');
 
+const mockNavigate = jest.fn();
+
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockNavigate,
+}));
+
 jest.mock('../../organisms/LandingPageHeader/LandingPageHeader', () => ({
   LandingPageHeader: () => <div data-testid='header'>Mock Header</div>,
 }));
@@ -99,5 +106,14 @@ describe('Step Component', () => {
 
     const descriptionBox = screen.getByText('Hover Test Title').closest('div');
     expect(descriptionBox).toHaveStyle('transition: transform 0.2s');
+  });
+
+  it('navigates to register when the button is clicked', () => {
+    render(<HowItWorks />);
+
+    const button = screen.getByRole('button', { name: /Sign Up Now!/i });
+    button.click();
+
+    expect(mockNavigate).toHaveBeenCalledWith('/register');
   });
 });

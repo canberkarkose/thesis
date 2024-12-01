@@ -86,12 +86,16 @@ export const Account = () => {
   const [currentPasswordError, setCurrentPasswordError] = useState('');
   const [newPasswordError, setNewPasswordError] = useState('');
   const [confirmNewPasswordError, setConfirmNewPasswordError] = useState('');
+  const [deleteEmail, setDeleteEmail] = useState('');
+  const [deleteEmailError, setDeleteEmailError] = useState('');
 
   // Delete Account Dialog States
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [deletePassword, setDeletePassword] = useState('');
   const [deletePasswordError, setDeletePasswordError] = useState('');
   const [showDeletePassword, setShowDeletePassword] = useState(false);
+
+  const isGmailUser = useMemo(() => userData?.email.endsWith('@gmail.com'), [userData]);
 
   // Initialize navigation
   const navigate = useNavigate();
@@ -175,8 +179,16 @@ export const Account = () => {
     if (!user) return;
 
     try {
-      // Re-authenticate the user
-      await reauthenticateUser(user, deletePassword);
+      if (isGmailUser) {
+        // Validate the entered email
+        if (deleteEmail.trim() !== userData?.email) {
+          setDeleteEmailError('Email does not match. Please enter your full Gmail address.');
+          return;
+        }
+      } else {
+        // Re-authenticate the user with password
+        await reauthenticateUser(user, deletePassword);
+      }
 
       // Delete user data from Firestore
       await deleteUserData(user.uid);
@@ -188,6 +200,8 @@ export const Account = () => {
       setIsDeleteDialogOpen(false);
       setDeletePassword('');
       setDeletePasswordError('');
+      setDeleteEmail('');
+      setDeleteEmailError('');
       setShowDeletePassword(false);
 
       // Redirect to /register
@@ -213,6 +227,7 @@ export const Account = () => {
 
   const handleSaveChanges = async () => {
     try {
+      setIsLoading(true);
       if (user) {
         let shouldReauth = false;
         // Handle Username Changes
@@ -229,6 +244,11 @@ export const Account = () => {
           const emailValidationError = validateEmail(email);
           if (emailValidationError) {
             setEmailError(emailValidationError);
+            return;
+          }
+
+          if (!userData?.email.endsWith('@gmail.com') && email.endsWith('@gmail.com')) {
+            setEmailError('Changing email to Gmail is not allowed. Please log in using Gmail instead.');
             return;
           }
           // Check email availability
@@ -262,6 +282,8 @@ export const Account = () => {
       toast.error('Failed to update account details. Please try again.', {
         position: 'bottom-left',
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -411,13 +433,13 @@ export const Account = () => {
     toast.info('Changes discarded.', { position: 'bottom-left' });
   };
 
-  if (loading || isLoading) {
+  if (loading) {
     return (
       <Box
         display='flex'
         justifyContent='center'
         alignItems='center'
-        minHeight='100vh'
+        minHeight='80vh'
       >
         <CircularProgress />
       </Box>
@@ -446,6 +468,7 @@ export const Account = () => {
                 setEmailError('');
               }
             }}
+            disabled={isLoading}
           >
             <EditIcon />
           </IconButton>
@@ -479,39 +502,46 @@ export const Account = () => {
                 setEmailError(error);
               }
             }}
-            disabled={!isEditingUserInfo}
+            disabled={!isEditingUserInfo || isGmailUser}
             fullWidth
             margin='normal'
             error={Boolean(emailError)}
-            helperText={emailError}
+            helperText={isGmailUser ? 'Email change is not allowed for Gmail users for security reasons.' : emailError}
           />
-          <Typography variant='body1' gutterBottom sx={{ mt: 2, mb: 2 }}>
-            To change your password, click the button below.
-          </Typography>
-          <Button
-            variant='contained'
-            sx={{
-              bgcolor: '#5b9d3e',
-              '&:hover': {
-                bgcolor: 'success.dark',
-              },
-              mb: 2
-            }}
-            onClick={() => {
-              setIsPasswordChangeDialogOpen(true);
-              setCurrentShowPassword(false);
-              setNewShowPassword(false);
-              setConfirmShowPassword(false);
-            }}
-            disabled={!isEditingUserInfo}
-          >
-            Change Password
-          </Button>
+          {!isGmailUser && (
+            <>
+              <Typography variant='body1' gutterBottom sx={{ mt: 2, mb: 2 }}>
+                To change your password, click the button below.
+              </Typography>
+              <Button
+                variant='contained'
+                sx={{
+                  bgcolor: '#5b9d3e',
+                  '&:hover': {
+                    bgcolor: 'success.dark',
+                  },
+                  mb: 2,
+                }}
+                onClick={() => {
+                  setIsPasswordChangeDialogOpen(true);
+                  setCurrentShowPassword(false);
+                  setNewShowPassword(false);
+                  setConfirmShowPassword(false);
+                }}
+                disabled={!isEditingUserInfo}
+              >
+                Change Password
+              </Button>
+            </>
+          )}
         </Box>
         <Divider sx={{ my: 2 }} />
         <Box display='flex' justifyContent='space-between' alignItems='center'>
           <Typography variant='h6'>Account Preferences</Typography>
-          <IconButton onClick={() => setIsEditingPreferences(!isEditingPreferences)}>
+          <IconButton
+            onClick={() => setIsEditingPreferences(!isEditingPreferences)}
+            disabled={isLoading}
+          >
             <EditIcon />
           </IconButton>
         </Box>
@@ -604,9 +634,15 @@ export const Account = () => {
             }}
             startIcon={<SaveIcon />}
             onClick={handleSaveChanges}
-            disabled={Boolean(usernameError) || Boolean(emailError) || !hasChanges}
+            disabled={
+              Boolean(usernameError)
+              || Boolean(emailError)
+              || !hasChanges
+              || isLoading
+              || (isGmailUser && email !== userData?.email)
+            }
           >
-            Save Changes
+            {isLoading ? <CircularProgress size={24} /> : 'Save Changes'}
           </Button>
           <Button
             variant='outlined'
@@ -617,6 +653,7 @@ export const Account = () => {
               },
             }}
             onClick={handleDiscardChanges}
+            disabled={isLoading}
           >
             Discard Changes
           </Button>
@@ -781,7 +818,8 @@ export const Account = () => {
               || !confirmNewPassword
               || Boolean(currentPasswordError)
               || Boolean(newPasswordError)
-              || Boolean(confirmNewPasswordError)}
+              || Boolean(confirmNewPasswordError)
+              || isLoading}
             >
               Change Password
             </Button>
@@ -857,39 +895,65 @@ export const Account = () => {
         >
           <DialogTitle>Delete Account</DialogTitle>
           <DialogContent>
-            <Typography variant='body1' gutterBottom>
-              Please enter your password to confirm the deletion of your account.
-              This action is irreversible.
-            </Typography>
-            <TextField
-              label='Password'
-              type={showDeletePassword ? 'text' : 'password'}
-              value={deletePassword}
-              onChange={(e) => {
-                const { value } = e.target;
-                setDeletePassword(value);
-                if (deletePasswordError && value) {
-                  setDeletePasswordError('');
-                }
-              }}
-              fullWidth
-              margin='normal'
-              error={Boolean(deletePasswordError)}
-              helperText={deletePasswordError || ' '}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position='end'>
-                    <IconButton
-                      aria-label={showDeletePassword ? 'Hide password' : 'Show password'}
-                      onClick={() => setShowDeletePassword(!showDeletePassword)}
-                      edge='end'
-                    >
-                      {showDeletePassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
+            {isGmailUser ? (
+              <>
+                <Typography variant='body1' gutterBottom>
+                  Please enter your full Gmail address to confirm the deletion of your account.
+                  This action is irreversible.
+                </Typography>
+                <TextField
+                  label='Email'
+                  value={deleteEmail}
+                  onChange={(e) => {
+                    const { value } = e.target;
+                    setDeleteEmail(value);
+                    if (deleteEmailError && value) {
+                      setDeleteEmailError('');
+                    }
+                  }}
+                  fullWidth
+                  margin='normal'
+                  error={Boolean(deleteEmailError)}
+                  helperText={deleteEmailError || ' '}
+                />
+              </>
+            ) : (
+              <>
+                <Typography variant='body1' gutterBottom>
+                  Please enter your password to confirm the deletion of your account.
+                  This action is irreversible.
+                </Typography>
+                <TextField
+                  label='Password'
+                  type={showDeletePassword ? 'text' : 'password'}
+                  value={deletePassword}
+                  onChange={(e) => {
+                    const { value } = e.target;
+                    setDeletePassword(value);
+                    if (deletePasswordError && value) {
+                      setDeletePasswordError('');
+                    }
+                  }}
+                  fullWidth
+                  margin='normal'
+                  error={Boolean(deletePasswordError)}
+                  helperText={deletePasswordError || ' '}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position='end'>
+                        <IconButton
+                          aria-label={showDeletePassword ? 'Hide password' : 'Show password'}
+                          onClick={() => setShowDeletePassword(!showDeletePassword)}
+                          edge='end'
+                        >
+                          {showDeletePassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </>
+            )}
           </DialogContent>
           <DialogActions>
             <Button
@@ -897,6 +961,8 @@ export const Account = () => {
                 setIsDeleteDialogOpen(false);
                 setDeletePassword('');
                 setDeletePasswordError('');
+                setDeleteEmail('');
+                setDeleteEmailError('');
                 setShowDeletePassword(false);
               }}
               color='secondary'
@@ -913,7 +979,9 @@ export const Account = () => {
               onClick={handleDeleteAccount}
               color='error'
               variant='contained'
-              disabled={!deletePassword}
+              disabled={
+                isGmailUser ? !deleteEmail : !deletePassword
+              }
             >
               Delete
             </Button>
@@ -925,7 +993,7 @@ export const Account = () => {
           variant='contained'
           color='error'
           onClick={() => setIsDeleteDialogOpen(true)}
-          disabled={isEditingUserInfo || isEditingPreferences}
+          disabled={isEditingUserInfo || isEditingPreferences || isLoading}
         >
           Delete Account
         </Button>

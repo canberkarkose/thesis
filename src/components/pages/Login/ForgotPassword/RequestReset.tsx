@@ -49,9 +49,17 @@ export const RequestReset = () => {
     );
   }
 
+  const isGmailEmail = (gmail: string) => gmail.trim().toLowerCase().endsWith('@gmail.com');
+
   const handleSubmit = async () => {
     if (!email) {
       toast.error('Please enter your email.', { position: 'bottom-left' });
+      return;
+    }
+
+    if (isGmailEmail(email)) {
+      // Inform the user that Gmail accounts cannot reset passwords
+      toast.info('Password reset is not available for Gmail accounts. Please use the Google login option.', { position: 'bottom-left' });
       return;
     }
     try {
